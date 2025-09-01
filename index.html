@@ -3,1444 +3,823 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ritzy's Forensic Tools | Professional Utilities</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔧</text></svg>">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta name="description" content="NeoForensics: Cutting-edge forensics tools for digital investigators. Download RitzyScans and complementary tools in a futuristic, dark-mode interface.">
+    <title>NeoForensics - Futuristic Forensics Solutions</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Roboto+Mono:wght@300;400;500&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
+        /* =======================================
+           Root Variables - Pink and Blue Theme in Dark Mode
+           ======================================= */
         :root {
-            --bg-dark: #0a0c15;
-            --bg-card: #161a26;
-            --bg-header: #07080f;
-            --primary: #5d6bff;
-            --primary-hover: #4a59f5;
-            --text-primary: #eef1f8;
-            --text-secondary: #a1a9c0;
-            --accent: #ff7bac;
-            --success: #4caf50;
-            --warning: #ff9800;
-            --border: #1e2335;
-            --shadow: 0 6px 24px rgba(0, 0, 0, 0.6);
-            --transition: all 0.3s ease;
+            --bg-primary: #0a0a0a; /* Deep black background */
+            --bg-secondary: #0a0a0a; /* Uniform dark for no gray */
+            --bg-accent: #0a0a0a; /* No gray accents */
+            --text-primary: #e0e0e0; /* Light text */
+            --text-secondary: #b0b0b0; /* Muted text */
+            --accent-blue: #00bfff; /* Neon blue */
+            --accent-pink: #ff00ff; /* Neon pink */
+            --gradient-bg: linear-gradient(135deg, #0a0a0a, #141414); /* Subtle dark gradient */
+            --glow-shadow-blue: 0 0 10px rgba(0, 191, 255, 0.6);
+            --glow-shadow-pink: 0 0 10px rgba(255, 0, 255, 0.6);
+            --transition: all 0.3s ease-in-out;
             --border-radius: 10px;
-            --dashboard-bg: linear-gradient(135deg, #0a0c15 0%, #1a1f31 100%);
+            --spacing-unit: 1.5rem;
         }
 
+        /* =======================================
+           Global Styles - Full Width, No Side Bars
+           ======================================= */
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
         }
 
-        body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background: var(--bg-dark);
+        html, body {
+            height: 100%;
+            width: 100%;
+            font-family: 'Orbitron', sans-serif;
+            background: var(--bg-primary);
             color: var(--text-primary);
-            line-height: 1.6;
-            min-height: 100vh;
-            padding: 0;
-            overflow-x: hidden;
-            background-image: radial-gradient(circle at 15% 50%, rgba(20, 23, 36, 0.5) 0%, transparent 50%);
-            overflow: hidden;
+            line-height: 1.7;
+            overflow: hidden; /* Prevent body scroll */
         }
 
-        .container {
-            max-width: 1600px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        /* Navigation */
-        .main-nav {
-            background: var(--bg-header);
-            padding: 1.2rem 0;
-            border-bottom: 1px solid var(--border);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            background-image: linear-gradient(to bottom, var(--bg-header) 0%, rgba(7, 8, 15, 0.8) 100%);
-        }
-
-        .nav-container {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .nav-link {
-            background: transparent;
-            border: none;
-            color: var(--text-secondary);
-            padding: 10px 20px;
-            border-radius: 30px;
-            cursor: pointer;
-            transition: var(--transition);
-            font-size: 1.1rem;
-            font-weight: 600;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .nav-link:hover, .nav-link.active {
-            background: var(--primary);
-            color: white;
-        }
-
-        /* Page Sections */
-        .page-section {
+        /* =======================================
+           Header - Full Width
+           ======================================= */
+        header {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            height: 100%;
-            overflow-y: auto;
+            background: rgba(10, 10, 10, 0.98);
+            backdrop-filter: blur(8px);
+            padding: var(--spacing-unit) 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            box-shadow: var(--glow-shadow-blue);
+            transition: var(--transition);
+        }
+
+        header.scrolled {
+            padding: calc(var(--spacing-unit) / 1.5) 2rem;
+            box-shadow: var(--glow-shadow-pink);
+        }
+
+        .logo {
+            font-size: 1.7rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+            text-shadow: 0 0 6px var(--accent-blue);
+            letter-spacing: 2px;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+        }
+
+        nav a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 500;
+            position: relative;
+            padding: 0.4rem 1rem;
+            border-radius: var(--border-radius);
+            transition: var(--transition);
+        }
+
+        nav a:hover, nav a.active {
+            color: var(--accent-pink);
+            background: rgba(255, 0, 255, 0.05);
+            text-shadow: 0 0 4px var(--accent-pink);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background: var(--accent-blue);
+            transition: var(--transition);
+        }
+
+        nav a:hover::after, nav a.active::after {
+            width: 50%;
+        }
+
+        /* =======================================
+           Main Content - Fixed Scrolling
+           ======================================= */
+        main {
+            flex: 1;
+            position: relative;
+            margin-top: 70px;
+            width: 100%;
+            height: calc(100vh - 70px);
+            overflow: hidden; /* Prevent main scroll */
+        }
+
+        /* =======================================
+           Section Styles - Controlled Scrolling
+           ======================================= */
+        section {
             display: none;
-            padding: 40px 0;
+            padding: 4rem 2rem;
+            width: 100%;
+            min-height: calc(100vh - 70px);
+            max-height: calc(100vh - 70px);
+            overflow-y: auto; /* Scroll only when content overflows */
             opacity: 0;
             transform: translateY(20px);
-            transition: opacity 0.5s ease, transform 0.5s ease;
+            transition: opacity 0.6s ease, transform 0.6s ease;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: var(--gradient-bg);
         }
 
-        .page-section.active {
-            display: block;
+        section.active {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
             opacity: 1;
             transform: translateY(0);
-        }
-
-        /* Dashboard Styles */
-        #home {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--dashboard-bg);
-            padding: 20px;
             position: relative;
-            overflow: hidden;
         }
 
-        .dashboard-overlay {
+        section::before {
+            content: '';
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: radial-gradient(circle at 80% 20%, rgba(93, 107, 255, 0.1), transparent 70%),
-                        radial-gradient(circle at 20% 80%, rgba(255, 123, 172, 0.1), transparent 70%);
-            pointer-events: none;
-            z-index: 1;
+            background: radial-gradient(circle, rgba(0, 191, 255, 0.05), transparent 70%);
+            opacity: 0.5;
+            z-index: -1;
         }
 
-        .dashboard-content {
-            position: relative;
-            z-index: 2;
-            max-width: 900px;
+        /* =======================================
+           Home Section
+           ======================================= */
+        #home {
             text-align: center;
-            padding: 40px;
-            background: rgba(10, 12, 21, 0.7);
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(93, 107, 255, 0.2);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
         }
 
-        .dashboard-content h1 {
-            font-size: 3.5rem;
-            margin-bottom: 1.5rem;
-            background: linear-gradient(90deg, var(--primary), var(--accent));
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: -0.5px;
-            font-weight: 800;
+        #home i {
+            font-size: 3rem;
+            color: var(--accent-blue);
+            text-shadow: var(--glow-shadow-blue);
+            margin-bottom: 2rem;
         }
 
-        .dashboard-content p {
-            font-size: 1.3rem;
-            color: var(--text-secondary);
-            margin-bottom: 2.5rem;
-            line-height: 1.8;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 25px;
-            margin: 40px 0;
-        }
-
-        .feature-card {
-            background: rgba(22, 26, 38, 0.6);
-            border-radius: var(--border-radius);
-            padding: 25px;
-            border: 1px solid var(--border);
-            transition: var(--transition);
-        }
-
-        .feature-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--primary);
-        }
-
-        .feature-card i {
-            font-size: 2.5rem;
-            color: var(--primary);
-            margin-bottom: 20px;
-        }
-
-        .feature-card h3 {
-            font-size: 1.4rem;
-            margin-bottom: 15px;
-        }
-
-        .feature-card p {
-            font-size: 1rem;
-            margin-bottom: 0;
-        }
-
-        .btn-container {
-            display: flex;
-            justify-content: center;
-            margin-top: 30px;
-        }
-
-        .continue-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            background: var(--primary);
-            color: white;
-            padding: 16px 35px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 1.2rem;
-            transition: var(--transition);
-            text-align: center;
-            border: none;
-            cursor: pointer;
-            font-family: inherit;
-            box-shadow: 0 8px 20px rgba(93, 107, 255, 0.4);
-        }
-
-        .coming-soon-btn {
-        background: #6c757d !important;
-        cursor: not-allowed;
-        opacity: 0.8;
-        }
-
-        .coming-soon-btn:hover {
-        background: #6c757d !important;
-        transform: none !important;
-        box-shadow: none !important;
-        }
-
-        .coming-soon-btn i {
-        margin-right: 8px;
-        }
-
-        .continue-btn:hover {
-            background: var(--primary-hover);
-            transform: translateY(-3px);
-            box-shadow: 0 12px 25px rgba(93, 107, 255, 0.5);
-        }
-
-        /* Tools Tab Styles */
-        .tools-section-header {
-            padding: 4rem 0 1.5rem;
-            text-align: center;
-            margin-bottom: 1rem;
-        }
-
-        .tools-section-header h1 {
-            font-size: 2.8rem;
-            margin-bottom: 0.8rem;
-            background: linear-gradient(90deg, var(--primary), var(--accent));
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: -0.5px;
+        #home h1 {
+            font-size: 3.2rem;
+            margin-bottom: 2rem;
+            color: var(--accent-blue);
+            text-shadow: var(--glow-shadow-blue);
+            letter-spacing: 2.5px;
             font-weight: 700;
         }
 
-        .tools-section-header p {
-            font-size: 1.2rem;
-            color: var(--text-secondary);
+        #home p {
+            font-size: 1.3rem;
             max-width: 700px;
-            margin: 0 auto;
-        }
-
-        /* Tabs Navigation */
-        .tabs-container {
-            margin: 20px auto;
-            max-width: 1600px;
-        }
-
-        .tabs {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 5px;
-            margin-bottom: 30px;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 15px;
-        }
-
-        .tab-btn {
-            background: transparent;
-            border: none;
+            margin: 0 auto 3rem;
             color: var(--text-secondary);
-            padding: 12px 25px;
-            border-radius: 30px;
-            cursor: pointer;
-            transition: var(--transition);
-            font-size: 1.1rem;
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        .cta-button {
+            padding: 1.2rem 3rem;
+            background: linear-gradient(135deg, var(--accent-pink), var(--accent-blue));
+            border: none;
+            color: #fff;
+            font-size: 1.2rem;
             font-weight: 600;
+            cursor: pointer;
+            border-radius: 50px;
+            box-shadow: var(--glow-shadow-pink);
+            transition: var(--transition);
         }
 
-        .tab-btn:hover, .tab-btn.active {
-            background: var(--primary);
-            color: white;
+        .cta-button:hover {
+            box-shadow: var(--glow-shadow-blue);
+            transform: scale(1.06);
         }
 
-        .tab-content {
-            display: none;
-            animation: fadeIn 0.5s ease;
+        /* =======================================
+           About Section
+           ======================================= */
+        #about {
+            text-align: center;
         }
 
-        .tab-content.active {
-            display: block;
+        #about i {
+            font-size: 2.5rem;
+            color: var(--accent-pink);
+            text-shadow: var(--glow-shadow-pink);
+            margin-bottom: 2rem;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        #about h2 {
+            font-size: 2.6rem;
+            color: var(--accent-pink);
+            text-shadow: var(--glow-shadow-pink);
+            margin-bottom: 2.5rem;
         }
 
-        /* Updated Tools Grid Styles */
-        .tools-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(450px, 1fr)); /* Wider boxes */
-            gap: 25px;
+        #about p {
+            font-size: 1.15rem;
+            max-width: 800px;
+            margin: 0 auto 1.5rem;
+            color: var(--text-secondary);
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        /* =======================================
+           Features Section
+           ======================================= */
+        #features {
+            text-align: center;
+        }
+
+        #features h2 {
+            font-size: 2.6rem;
+            color: var(--accent-blue);
+            text-shadow: var(--glow-shadow-blue);
             margin-bottom: 3rem;
         }
 
-        @media (min-width: 1800px) {
-            .tools-grid {
-                grid-template-columns: repeat(4, 1fr); /* Reduced from 5 to 4 columns */
-            }
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            width: 100%;
+            max-width: 1200px;
         }
 
-        @media (min-width: 1400px) {
-            .tools-grid {
-                grid-template-columns: repeat(3, 1fr); /* Reduced from 4 to 3 columns */
-            }
+        .feature-card {
+            background: transparent;
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--glow-shadow-pink);
+            transition: var(--transition);
+            text-align: center;
+            border: 1px solid rgba(255, 0, 255, 0.1);
         }
 
-        @media (max-width: 1200px) {
-            .tools-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
+        .feature-card:hover {
+            box-shadow: var(--glow-shadow-blue);
         }
 
-        @media (max-width: 900px) {
-            .tools-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 20px;
-            }
+        .feature-card i {
+            font-size: 2rem;
+            color: var(--accent-blue);
+            text-shadow: var(--glow-shadow-blue);
+            margin-bottom: 1rem;
         }
 
-        @media (max-width: 600px) {
-            .tools-grid {
-                grid-template-columns: 1fr;
-            }
+        .feature-card h3 {
+            color: var(--accent-pink);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card p {
+            font-family: 'Roboto Mono', monospace;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* =======================================
+           Tools Section
+           ======================================= */
+        #tools {
+            text-align: center;
+        }
+
+        #tools h2 {
+            font-size: 2.6rem;
+            color: var(--accent-pink);
+            text-shadow: var(--glow-shadow-pink);
+            margin-bottom: 2.5rem;
+        }
+
+        #tools p.note {
+            max-width: 800px;
+            margin: 0 auto 3rem;
+            font-family: 'Roboto Mono', monospace;
+            color: var(--text-secondary);
+        }
+
+        .tool-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+            width: 100%;
+            max-width: 1200px;
         }
 
         .tool-card {
-            background: var(--bg-card);
+            background: transparent;
+            padding: 2.5rem;
             border-radius: var(--border-radius);
-            overflow: hidden;
-            box-shadow: var(--shadow);
+            box-shadow: var(--glow-shadow-blue);
             transition: var(--transition);
-            border: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-            height: 100%;
+            border: 1px solid rgba(0, 191, 255, 0.1);
         }
 
         .tool-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.4);
-            border-color: rgba(93, 107, 255, 0.3);
+            box-shadow: var(--glow-shadow-pink);
         }
 
-        /* Improved Card Header */
-        .card-header {
-            padding: 1.2rem 1.5rem; /* Slightly reduced padding */
-            border-bottom: 1px solid var(--border);
-            background: rgba(0, 0, 0, 0.2);
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            flex-wrap: wrap; /* Allow content wrapping */
+        .tool-card i {
+            font-size: 2.2rem;
+            color: var(--accent-pink);
+            text-shadow: var(--glow-shadow-pink);
+            margin-bottom: 1.5rem;
         }
 
-        .tool-icon {
+        .tool-card h3 {
+            color: var(--accent-blue);
             font-size: 1.8rem;
-            background: rgba(93, 107, 255, 0.1);
-            width: 55px;
-            height: 55px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
+            margin-bottom: 1.5rem;
         }
 
-        .tool-info {
-            flex-grow: 1;
-            min-width: 0;
+        .tool-card p {
+            font-size: 1rem;
+            margin-bottom: 2rem;
+            color: var(--text-secondary);
+            font-family: 'Roboto Mono', monospace;
         }
 
-        .card-header h3 {
-            font-size: 1.45rem;
-            margin-bottom: 0.3rem;
+        .download-button {
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-pink));
+            color: #fff;
+            text-decoration: none;
+            border-radius: 50px;
             font-weight: 600;
-            display: flex;
-            flex-wrap: wrap; /* Allow version tag to wrap */
-            gap: 8px; /* Space between elements */
-            align-items: center;
-            overflow: visible; /* Remove text truncation */
+            box-shadow: var(--glow-shadow-blue);
+            transition: var(--transition);
         }
 
-        .version {
-            background: var(--primary);
-            color: white;
-            padding: 4px 12px;
-            border-radius: 15px;
-            font-size: 0.9rem;
-            font-weight: 500;
-            margin-left: 0; /* Remove left margin */
-            margin-top: 4px; /* Space when wrapped */
-            flex-shrink: 0;
+        .download-button:hover {
+            box-shadow: var(--glow-shadow-pink);
         }
 
-        .card-body {
-            padding: 1.2rem 1.5rem;
+        /* =======================================
+           Pricing Section
+           ======================================= */
+        #pricing {
+            text-align: center;
+        }
+
+        #pricing h2 {
+            font-size: 2.6rem;
+            color: var(--accent-blue);
+            text-shadow: var(--glow-shadow-blue);
+            margin-bottom: 2.5rem;
+        }
+
+        .pricing-card {
+            max-width: 600px;
+            background: transparent;
+            padding: 3rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--glow-shadow-pink);
+            width: 100%;
+            border: 1px solid rgba(255, 0, 255, 0.1);
+        }
+
+        .pricing-card i {
+            font-size: 2.5rem;
+            color: var(--accent-pink);
+            text-shadow: var(--glow-shadow-pink);
+            margin-bottom: 1.5rem;
+        }
+
+        .pricing-card h3 {
+            color: var(--accent-blue);
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .pricing-card p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        /* =======================================
+           TOS Section - Scrollable
+           ======================================= */
+        #tos {
+            text-align: center; /* Center all content */
+            max-width: 100%; /* Full width */
+            width: 100%;
+            overflow-y: auto; /* Enable scrolling when content overflows */
+            padding: 6rem 2rem 4rem; /* Increased top padding to ensure visibility */
             display: flex;
             flex-direction: column;
-            flex-grow: 1;
-            justify-content: space-between;
-        }
-
-        /* Better tag handling */
-        .tool-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 8px;
-        }
-
-        .tag {
-            background: rgba(93, 107, 255, 0.15);
-            color: var(--primary);
-            padding: 5px 12px;
-            border-radius: 12px;
-            font-size: 0.8rem;
-            font-weight: 500;
-            white-space: nowrap;
-        }
-
-        /* Quick Info Bar - now at the bottom */
-        .quick-info {
-            display: flex;
-            justify-content: space-between;
-            background: rgba(30, 35, 53, 0.6);
-            border-radius: var(--border-radius);
-            padding: 12px 15px;
-            font-size: 0.9rem;
-            margin-top: 12px;
-        }
-
-        .info-item {
-            display: flex;
             align-items: center;
-            gap: 8px;
-            white-space: nowrap;
+            height: calc(100vh - 70px); /* Full viewport height minus header */
+            scrollbar-width: none; /* Hide scrollbar for Firefox */
+            -ms-overflow-style: none; /* Hide scrollbar for IE/Edge */
+            position: relative; /* Ensure stable positioning */
+            box-sizing: border-box;
         }
 
-        .info-item i {
-            color: var(--primary);
+        #tos::-webkit-scrollbar {
+            display: none; /* Hide scrollbar for Chrome/Safari */
         }
 
-        .download-container {
-            margin-top: 15px;
-            padding-top: 12px;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        #tos h2 {
+            font-size: 2.6rem;
+            color: var(--accent-pink);
+            text-shadow: var(--glow-shadow-pink);
+            margin-bottom: 2.5rem;
         }
 
-        .download-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            background: var(--primary);
-            color: white;
-            padding: 12px 15px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 1rem;
-            transition: var(--transition);
-            text-align: center;
-            border: none;
-            cursor: pointer;
-            font-family: inherit;
-            width: 100%;
-            white-space: nowrap;
+        #tos i {
+            font-size: 2.5rem;
+            color: var(--accent-blue);
+            text-shadow: var(--glow-shadow-blue);
+            margin: 2rem auto;
         }
 
-        .download-btn:hover {
-            background: var(--primary-hover);
-            transform: scale(1.02);
+        #tos h3 {
+            color: var(--accent-blue);
+            font-size: 1.6rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            text-shadow: var(--glow-shadow-blue);
         }
 
-        /* How-to Section */
-        .how-to-content {
-            background: var(--bg-card);
-            border-radius: var(--border-radius);
-            padding: 30px;
-            margin-bottom: 30px;
-            border: 1px solid var(--border);
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .how-to-content:hover {
-            border-color: var(--primary);
-        }
-
-        .how-to-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 15px;
-            margin-bottom: 0;
-        }
-
-        .how-to-header-content {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .how-to-header i {
-            font-size: 2rem;
-            color: var(--primary);
-            transition: var(--transition);
-        }
-
-        .how-to-header h3 {
-            margin-bottom: 5px;
-            font-size: 1.5rem;
-        }
-
-        .how-to-header p {
+        #tos p, #tos ul {
+            font-family: 'Roboto Mono', monospace;
+            font-size: 0.95rem;
             color: var(--text-secondary);
-            font-size: 1rem;
+            margin-bottom: 1.2rem;
+            max-width: 900px; /* Constrain content width for readability */
+            width: 100%;
         }
 
-        .how-to-chevron {
-            font-size: 1.2rem;
-            transition: transform 0.3s ease;
+        #tos ul {
+            list-style-type: disc;
+            padding-left: 2rem;
+            margin-bottom: 2rem;
+            text-align: left; /* Left-align list items for readability */
         }
 
-        .how-to-steps {
-            padding-left: 20px;
-            margin: 20px 0;
-            display: none;
+        /* Ensure content stability during scroll */
+        #tos > * {
+            position: relative; /* Prevent content shifting */
+            transform: translateY(0); /* Lock position */
         }
 
-        .how-to-content.active .how-to-steps {
-            display: block;
+        /* =======================================
+           Contact Section
+           ======================================= */
+        #contact {
+            text-align: center;
         }
 
-        .how-to-content.active .how-to-chevron {
-            transform: rotate(180deg);
+        #contact h2 {
+            font-size: 2.6rem;
+            color: var(--accent-blue);
+            text-shadow: var(--glow-shadow-blue);
+            margin-bottom: 2.5rem;
         }
 
-        .how-to-content.active .how-to-header i {
-            color: var(--accent);
+        #contact p {
+            max-width: 800px;
+            font-family: 'Roboto Mono', monospace;
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
         }
 
-        .how-to-steps li {
-            margin-bottom: 15px;
-            line-height: 1.6;
-            font-size: 1.05rem;
+        #contact .discord-btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--accent-pink), var(--accent-blue));
+            color: #fff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            box-shadow: var(--glow-shadow-pink);
+            transition: var(--transition);
         }
 
-        .note {
-            background: rgba(255, 123, 172, 0.1);
-            border-left: 3px solid var(--accent);
-            padding: 15px;
-            border-radius: 4px;
-            margin: 20px 0;
-            font-size: 1rem;
+        #contact .discord-btn i {
+            font-size: 1.5rem;
+            margin-right: 0.5rem;
         }
 
-        /* About Tab - Improved Design */
-        .about-content {
-            background: var(--bg-card);
-            border-radius: var(--border-radius);
-            padding: 30px;
-            margin-bottom: 30px;
-            border: 1px solid var(--border);
+        #contact .discord-btn:hover {
+            box-shadow: var(--glow-shadow-blue);
         }
 
-        .about-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            margin-top: 20px;
+        /* =======================================
+           Footer
+           ======================================= */
+        footer {
+            padding: 2rem 2rem;
+            background: var(--bg-primary);
+            text-align: center;
+            border-top: 1px solid rgba(0, 191, 255, 0.2);
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-family: 'Roboto Mono', monospace;
         }
 
+        /* =======================================
+           Animations
+           ======================================= */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fade-up {
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        /* =======================================
+           Responsive
+           ======================================= */
         @media (max-width: 768px) {
-            .about-grid {
+            header {
+                flex-direction: column;
+                padding: 1rem 1rem;
+            }
+
+            nav ul {
+                gap: 1.2rem;
+                flex-wrap: wrap;
+            }
+
+            section {
+                padding: 2.5rem 1rem;
+            }
+
+            #home h1 {
+                font-size: 2.5rem;
+            }
+
+            #home p {
+                font-size: 1.1rem;
+            }
+
+            .feature-grid, .tool-grid {
                 grid-template-columns: 1fr;
             }
         }
 
-        .about-card {
-            background: rgba(22, 26, 38, 0.6);
-            border-radius: var(--border-radius);
-            padding: 25px;
-            border: 1px solid var(--border);
-            transition: var(--transition);
-        }
-
-        .about-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-        }
-
-        .about-card h3 {
-            font-size: 1.4rem;
-            margin-bottom: 15px;
-            color: var(--primary);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .about-card i {
-            font-size: 1.8rem;
-        }
-
-        /* Contact Tab */
-        .contact-content {
-            background: var(--bg-card);
-            border-radius: var(--border-radius);
-            padding: 50px 40px;
-            text-align: center;
-            border: 1px solid var(--border);
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .contact-icon {
-            font-size: 4rem;
-            color: var(--primary);
-            margin-bottom: 25px;
-        }
-
-        .contact-content h2 {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-            background: linear-gradient(90deg, var(--primary), var(--accent));
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .contact-content p {
-            color: var(--text-secondary);
-            max-width: 600px;
-            margin: 0 auto 30px;
-            line-height: 1.7;
-            font-size: 1.15rem;
-        }
-
-        .discord-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            background: #5865F2;
-            color: white;
-            padding: 18px 40px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 1.3rem;
-            transition: var(--transition);
-            border: none;
-            cursor: pointer;
-            font-family: inherit;
-            margin-top: 10px;
-            box-shadow: 0 8px 20px rgba(88, 101, 242, 0.4);
-        }
-
-        .discord-btn:hover {
-            background: #4752c4;
-            transform: translateY(-3px);
-            box-shadow: 0 12px 25px rgba(88, 101, 242, 0.5);
-        }
-
-        /* Footer */
-        footer {
-            background: var(--bg-header);
-            padding: 3rem 0;
-            text-align: center;
-            border-top: 1px solid var(--border);
-            margin-top: 2rem;
-            background-image: linear-gradient(to bottom, rgba(7, 8, 15, 0.8) 0%, var(--bg-header) 100%);
-        }
-
-        .footer-content {
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .footer-logo {
-            font-size: 1.8rem;
-            font-weight: bold;
-            margin-bottom: 1rem;
-            background: linear-gradient(90deg, var(--primary), var(--accent));
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .copyright {
-            color: var(--text-secondary);
-            font-size: 1rem;
-            margin-top: 1.2rem;
-            line-height: 1.6;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 1024px) {
-            .tools-grid {
-                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        @media (max-width: 576px) {
+            .logo {
+                font-size: 1.4rem;
             }
-        }
 
-        @media (max-width: 768px) {
-            h1 { font-size: 2.4rem; }
-            .dashboard-content h1 { font-size: 2.8rem; }
-            .dashboard-content p { font-size: 1.1rem; }
-            .feature-card { padding: 20px; }
-            .section-title { font-size: 1.8rem; }
-            .card-header { padding: 1.2rem; }
-            .card-body { padding: 1.2rem; }
-            .tab-btn { padding: 10px 20px; font-size: 1rem; }
-            .how-to-header {
-                flex-direction: column;
-                align-items: flex-start;
+            nav a {
+                font-size: 0.9rem;
             }
-            .tools-section-header {
-                padding: 3rem 0 1.5rem;
-            }
-            .tools-section-header h1 {
-                font-size: 2.4rem;
-            }
-            .contact-content {
-                padding: 30px 20px;
-            }
-        }
 
-        @media (max-width: 480px) {
-            h1 { font-size: 2rem; }
-            .dashboard-content { padding: 20px; }
-            .dashboard-content h1 { font-size: 2.2rem; }
-            .section-title { font-size: 1.6rem; }
-            .tool-card { border-radius: 8px; }
-            .continue-btn { width: 100%; padding: 14px; }
-            .tools-section-header h1 {
+            #home h1 {
                 font-size: 2rem;
             }
-            .tools-section-header p {
-                font-size: 1.1rem;
-            }
-            .card-header {
-                flex-direction: column;
-                text-align: center;
-                gap: 15px;
-            }
-            .card-header h3 {
-                flex-direction: column;
-                gap: 10px;
-            }
-            .version {
-                margin-left: 0;
-                margin-top: 8px;
+
+            .cta-button {
+                padding: 1rem 2rem;
+                font-size: 1rem;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="main-nav">
-        <div class="container nav-container">
-            <a href="#home" class="nav-link active" data-page="home"><i class="fas fa-home"></i> Home</a>
-            <a href="#tools" class="nav-link" data-page="tools"><i class="fas fa-tools"></i> Tools</a>
-            <a href="#contact" class="nav-link" data-page="contact"><i class="fas fa-envelope"></i> Contact</a>
-        </div>
-    </nav>
+    <header id="header">
+        <div class="logo">NeoForensics</div>
+        <nav>
+            <ul>
+                <li><a href="#home" class="tab-link active">Home</a></li>
+                <li><a href="#about" class="tab-link">About</a></li>
+                <li><a href="#features" class="tab-link">Features</a></li>
+                <li><a href="#tools" class="tab-link">Tools</a></li>
+                <li><a href="#pricing" class="tab-link">Pricing</a></li>
+                <li><a href="#tos" class="tab-link">TOS</a></li>
+                <li><a href="#contact" class="tab-link">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
 
-    <!-- Page Sections -->
-    <section id="home" class="page-section active">
-        <div class="dashboard-overlay"></div>
-        <div class="container">
-            <div class="dashboard-content">
-                <h1>Welcome to Ritzy's Forensic Tools</h1>
-                <p>Your premier destination for professional digital forensics and security analysis utilities. Our tools are designed by experts to help you uncover critical evidence, analyze system artifacts, and enhance your investigative capabilities.</p>
-                
-                <div class="features-grid">
-                    <div class="feature-card">
-                        <i class="fas fa-search"></i>
-                        <h3>Advanced Analysis</h3>
-                        <p>Deep dive into system artifacts with precision tools designed for forensic professionals.</p>
-                    </div>
-                    <div class="feature-card">
-                        <i class="fas fa-bolt"></i>
-                        <h3>Efficient Tools</h3>
-                        <p>Optimized utilities that deliver fast results without compromising on thoroughness.</p>
-                    </div>
-                    <div class="feature-card">
-                        <i class="fas fa-shield-alt"></i>
-                        <h3>Security Focused</h3>
-                        <p>Tools developed with security best practices to ensure reliable and safe operation.</p>
-                    </div>
+    <main>
+        <section id="home" class="active">
+            <i class="fas fa-fingerprint"></i>
+            <h1>Welcome to NeoForensics</h1>
+            <p>Empowering digital investigators with cutting-edge forensics tools in a vibrant, futuristic ecosystem. Discover advanced scanning and analysis – completely free.</p>
+            <button class="cta-button" data-target="#tools">Continue to Screenshare Experience</button>
+        </section>
+
+        <section id="about">
+            <i class="fas fa-microchip"></i>
+            <h2>About Our Tools</h2>
+            <p>NeoForensics is redefining digital forensics with innovative, accessible solutions. Our tools empower investigators to uncover critical evidence with unmatched efficiency.</p>
+            <p>Our mission is to provide professional-grade tools for free, hosted on GitHub to ensure transparency and community collaboration. We’re building the future of forensics.</p>
+        </section>
+
+        <section id="features">
+            <h2>What to Expect from Us</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <i class="fas fa-search"></i>
+                    <h3>Registry Scanning</h3>
+                    <p>Analyze MUICache, Store, BAM, DAM, and more to uncover hidden system activities.</p>
                 </div>
-                
-                <div class="btn-container">
-                    <button id="continue-btn" class="continue-btn">
-                        <i class="fas fa-arrow-right"></i> Continue to Tools
-                    </button>
+                <div class="feature-card">
+                    <i class="fas fa-cogs"></i>
+                    <h3>Process & Service Insights</h3>
+                    <p>Extract paths from processes and services, identify enabled or disabled critical services.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-list"></i>
+                    <h3>Jumplist Analysis</h3>
+                    <p>Capture custom and automatic jumplists for detailed user behavior insights.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-file-csv"></i>
+                    <h3>CSV Compatibility</h3>
+                    <p>Export results to CSV for seamless integration with timeline analysis tools.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-desktop"></i>
+                    <h3>Neon Interface</h3>
+                    <p>Immersive dark-mode design with vibrant neon accents for a professional experience.</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-lock-open"></i>
+                    <h3>Free Access</h3>
+                    <p>All tools are 100% free, with open-source code on GitHub for community trust.</p>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section id="tools" class="page-section">
-        <div class="tools-section-header">
-            <h1>Professional Forensic Tools</h1>
-            <p>Comprehensive utilities for digital forensics, incident response, and security analysis</p>
-        </div>
-        
-        <main class="container">
-            <div class="tabs-container">
-                <div class="tabs">
-                    <button class="tab-btn active" data-tab="tools-content">Tools</button>
-                    <button class="tab-btn" data-tab="how-to-content">How to Use</button>
-                    <button class="tab-btn" data-tab="about-content">About</button>
+        <section id="tools">
+            <h2>Our Forensics Tools</h2>
+            <p class="note">The "screenshare experience" is delivered through interactive demos, video tutorials, and detailed documentation in each tool's GitHub repository.</p>
+            <div class="tool-grid">
+                <div class="tool-card">
+                    <i class="fas fa-microscope"></i>
+                    <h3>RitzyScans</h3>
+                    <p>RitzyScans is a professional-grade registry scanner targeting MUICache, Store, BAM, DAM, and more. It extracts paths from processes and services, analyzes jumplists, and reports on service statuses. Results are exported to CSV for further analysis.</p>
+                    <a href="https://github.com/RitzySixx/RitzyScanner/releases/download/v1.0.0/RitzyScanner.exe" class="download-button">Download RitzyScans</a>
                 </div>
-                
-                <!-- Tools Tab -->
-                <div id="tools-content" class="tab-content active">
-                    <div class="tools-grid">
-                        <!-- Tool 1: Process Executions Analyzer -->
-                        <div class="tool-card">
-                            <div class="card-header">
-                                <div class="tool-icon"><i class="fas fa-search"></i></div>
-                                <div class="tool-info">
-                                    <h3>
-                                        <span>Service Execution Analyzer</span>
-                                        <span class="version">v2.0.0</span>
-                                    </h3>
-                                    <div class="tool-tags">
-                                        <span class="tag">Memory</span>
-                                        <span class="tag">Forensics</span>
-                                        <span class="tag">Windows</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <div class="quick-info">
-                                    <div class="info-item"><i class="fas fa-desktop"></i> Windows</div>
-                                    <div class="info-item"><i class="fas fa-memory"></i> 2GB+ RAM</div>
-                                    <div class="info-item"><i class="fas fa-download"></i> 1.2 MB</div>
-                                </div>
-                                <div class="download-container">
-                                    <a href="https://github.com/ritzysixx/Process-Executions/releases/download/V2.0.0/ProcessMemoryScanner.exe" class="download-btn">
-                                        <i class="fas fa-download"></i> Download (Windows)
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Tool 2: Registry Executions -->
-                        <div class="tool-card">
-                            <div class="card-header">
-                                <div class="tool-icon"><i class="fas fa-database"></i></div>
-                                <div class="tool-info">
-                                    <h3>
-                                        <span>Registry Executions Scanner</span>
-                                        <span class="version">v2.0.0</span>
-                                    </h3>
-                                    <div class="tool-tags">
-                                        <span class="tag">Registry</span>
-                                        <span class="tag">Forensics</span>
-                                        <span class="tag">Analysis</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <div class="quick-info">
-                                    <div class="info-item"><i class="fas fa-desktop"></i> Windows</div>
-                                    <div class="info-item"><i class="fas fa-memory"></i> 2GB+ RAM</div>
-                                    <div class="info-item"><i class="fas fa-download"></i> 1 MB</div>
-                                </div>
-                                <div class="download-container">
-                                    <a href="https://github.com/RitzySixx/Registry-Executions/releases/download/v2.0.0/RegistryParser.exe" class="download-btn">
-                                        <i class="fas fa-download"></i> Download (Windows)
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Tool 3: DMA Catcher -->
-                        <div class="tool-card">
-                            <div class="card-header">
-                                <div class="tool-icon"><i class="fas fa-shield-alt"></i></div>
-                                <div class="tool-info">
-                                    <h3>
-                                        <span>DMA Device Detector</span>
-                                        <span class="version">v1.0.0</span>
-                                    </h3>
-                                    <div class="tool-tags">
-                                        <span class="tag">DMA</span>
-                                        <span class="tag">Security</span>
-                                        <span class="tag">PowerShell</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <div class="quick-info">
-                                    <div class="info-item"><i class="fas fa-terminal"></i> PowerShell</div>
-                                    <div class="info-item"><i class="fas fa-memory"></i> 2GB+ RAM</div>
-                                    <div class="info-item"><i class="fas fa-download"></i> 5 MB</div>
-                                </div>
-                                <div class="download-container">
-                                    <a href="https://github.com/ritzysixx/dma-catcher/releases/download/V1.0.0/DMA.Catcher.ps1" class="download-btn">
-                                        <i class="fas fa-download"></i> Download (PowerShell)
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Tool 4: Timeline Explorer -->
-                        <div class="tool-card">
-                            <div class="card-header">
-                                <div class="tool-icon"><i class="fas fa-timeline"></i></div>
-                                <div class="tool-info">
-                                    <h3>
-                                        <span>Timeline Explorer</span>
-                                        <span class="version">v2.0.0.1</span>
-                                    </h3>
-                                    <div class="tool-tags">
-                                        <span class="tag">Timeline</span>
-                                        <span class="tag">Analysis</span>
-                                        <span class="tag">Visualization</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <div class="quick-info">
-                                    <div class="info-item"><i class="fas fa-desktop"></i> Windows</div>
-                                    <div class="info-item"><i class="fas fa-memory"></i> 4GB+ RAM</div>
-                                    <div class="info-item"><i class="fas fa-download"></i> 100 MB</div>
-                                </div>
-                                <div class="download-container">
-                                    <a href="https://download.ericzimmermanstools.com/net6/TimelineExplorer.zip" class="download-btn">
-                                        <i class="fas fa-download"></i> Download (Windows)
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Tool 5: Network Analyzer -->
-                        <div class="tool-card">
-                            <div class="card-header">
-                                <div class="tool-icon"><i class="fas fa-network-wired"></i></div>
-                                <div class="tool-info">
-                                    <h3>
-                                        <span>Network Traffic Analyzer</span>
-                                        <span class="version">v1.0.0</span>
-                                    </h3>
-                                    <div class="tool-tags">
-                                        <span class="tag">Network</span>
-                                        <span class="tag">Security</span>
-                                        <span class="tag">Analysis</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <div class="quick-info">
-                                    <div class="info-item"><i class="fas fa-desktop"></i> Multi-OS</div>
-                                    <div class="info-item"><i class="fas fa-memory"></i> 4GB+ RAM</div>
-                                    <div class="info-item"><i class="fas fa-download"></i> 15 MB</div>
-                                </div>
-                                <div class="download-container">
-                                <a href="javascript:void(0)" class="download-btn coming-soon-btn">
-                                    <i class="fas fa-lock"></i> Coming Soon
-                                </a>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Tool 6: Memory Imager -->
-                        <div class="tool-card">
-                            <div class="card-header">
-                                <div class="tool-icon"><i class="fas fa-microchip"></i></div>
-                                <div class="tool-info">
-                                    <h3>
-                                        <span>Memory Imager Pro</span>
-                                        <span class="version">v1.0.0</span>
-                                    </h3>
-                                    <div class="tool-tags">
-                                        <span class="tag">Memory</span>
-                                        <span class="tag">Acquisition</span>
-                                        <span class="tag">Forensics</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <div class="quick-info">
-                                    <div class="info-item"><i class="fas fa-desktop"></i> Windows</div>
-                                    <div class="info-item"><i class="fas fa-memory"></i> 8GB+ RAM</div>
-                                    <div class="info-item"><i class="fas fa-download"></i> 25 MB</div>
-                                </div>
-                                <div class="download-container">
-                                <a href="javascript:void(0)" class="download-btn coming-soon-btn">
-                                    <i class="fas fa-lock"></i> Coming Soon
-                                </a>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Tool 7: File Carver -->
-                        <div class="tool-card">
-                            <div class="card-header">
-                                <div class="tool-icon"><i class="fas fa-file"></i></div>
-                                <div class="tool-info">
-                                    <h3>
-                                        <span>Advanced File Carver</span>
-                                        <span class="version">v1.0.0</span>
-                                    </h3>
-                                    <div class="tool-tags">
-                                        <span class="tag">Data Recovery</span>
-                                        <span class="tag">Forensics</span>
-                                        <span class="tag">Analysis</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <div class="quick-info">
-                                    <div class="info-item"><i class="fas fa-desktop"></i> Multi-OS</div>
-                                    <div class="info-item"><i class="fas fa-memory"></i> 4GB+ RAM</div>
-                                    <div class="info-item"><i class="fas fa-download"></i> 8 MB</div>
-                                </div>
-                                <div class="download-container">
-                                <a href="javascript:void(0)" class="download-btn coming-soon-btn">
-                                    <i class="fas fa-lock"></i> Coming Soon
-                                </a>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Tool 8: Hash Analyzer -->
-                        <div class="tool-card">
-                            <div class="card-header">
-                                <div class="tool-icon"><i class="fas fa-fingerprint"></i></div>
-                                <div class="tool-info">
-                                    <h3>
-                                        <span>Hash Analyzer Pro</span>
-                                        <span class="version">v1.0.0</span>
-                                    </h3>
-                                    <div class="tool-tags">
-                                        <span class="tag">Hashing</span>
-                                        <span class="tag">Verification</span>
-                                        <span class="tag">Security</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <div class="quick-info">
-                                    <div class="info-item"><i class="fas fa-desktop"></i> Multi-OS</div>
-                                    <div class="info-item"><i class="fas fa-memory"></i> 2GB+ RAM</div>
-                                    <div class="info-item"><i class="fas fa-download"></i> 3 MB</div>
-                                </div>
-                                <div class="download-container">
-                                <a href="javascript:void(0)" class="download-btn coming-soon-btn">
-                                    <i class="fas fa-lock"></i> Coming Soon
-                                </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- How to Use Tab - Expanded with all tools -->
-                <div id="how-to-content" class="tab-content">
-                    <h2 class="section-title">How to Use Our Tools</h2>
-                    
-                    <div class="how-to-content">
-                        <div class="how-to-header">
-                            <div class="how-to-header-content">
-                                <i class="fas fa-search"></i>
-                                <div>
-                                    <h3>Service Execution Analyzer</h3>
-                                    <p>Step-by-step guide for using the Process Memory Scanner</p>
-                                </div>
-                            </div>
-                            <i class="fas fa-chevron-down how-to-chevron"></i>
-                        </div>
-                        
-                        <div class="how-to-steps">
-                            <div class="requirements">
-                                <strong>Requirements:</strong> Windows 7/Server 2008+, Administrator privileges, .NET Framework 4.8
-                            </div>
-                            
-                            <h4>Installation:</h4>
-                            <ol class="how-to-steps">
-                                <li>Download the executable file from the Tools section</li>
-                                <li>Place the file in a dedicated folder for forensic tools</li>
-                                <li>Right-click the executable and select "Run as administrator"</li>
-                                <li>Accept any security prompts from Windows Defender</li>
-                            </ol>
-                            
-                            <h4>Usage:</h4>
-                            <ol class="how-to-steps">
-                                <li>Select the process you want to analyze from the dropdown list</li>
-                                <li>Click the "Scan Process" button to begin memory analysis</li>
-                                <li>Review the results showing file paths and their status (present or deleted)</li>
-                                <li>Use the color coding to quickly identify suspicious entries (red = deleted, green = present)</li>
-                                <li>Export results to a text file using the "Export" button for documentation</li>
-                            </ol>
-                            
-                            <div class="note">
-                                <strong>Note:</strong> For best results, run this tool immediately after identifying suspicious activity to capture relevant memory artifacts before they're cleared.
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="how-to-content">
-                        <div class="how-to-header">
-                            <div class="how-to-header-content">
-                                <i class="fas fa-database"></i>
-                                <div>
-                                    <h3>Registry Executions Analyzer</h3>
-                                    <p>Comprehensive guide to using the Registry Executions tool</p>
-                                </div>
-                            </div>
-                            <i class="fas fa-chevron-down how-to-chevron"></i>
-                        </div>
-                        
-                        <div class="how-to-steps">
-                            <h4>Installation:</h4>
-                            <ol class="how-to-steps">
-                                <li>Download the executable from the Tools section</li>
-                                <li>Extract the ZIP file to your preferred location</li>
-                                <li>Install .NET Core 3.1 Runtime if not already installed</li>
-                                <li>Double-click the executable to launch the application</li>
-                            </ol>
-                            
-                            <h4>Usage:</h4>
-                            <ol class="how-to-steps">
-                                <li>Upon launch, the tool will automatically scan common registry locations</li>
-                                <li>Use the filter options to narrow down results by registry key or value</li>
-                                <li>Right-click any entry to access context menu options</li>
-                                <li>Select "Open File Location" to navigate to the executable path</li>
-                                <li>Toggle between dark and light themes using the settings menu</li>
-                                <li>Export results to CSV format for further analysis</li>
-                            </ol>
-                            
-                            <div class="note">
-                                <strong>Tip:</strong> Focus on entries marked as "Deleted" as these often indicate attempts to hide malicious activity. Cross-reference with other evidence.
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="how-to-content">
-                        <div class="how-to-header">
-                            <div class="how-to-header-content">
-                                <i class="fas fa-shield-alt"></i>
-                                <div>
-                                    <h3>DMA Device Detector</h3>
-                                    <p>Using the PowerShell-based DMA detection script</p>
-                                </div>
-                            </div>
-                            <i class="fas fa-chevron-down how-to-chevron"></i>
-                        </div>
-                        
-                        <div class="how-to-steps">
-                            <h4>Installation:</h4>
-                            <ol class="how-to-steps">
-                                <li>Download the PowerShell script from the Tools section</li>
-                                <li>Save the file with a .ps1 extension</li>
-                                <li>Open PowerShell as Administrator</li>
-                                <li>Set execution policy: <code>Set-ExecutionPolicy RemoteSigned</code></li>
-                            </ol>
-                            
-                            <h4>Usage:</h4>
-                            <ol class="how-to-steps">
-                                <li>Navigate to the directory containing the script</li>
-                                <li>Run the command: <code>.\DMA.Catcher.ps1</code></li>
-                                <li>Review the list of detected DMA-capable devices</li>
-                                <li>Investigate any unknown devices using the provided research links</li>
-                                <li>Check the generated log file (DMA_Report_YYYYMMDD.txt) for detailed information</li>
-                                <li>For comprehensive analysis, run the tool before and after connecting new devices</li>
-                            </ol>
-                            
-                            <div class="note">
-                                <strong>Security Note:</strong> Always verify the integrity of PowerShell scripts before execution. Consider setting execution policy back to "Restricted" after use for security.
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="how-to-content">
-                        <div class="how-to-header">
-                            <div class="how-to-header-content">
-                                <i class="fas fa-timeline"></i>
-                                <div>
-                                    <h3>Timeline Explorer</h3>
-                                    <p>Guide for visualizing timeline data</p>
-                                </div>
-                            </div>
-                            <i class="fas fa-chevron-down how-to-chevron"></i>
-                        </div>
-                        
-                        <div class="how-to-steps">
-                            <h4>Installation:</h4>
-                            <ol class="how-to-steps">
-                                <li>Download the ZIP file from the Tools section</li>
-                                <li>Extract the contents to your preferred location</li>
-                                <li>Ensure .NET 6.0 Runtime is installed</li>
-                                <li>Run the executable file to launch the application</li>
-                            </ol>
-                            
-                            <h4>Usage:</h4>
-                            <ol class="how-to-steps">
-                                <li>Import timeline data from CSV or other supported formats</li>
-                                <li>Use the timeline view to navigate through chronological events</li>
-                                <li>Filter events by type, keywords, or time range</li>
-                                <li>Group events by time intervals for better analysis</li>
-                                <li>Export your findings to various formats for reporting</li>
-                            </ol>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- About Tab -->
-                <div id="about-content" class="tab-content">
-                    <h2 class="section-title">About Ritzy's Forensic Tools</h2>
-                    
-                    <div class="about-content">
-                        <p>Ritzy's Forensic Tools is a comprehensive collection of professional utilities designed for digital forensics, incident response, and security analysis. Our tools are developed by industry experts with years of experience in cybersecurity and digital investigations.</p>
-                        
-                        <div class="about-grid">
-                            <div class="about-card">
-                                <h3><i class="fas fa-bullseye"></i> Our Mission</h3>
-                                <p>We aim to provide security professionals with efficient, reliable tools that simplify complex forensic tasks while maintaining the highest standards of accuracy and integrity.</p>
-                            </div>
-                            
-                            <div class="about-card">
-                                <h3><i class="fas fa-history"></i> Our Journey</h3>
-                                <p>Founded in 2023, Ritzy's Forensic Tools started as a passion project to solve real-world forensic challenges. Today, our tools are used by thousands of professionals worldwide.</p>
-                            </div>
-                            
-                            <div class="about-card">
-                                <h3><i class="fas fa-check-circle"></i> Accuracy Commitment</h3>
-                                <p>All our tools undergo rigorous testing and validation to ensure they meet professional standards. We maintain 100% accuracy in artifact detection and reporting.</p>
-                            </div>
-                            
-                            <div class="about-card">
-                                <h3><i class="fas fa-lock"></i> Security Focus</h3>
-                                <p>Security is at the core of our development process. Each tool is designed with secure coding practices, minimal dependencies, and regular security audits.</p>
-                            </div>
-                        </div>
-                    </div>
+                <div class="tool-card">
+                    <i class="fas fa-clock"></i>
+                    <h3>Timeline Explorer (by Eric Zimmerman)</h3>
+                    <p>Analyze RitzyScans' CSV exports with Eric Zimmerman's Timeline Explorer. This tool offers advanced filtering, grouping, and visualization for forensic timelines.</p>
+                    <a href="https://download.ericzimmermanstools.com/net6/TimelineExplorer.zip" class="download-button">Download Timeline Explorer</a>
                 </div>
             </div>
-        </main>
-    </section>
+        </section>
 
-    <!-- Contact Section -->
-    <section id="contact" class="page-section">
-        <div class="container">
-            <div class="contact-content">
-                <div class="contact-icon">
-                    <i class="fab fa-discord"></i>
-                </div>
-                <h2>Join Our Community</h2>
-                <p>Connect with other forensic professionals, get support for our tools, share your findings, and stay updated with the latest developments in digital forensics.</p>
-                <a href="https://discord.gg/VyyFH9pAtv" target="_blank" class="discord-btn">
-                    <i class="fab fa-discord"></i> Join Our Discord Server
-                </a>
-                <p style="margin-top: 30px; font-size: 1rem;">
-                    For direct inquiries: <a href="mailto:support@ritzyforensics.com" style="color: var(--primary);">support@ritzyforensics.com</a>
-                </p>
+        <section id="pricing">
+            <h2>Pricing</h2>
+            <div class="pricing-card">
+                <i class="fas fa-dollar-sign"></i>
+                <h3>100% Free</h3>
+                <p>NeoForensics tools are entirely free with no subscriptions or hidden costs. We believe in making advanced forensics accessible to all investigators.</p>
             </div>
-        </div>
-    </section>
+        </section>
+
+<section id="tos">
+    <div style="height: 2rem;"></div> <!-- Spacer to push content down -->
+    <h2>Terms of Service</h2>
+    <i class="fas fa-file-contract"></i>
+    <p>Last Updated: August 27, 2025</p>
+    <p>By using NeoForensics' website or tools, you agree to these Terms of Service ("TOS"). If you do not agree, please do not use our services.</p>
+    
+    <h3>.</h3>
+    <h3>.</h3>
+    <h3>.</h3>
+    <h3>.</h3>
+
+    <h3>1. Acceptance of Terms</h3>
+    <p>These TOS are a binding agreement between you and NeoForensics ("Company"). We may update terms, and continued use implies acceptance.</p>
+    
+    <h3>2. Service Description</h3>
+    <p>Our tools are hosted statically on GitHub for download. No accounts or logins are required. They are designed for digital forensics.</p>
+    
+    <h3>3. User Responsibilities</h3>
+    <ul>
+        <li>Use tools in compliance with applicable laws.</li>
+        <li>Ensure responsible data handling.</li>
+        <li>Do not modify, reverse engineer, or redistribute without permission.</li>
+        <li>Report issues to support promptly.</li>
+    </ul>
+    
+    <h3>4. Intellectual Property</h3>
+    <p>Content and tools are owned by the Company or licensors. You receive a limited license for forensic use.</p>
+    
+    <h3>5. Third-Party Tools</h3>
+    <p>Links to tools like Timeline Explorer are provided for compatibility. We are not responsible for third-party content.</p>
+    
+    <h3>6. Disclaimer of Warranties</h3>
+    <p>Services are "AS IS" with no warranties for merchantability, fitness, or non-infringement.</p>
+    
+    <h3>7. Limitation of Liability</h3>
+    <p>We are not liable for indirect, incidental, or consequential damages from tool use.</p>
+    
+    <h3>8. Indemnification</h3>
+    <p>You indemnify the Company against claims arising from your use.</p>
+    
+    <h3>9. Governing Law</h3>
+    <p>Governed by California law, excluding conflict principles.</p>
+    
+    <h3>10. Contact</h3>
+    <p>Email support@neoforensics.com for questions.</p>
+    <div style="height: 2rem;"></div> <!-- Bottom spacer for scroll comfort -->
+</section>
+
+        <section id="contact">
+            <h2>Contact Us</h2>
+            <p>Reach out via GitHub or email at support@neoforensics.com for support, feedback, or inquiries. We're committed to advancing your forensic investigations.</p>
+            <a href="https://discord.com/users/riddysix" target="_blank" class="discord-btn">
+                <i class="fab fa-discord"></i> riddysix
+            </a>
+        </section>
+    </main>
 
     <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-logo">Ritzy's Forensic Tools</div>
-                <p class="copyright">© 2023 Ritzy's Forensic Tools. All rights reserved.<br>Professional utilities for digital forensics and security professionals.</p>
-            </div>
-        </div>
+        <p>&copy; 2025 NeoForensics. All rights reserved. Hosted on GitHub Pages.</p>
     </footer>
-    
+
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Navigation and Routing
-            const navLinks = document.querySelectorAll('.nav-link');
-            const pageSections = document.querySelectorAll('.page-section');
-            const tabBtns = document.querySelectorAll('.tab-btn');
-            const tabContents = document.querySelectorAll('.tab-content');
-            const howToSections = document.querySelectorAll('.how-to-content');
-            
-            // Set active page based on hash
-            function setActivePage() {
-                const hash = window.location.hash || '#home';
-                
-                // Update nav links
-                navLinks.forEach(link => {
-                    link.classList.remove('active');
-                    if (link.getAttribute('href') === hash) {
-                        link.classList.add('active');
-                    }
-                });
-                
-                // Show active page section
-                pageSections.forEach(section => {
-                    section.classList.remove('active');
-                    if (section.id === hash.substring(1)) {
-                        section.classList.add('active');
-                    }
-                });
-                
-                // If on tools page, set first tab as active
-                if (hash === '#tools') {
-                    setActiveTab('tools-content');
-                }
-                
-                // Scroll to top of the active section
-                window.scrollTo(0, 0);
-            }
-            
-            // Set active tab
-            function setActiveTab(tabId) {
-                // Hide all tab contents
-                tabContents.forEach(content => {
-                    content.classList.remove('active');
-                });
-                
-                // Remove active class from all tab buttons
-                tabBtns.forEach(btn => {
-                    btn.classList.remove('active');
-                });
-                
-                // Show selected tab content
-                const tabContent = document.getElementById(tabId);
-                if (tabContent) {
-                    tabContent.classList.add('active');
-                }
-                
-                // Activate the button
-                const tabButton = document.querySelector(`.tab-btn[data-tab="${tabId}"]`);
-                if (tabButton) {
-                    tabButton.classList.add('active');
-                }
-            }
-            
-            // Initialize page
-            setActivePage();
-            
-            // Navigation event listeners
-            navLinks.forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const targetPage = this.getAttribute('href');
-                    window.location.hash = targetPage;
-                    setActivePage();
-                });
+        // =======================================
+        // Tab Switching - Fixed Scrolling
+        // =======================================
+        const tabLinks = document.querySelectorAll('.tab-link');
+        const sections = document.querySelectorAll('section');
+        const ctaButton = document.querySelector('.cta-button');
+
+        function switchTab(targetId) {
+            sections.forEach(section => {
+                section.classList.remove('active');
+                section.style.display = 'none'; // Ensure hidden
             });
-            
-            // Tab event listeners
-            tabBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const tabId = this.getAttribute('data-tab');
-                    setActiveTab(tabId);
-                });
-            });
-            
-            // How-to section event listeners
-            howToSections.forEach(section => {
-                const header = section.querySelector('.how-to-header');
-                header.addEventListener('click', function() {
-                    // Close all other sections
-                    howToSections.forEach(s => {
-                        if (s !== section) {
-                            s.classList.remove('active');
-                        }
-                    });
-                    
-                    // Toggle current section
-                    section.classList.toggle('active');
-                });
-            });
-            
-            // Continue button functionality
-            const continueBtn = document.getElementById('continue-btn');
-            if (continueBtn) {
-                continueBtn.addEventListener('click', function() {
-                    window.location.hash = '#tools';
-                    setActivePage();
-                    
-                    // Ensure tools tab is active
-                    setTimeout(() => {
-                        setActiveTab('tools-content');
-                    }, 100);
-                });
+            const targetSection = document.querySelector(targetId);
+            if (targetSection) {
+                targetSection.classList.add('active');
+                targetSection.style.display = 'flex';
+                targetSection.scrollTop = 0; // Reset scroll position
             }
-            
-            // Handle hash changes
-            window.addEventListener('hashchange', setActivePage);
-            
-            // Card animations
-            const toolCards = document.querySelectorAll('.tool-card');
-            
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.opacity = 1;
-                        entry.target.style.transform = 'translateY(0)';
-                    }
-                });
-            }, { threshold: 0.1 });
-            
-            toolCards.forEach(card => {
-                card.style.opacity = 0;
-                card.style.transform = 'translateY(20px)';
-                card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-                observer.observe(card);
+            tabLinks.forEach(link => link.classList.remove('active'));
+            tabLinks.forEach(link => {
+                if (link.getAttribute('href') === targetId) link.classList.add('active');
+            });
+        }
+
+        tabLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                switchTab(link.getAttribute('href'));
             });
         });
+
+        if (ctaButton) {
+            ctaButton.addEventListener('click', () => switchTab(ctaButton.getAttribute('data-target')));
+        }
+
+        // Initial load
+        switchTab('#home');
+
+        // =======================================
+        // Animation Observer
+        // =======================================
+        const animateElements = document.querySelectorAll('.feature-card, .tool-card, p, h2, h3, .pricing-card, i');
+        const elementObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-fade-up');
+                    elementObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.3 });
+
+        animateElements.forEach(el => elementObserver.observe(el));
     </script>
 </body>
 </html>
