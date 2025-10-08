@@ -1,825 +1,211 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="NeoForensics: Cutting-edge forensics tools for digital investigators. Download RitzyScans and complementary tools in a futuristic, dark-mode interface.">
-    <title>NeoForensics - Futuristic Forensics Solutions</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Roboto+Mono:wght@300;400;500&display=swap">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <style>
-        /* =======================================
-           Root Variables - Pink and Blue Theme in Dark Mode
-           ======================================= */
-        :root {
-            --bg-primary: #0a0a0a; /* Deep black background */
-            --bg-secondary: #0a0a0a; /* Uniform dark for no gray */
-            --bg-accent: #0a0a0a; /* No gray accents */
-            --text-primary: #e0e0e0; /* Light text */
-            --text-secondary: #b0b0b0; /* Muted text */
-            --accent-blue: #00bfff; /* Neon blue */
-            --accent-pink: #ff00ff; /* Neon pink */
-            --gradient-bg: linear-gradient(135deg, #0a0a0a, #141414); /* Subtle dark gradient */
-            --glow-shadow-blue: 0 0 10px rgba(0, 191, 255, 0.6);
-            --glow-shadow-pink: 0 0 10px rgba(255, 0, 255, 0.6);
-            --transition: all 0.3s ease-in-out;
-            --border-radius: 10px;
-            --spacing-unit: 1.5rem;
-        }
-
-        /* =======================================
-           Global Styles - Full Width, No Side Bars
-           ======================================= */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        html, body {
-            height: 100%;
-            width: 100%;
-            font-family: 'Orbitron', sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: 1.7;
-            overflow: hidden; /* Prevent body scroll */
-        }
-
-        /* =======================================
-           Header - Full Width
-           ======================================= */
-        header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background: rgba(10, 10, 10, 0.98);
-            backdrop-filter: blur(8px);
-            padding: var(--spacing-unit) 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 1000;
-            box-shadow: var(--glow-shadow-blue);
-            transition: var(--transition);
-        }
-
-        header.scrolled {
-            padding: calc(var(--spacing-unit) / 1.5) 2rem;
-            box-shadow: var(--glow-shadow-pink);
-        }
-
-        .logo {
-            font-size: 1.7rem;
-            font-weight: 700;
-            color: var(--accent-blue);
-            text-shadow: 0 0 6px var(--accent-blue);
-            letter-spacing: 2px;
-        }
-
-        nav ul {
-            display: flex;
-            list-style: none;
-            gap: 2.5rem;
-        }
-
-        nav a {
-            color: var(--text-primary);
-            text-decoration: none;
-            font-size: 1rem;
-            font-weight: 500;
-            position: relative;
-            padding: 0.4rem 1rem;
-            border-radius: var(--border-radius);
-            transition: var(--transition);
-        }
-
-        nav a:hover, nav a.active {
-            color: var(--accent-pink);
-            background: rgba(255, 0, 255, 0.05);
-            text-shadow: 0 0 4px var(--accent-pink);
-        }
-
-        nav a::after {
-            content: '';
-            position: absolute;
-            bottom: -6px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0;
-            height: 2px;
-            background: var(--accent-blue);
-            transition: var(--transition);
-        }
-
-        nav a:hover::after, nav a.active::after {
-            width: 50%;
-        }
-
-        /* =======================================
-           Main Content - Fixed Scrolling
-           ======================================= */
-        main {
-            flex: 1;
-            position: relative;
-            margin-top: 70px;
-            width: 100%;
-            height: calc(100vh - 70px);
-            overflow: hidden; /* Prevent main scroll */
-        }
-
-        /* =======================================
-           Section Styles - Controlled Scrolling
-           ======================================= */
-        section {
-            display: none;
-            padding: 4rem 2rem;
-            width: 100%;
-            min-height: calc(100vh - 70px);
-            max-height: calc(100vh - 70px);
-            overflow-y: auto; /* Scroll only when content overflows */
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.6s ease, transform 0.6s ease;
-            position: absolute;
-            top: 0;
-            left: 0;
-            background: var(--gradient-bg);
-        }
-
-        section.active {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            opacity: 1;
-            transform: translateY(0);
-            position: relative;
-        }
-
-        section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle, rgba(0, 191, 255, 0.05), transparent 70%);
-            opacity: 0.5;
-            z-index: -1;
-        }
-
-        /* =======================================
-           Home Section
-           ======================================= */
-        #home {
-            text-align: center;
-        }
-
-        #home i {
-            font-size: 3rem;
-            color: var(--accent-blue);
-            text-shadow: var(--glow-shadow-blue);
-            margin-bottom: 2rem;
-        }
-
-        #home h1 {
-            font-size: 3.2rem;
-            margin-bottom: 2rem;
-            color: var(--accent-blue);
-            text-shadow: var(--glow-shadow-blue);
-            letter-spacing: 2.5px;
-            font-weight: 700;
-        }
-
-        #home p {
-            font-size: 1.3rem;
-            max-width: 700px;
-            margin: 0 auto 3rem;
-            color: var(--text-secondary);
-            font-family: 'Roboto Mono', monospace;
-        }
-
-        .cta-button {
-            padding: 1.2rem 3rem;
-            background: linear-gradient(135deg, var(--accent-pink), var(--accent-blue));
-            border: none;
-            color: #fff;
-            font-size: 1.2rem;
-            font-weight: 600;
-            cursor: pointer;
-            border-radius: 50px;
-            box-shadow: var(--glow-shadow-pink);
-            transition: var(--transition);
-        }
-
-        .cta-button:hover {
-            box-shadow: var(--glow-shadow-blue);
-            transform: scale(1.06);
-        }
-
-        /* =======================================
-           About Section
-           ======================================= */
-        #about {
-            text-align: center;
-        }
-
-        #about i {
-            font-size: 2.5rem;
-            color: var(--accent-pink);
-            text-shadow: var(--glow-shadow-pink);
-            margin-bottom: 2rem;
-        }
-
-        #about h2 {
-            font-size: 2.6rem;
-            color: var(--accent-pink);
-            text-shadow: var(--glow-shadow-pink);
-            margin-bottom: 2.5rem;
-        }
-
-        #about p {
-            font-size: 1.15rem;
-            max-width: 800px;
-            margin: 0 auto 1.5rem;
-            color: var(--text-secondary);
-            font-family: 'Roboto Mono', monospace;
-        }
-
-        /* =======================================
-           Features Section
-           ======================================= */
-        #features {
-            text-align: center;
-        }
-
-        #features h2 {
-            font-size: 2.6rem;
-            color: var(--accent-blue);
-            text-shadow: var(--glow-shadow-blue);
-            margin-bottom: 3rem;
-        }
-
-        .feature-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            width: 100%;
-            max-width: 1200px;
-        }
-
-        .feature-card {
-            background: transparent;
-            padding: 2rem;
-            border-radius: var(--border-radius);
-            box-shadow: var(--glow-shadow-pink);
-            transition: var(--transition);
-            text-align: center;
-            border: 1px solid rgba(255, 0, 255, 0.1);
-        }
-
-        .feature-card:hover {
-            box-shadow: var(--glow-shadow-blue);
-        }
-
-        .feature-card i {
-            font-size: 2rem;
-            color: var(--accent-blue);
-            text-shadow: var(--glow-shadow-blue);
-            margin-bottom: 1rem;
-        }
-
-        .feature-card h3 {
-            color: var(--accent-pink);
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .feature-card p {
-            font-family: 'Roboto Mono', monospace;
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-        }
-
-        /* =======================================
-           Tools Section
-           ======================================= */
-        #tools {
-            text-align: center;
-        }
-
-        #tools h2 {
-            font-size: 2.6rem;
-            color: var(--accent-pink);
-            text-shadow: var(--glow-shadow-pink);
-            margin-bottom: 2.5rem;
-        }
-
-        #tools p.note {
-            max-width: 800px;
-            margin: 0 auto 3rem;
-            font-family: 'Roboto Mono', monospace;
-            color: var(--text-secondary);
-        }
-
-        .tool-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2.5rem;
-            width: 100%;
-            max-width: 1200px;
-        }
-
-        .tool-card {
-            background: transparent;
-            padding: 2.5rem;
-            border-radius: var(--border-radius);
-            box-shadow: var(--glow-shadow-blue);
-            transition: var(--transition);
-            border: 1px solid rgba(0, 191, 255, 0.1);
-        }
-
-        .tool-card:hover {
-            box-shadow: var(--glow-shadow-pink);
-        }
-
-        .tool-card i {
-            font-size: 2.2rem;
-            color: var(--accent-pink);
-            text-shadow: var(--glow-shadow-pink);
-            margin-bottom: 1.5rem;
-        }
-
-        .tool-card h3 {
-            color: var(--accent-blue);
-            font-size: 1.8rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .tool-card p {
-            font-size: 1rem;
-            margin-bottom: 2rem;
-            color: var(--text-secondary);
-            font-family: 'Roboto Mono', monospace;
-        }
-
-        .download-button {
-            padding: 1rem 2rem;
-            background: linear-gradient(135deg, var(--accent-blue), var(--accent-pink));
-            color: #fff;
-            text-decoration: none;
-            border-radius: 50px;
-            font-weight: 600;
-            box-shadow: var(--glow-shadow-blue);
-            transition: var(--transition);
-        }
-
-        .download-button:hover {
-            box-shadow: var(--glow-shadow-pink);
-        }
-
-        /* =======================================
-           Pricing Section
-           ======================================= */
-        #pricing {
-            text-align: center;
-        }
-
-        #pricing h2 {
-            font-size: 2.6rem;
-            color: var(--accent-blue);
-            text-shadow: var(--glow-shadow-blue);
-            margin-bottom: 2.5rem;
-        }
-
-        .pricing-card {
-            max-width: 600px;
-            background: transparent;
-            padding: 3rem;
-            border-radius: var(--border-radius);
-            box-shadow: var(--glow-shadow-pink);
-            width: 100%;
-            border: 1px solid rgba(255, 0, 255, 0.1);
-        }
-
-        .pricing-card i {
-            font-size: 2.5rem;
-            color: var(--accent-pink);
-            text-shadow: var(--glow-shadow-pink);
-            margin-bottom: 1.5rem;
-        }
-
-        .pricing-card h3 {
-            color: var(--accent-blue);
-            font-size: 2rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .pricing-card p {
-            font-size: 1.1rem;
-            color: var(--text-secondary);
-            font-family: 'Roboto Mono', monospace;
-        }
-
-        /* =======================================
-           TOS Section - Scrollable
-           ======================================= */
-        #tos {
-            text-align: center; /* Center all content */
-            max-width: 100%; /* Full width */
-            width: 100%;
-            overflow-y: auto; /* Enable scrolling when content overflows */
-            padding: 6rem 2rem 4rem; /* Increased top padding to ensure visibility */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            height: calc(100vh - 70px); /* Full viewport height minus header */
-            scrollbar-width: none; /* Hide scrollbar for Firefox */
-            -ms-overflow-style: none; /* Hide scrollbar for IE/Edge */
-            position: relative; /* Ensure stable positioning */
-            box-sizing: border-box;
-        }
-
-        #tos::-webkit-scrollbar {
-            display: none; /* Hide scrollbar for Chrome/Safari */
-        }
-
-        #tos h2 {
-            font-size: 2.6rem;
-            color: var(--accent-pink);
-            text-shadow: var(--glow-shadow-pink);
-            margin-bottom: 2.5rem;
-        }
-
-        #tos i {
-            font-size: 2.5rem;
-            color: var(--accent-blue);
-            text-shadow: var(--glow-shadow-blue);
-            margin: 2rem auto;
-        }
-
-        #tos h3 {
-            color: var(--accent-blue);
-            font-size: 1.6rem;
-            margin-top: 2rem;
-            margin-bottom: 1rem;
-            text-shadow: var(--glow-shadow-blue);
-        }
-
-        #tos p, #tos ul {
-            font-family: 'Roboto Mono', monospace;
-            font-size: 0.95rem;
-            color: var(--text-secondary);
-            margin-bottom: 1.2rem;
-            max-width: 900px; /* Constrain content width for readability */
-            width: 100%;
-        }
-
-        #tos ul {
-            list-style-type: disc;
-            padding-left: 2rem;
-            margin-bottom: 2rem;
-            text-align: left; /* Left-align list items for readability */
-        }
-
-        /* Ensure content stability during scroll */
-        #tos > * {
-            position: relative; /* Prevent content shifting */
-            transform: translateY(0); /* Lock position */
-        }
-
-        /* =======================================
-           Contact Section
-           ======================================= */
-        #contact {
-            text-align: center;
-        }
-
-        #contact h2 {
-            font-size: 2.6rem;
-            color: var(--accent-blue);
-            text-shadow: var(--glow-shadow-blue);
-            margin-bottom: 2.5rem;
-        }
-
-        #contact p {
-            max-width: 800px;
-            font-family: 'Roboto Mono', monospace;
-            color: var(--text-secondary);
-            font-size: 1.1rem;
-            margin-bottom: 2rem;
-        }
-
-        #contact .discord-btn {
-            display: inline-flex;
-            align-items: center;
-            padding: 1rem 2rem;
-            background: linear-gradient(135deg, var(--accent-pink), var(--accent-blue));
-            color: #fff;
-            text-decoration: none;
-            border-radius: 50px;
-            font-weight: 600;
-            box-shadow: var(--glow-shadow-pink);
-            transition: var(--transition);
-        }
-
-        #contact .discord-btn i {
-            font-size: 1.5rem;
-            margin-right: 0.5rem;
-        }
-
-        #contact .discord-btn:hover {
-            box-shadow: var(--glow-shadow-blue);
-        }
-
-        /* =======================================
-           Footer
-           ======================================= */
-        footer {
-            padding: 2rem 2rem;
-            background: var(--bg-primary);
-            text-align: center;
-            border-top: 1px solid rgba(0, 191, 255, 0.2);
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-            font-family: 'Roboto Mono', monospace;
-        }
-
-        /* =======================================
-           Animations
-           ======================================= */
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .animate-fade-up {
-            animation: fadeInUp 0.8s ease forwards;
-        }
-
-        /* =======================================
-           Responsive
-           ======================================= */
-        @media (max-width: 768px) {
-            header {
-                flex-direction: column;
-                padding: 1rem 1rem;
-            }
-
-            nav ul {
-                gap: 1.2rem;
-                flex-wrap: wrap;
-            }
-
-            section {
-                padding: 2.5rem 1rem;
-            }
-
-            #home h1 {
-                font-size: 2.5rem;
-            }
-
-            #home p {
-                font-size: 1.1rem;
-            }
-
-            .feature-grid, .tool-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .logo {
-                font-size: 1.4rem;
-            }
-
-            nav a {
-                font-size: 0.9rem;
-            }
-
-            #home h1 {
-                font-size: 2rem;
-            }
-
-            .cta-button {
-                padding: 1rem 2rem;
-                font-size: 1rem;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ritzy's Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+/* Reset & base */
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins', sans-serif; }
+body { overflow:hidden; background:#0a001a; color:#fff; }
+
+/* Top Bar */
+header {
+  position:fixed; top:0; left:0; width:100%; height:60px;
+  display:flex; align-items:center; justify-content:center;
+  background: linear-gradient(90deg, #0a001a, #4b0082, #0a001a);
+  font-weight:600; font-size:1.5em; z-index:1000;
+  box-shadow:0 0 10px #8000ff;
+}
+
+/* Bubble background */
+.bubbles { position:absolute; width:100%; height:100%; overflow:hidden; z-index:0; }
+.bubble {
+  position:absolute; bottom:-50px; border-radius:50%;
+  animation-name:rise; animation-timing-function:linear; animation-iteration-count:infinite;
+  background: rgba(128,0,128,0.2);
+}
+@keyframes rise {
+  0% { transform: translateY(0) scale(1); opacity:1; }
+  100% { transform: translateY(-1200px) scale(1.5); opacity:0; }
+}
+
+/* Home Page */
+.page { height:100vh; width:100%; display:none; justify-content:center; align-items:center; flex-direction:column; text-align:center; position:relative; z-index:10; }
+.page.active { display:flex; }
+
+.home-title {
+  font-size:4em; background:linear-gradient(90deg,#8000ff,#4b0082); -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  animation: pulse 3s infinite;
+  text-shadow: 0 0 10px #8000ff;
+}
+@keyframes pulse { 0%,100%{ transform:scale(1); }50%{ transform:scale(1.03); } }
+
+.home-subtitle { font-size:1.5em; margin:10px 0; opacity:0.8; text-shadow: 0 0 5px #8000ff; }
+
+.home-button {
+  background:linear-gradient(90deg,#8000ff,#4b0082); border:none; padding:20px 50px; border-radius:50px; font-size:1.5em; cursor:pointer; transition:0.3s;
+  box-shadow:0 0 10px #8000ff;
+}
+.home-button:hover { transform:scale(1.05); box-shadow:0 0 20px #8000ff; }
+
+/* Dashboard Layout */
+#dashboard { flex-direction:row; height:100vh; width:100%; display:none; position:relative; }
+#dashboard.active { display:flex; }
+
+/* Sidebar */
+.sidebar {
+  width:250px; background: rgba(0,0,0,0.9); padding:20px; overflow-y:auto; border-right:2px solid #8000ff;
+  position:fixed; top:60px; bottom:0; left:0;
+}
+.sidebar h2 { text-align:center; margin-bottom:20px; color:#8000ff; text-shadow:0 0 5px #8000ff; }
+.tab { padding:15px; margin:10px 0; background: #4b0082; border-radius:12px; cursor:pointer; text-align:center; color:#fff; transition:0.3s; border: 2px solid transparent; }
+.tab:hover { background: #6a0dad; }
+.tab.active { background: #8000ff; font-weight:600; border-color: #fff; }
+
+/* Content Area */
+.content {
+  margin-left:280px; padding:80px 40px; flex:1; height:calc(100vh - 60px); overflow-y:auto;
+  background: rgba(0,0,0,0.5); border-radius:10px;
+}
+.content h1 { margin-bottom:20px; color:#8000ff; }
+.content p { font-size:1.1em; line-height:1.5; opacity:0.9; }
+
+/* Scrollbar styling */
+.content::-webkit-scrollbar { width:8px; }
+.content::-webkit-scrollbar-thumb { background: #8000ff; border-radius:4px; }
+.content::-webkit-scrollbar-track { background: transparent; }
+
+/* Powershell command box */
+.command {
+  background: rgba(128,0,128,0.2);
+  padding:10px;
+  border-radius:6px;
+  margin:5px 0;
+  cursor:pointer;
+  transition:0.2s;
+  font-family: monospace;
+}
+.command:hover { background: rgba(128,0,128,0.4); }
+
+/* Responsive */
+@media (max-width: 768px) {
+  #dashboard { flex-direction: column; }
+  .sidebar { width: 100%; position: relative; top: 0; height: auto; border-right: none; border-bottom: 2px solid #8000ff; }
+  .content { margin-left: 0; margin-top: 20px; }
+}
+</style>
 </head>
 <body>
-    <header id="header">
-        <div class="logo">NeoForensics</div>
-        <nav>
-            <ul>
-                <li><a href="#home" class="tab-link active">Home</a></li>
-                <li><a href="#about" class="tab-link">About</a></li>
-                <li><a href="#features" class="tab-link">Features</a></li>
-                <li><a href="#tools" class="tab-link">Tools</a></li>
-                <li><a href="#pricing" class="tab-link">Pricing</a></li>
-                <li><a href="#tos" class="tab-link">TOS</a></li>
-                <li><a href="#contact" class="tab-link">Contact</a></li>
-            </ul>
-        </nav>
-    </header>
 
-    <main>
-        <section id="home" class="active">
-            <i class="fas fa-fingerprint"></i>
-            <h1>Welcome to NeoForensics</h1>
-            <p>Empowering digital investigators with cutting-edge forensics tools in a vibrant, futuristic ecosystem. Discover advanced scanning and analysis – completely free.</p>
-            <button class="cta-button" data-target="#tools">Continue to Screenshare Experience</button>
-        </section>
+<header>Ritzy's Guide</header>
+<div class="bubbles"></div>
 
-        <section id="about">
-            <i class="fas fa-microchip"></i>
-            <h2>About Our Tools</h2>
-            <p>NeoForensics is redefining digital forensics with innovative, accessible solutions. Our tools empower investigators to uncover critical evidence with unmatched efficiency.</p>
-            <p>Our mission is to provide professional-grade tools for free, hosted on GitHub to ensure transparency and community collaboration. We’re building the future of forensics.</p>
-        </section>
-
-        <section id="features">
-            <h2>What to Expect from Us</h2>
-            <div class="feature-grid">
-                <div class="feature-card">
-                    <i class="fas fa-search"></i>
-                    <h3>Registry Scanning</h3>
-                    <p>Analyze MUICache, Store, BAM, DAM, and more to uncover hidden system activities.</p>
-                </div>
-                <div class="feature-card">
-                    <i class="fas fa-cogs"></i>
-                    <h3>Process & Service Insights</h3>
-                    <p>Extract paths from processes and services, identify enabled or disabled critical services.</p>
-                </div>
-                <div class="feature-card">
-                    <i class="fas fa-list"></i>
-                    <h3>Jumplist Analysis</h3>
-                    <p>Capture custom and automatic jumplists for detailed user behavior insights.</p>
-                </div>
-                <div class="feature-card">
-                    <i class="fas fa-file-csv"></i>
-                    <h3>CSV Compatibility</h3>
-                    <p>Export results to CSV for seamless integration with timeline analysis tools.</p>
-                </div>
-                <div class="feature-card">
-                    <i class="fas fa-desktop"></i>
-                    <h3>Neon Interface</h3>
-                    <p>Immersive dark-mode design with vibrant neon accents for a professional experience.</p>
-                </div>
-                <div class="feature-card">
-                    <i class="fas fa-lock-open"></i>
-                    <h3>Free Access</h3>
-                    <p>All tools are 100% free, with open-source code on GitHub for community trust.</p>
-                </div>
-            </div>
-        </section>
-
-        <section id="tools">
-            <h2>Our Forensics Tools</h2>
-            <p class="note">The "screenshare experience" is delivered through interactive demos, video tutorials, and detailed documentation in each tool's GitHub repository.</p>
-            <div class="tool-grid">
-                <div class="tool-card">
-                    <i class="fas fa-microscope"></i>
-                    <h3>RitzyScans</h3>
-                    <p>RitzyScans is a professional-grade registry scanner targeting MUICache, Store, BAM, DAM, and more. It extracts paths from processes and services, analyzes jumplists, and reports on service statuses. Results are exported to CSV for further analysis.</p>
-                    <a href="https://github.com/RitzySixx/RitzyScanner/releases/download/RitzyScanner/RitzyScanner.exe" class="download-button">Download RitzyScans</a>
-                </div>
-                <div class="tool-card">
-                    <i class="fas fa-clock"></i>
-                    <h3>Timeline Explorer (by Eric Zimmerman)</h3>
-                    <p>Analyze RitzyScans' CSV exports with Eric Zimmerman's Timeline Explorer. This tool offers advanced filtering, grouping, and visualization for forensic timelines.</p>
-                    <a href="https://download.ericzimmermanstools.com/net6/TimelineExplorer.zip" class="download-button">Download Timeline Explorer</a>
-                </div>
-            </div>
-        </section>
-
-        <section id="pricing">
-            <h2>Pricing</h2>
-            <div class="pricing-card">
-                <i class="fas fa-dollar-sign"></i>
-                <h3>100% Free</h3>
-                <p>NeoForensics tools are entirely free with no subscriptions or hidden costs. We believe in making advanced forensics accessible to all investigators.</p>
-            </div>
-        </section>
-
-<section id="tos">
-    <div style="height: 2rem;"></div> <!-- Spacer to push content down -->
-    <h2>Terms of Service</h2>
-    <i class="fas fa-file-contract"></i>
-    <p>Last Updated: August 27, 2025</p>
-    <p>By using NeoForensics' website or tools, you agree to these Terms of Service ("TOS"). If you do not agree, please do not use our services.</p>
-    
-    <h3>.</h3>
-    <h3>.</h3>
-    <h3>.</h3>
-    <h3>.</h3>
-
-    <h3>1. Acceptance of Terms</h3>
-    <p>These TOS are a binding agreement between you and NeoForensics ("Company"). We may update terms, and continued use implies acceptance.</p>
-    
-    <h3>2. Service Description</h3>
-    <p>Our tools are hosted statically on GitHub for download. No accounts or logins are required. They are designed for digital forensics.</p>
-    
-    <h3>3. User Responsibilities</h3>
-    <ul>
-        <li>Use tools in compliance with applicable laws.</li>
-        <li>Ensure responsible data handling.</li>
-        <li>Do not modify, reverse engineer, or redistribute without permission.</li>
-        <li>Report issues to support promptly.</li>
-    </ul>
-    
-    <h3>4. Intellectual Property</h3>
-    <p>Content and tools are owned by the Company or licensors. You receive a limited license for forensic use.</p>
-    
-    <h3>5. Third-Party Tools</h3>
-    <p>Links to tools like Timeline Explorer are provided for compatibility. We are not responsible for third-party content.</p>
-    
-    <h3>6. Disclaimer of Warranties</h3>
-    <p>Services are "AS IS" with no warranties for merchantability, fitness, or non-infringement.</p>
-    
-    <h3>7. Limitation of Liability</h3>
-    <p>We are not liable for indirect, incidental, or consequential damages from tool use.</p>
-    
-    <h3>8. Indemnification</h3>
-    <p>You indemnify the Company against claims arising from your use.</p>
-    
-    <h3>9. Governing Law</h3>
-    <p>Governed by California law, excluding conflict principles.</p>
-    
-    <h3>10. Contact</h3>
-    <p>Email support@neoforensics.com for questions.</p>
-    <div style="height: 2rem;"></div> <!-- Bottom spacer for scroll comfort -->
+<!-- Home Page -->
+<section id="home" class="page active">
+  <h1 class="home-title">Ritzy's Guide</h1>
+  <p class="home-subtitle">PC Forensics Course</p>
+  <button class="home-button" onclick="goToDashboard()">Learn Now!</button>
 </section>
 
-        <section id="contact">
-            <h2>Contact Us</h2>
-            <p>Reach out via GitHub or email at support@neoforensics.com for support, feedback, or inquiries. We're committed to advancing your forensic investigations.</p>
-            <a href="https://discord.com/users/riddysix" target="_blank" class="discord-btn">
-                <i class="fab fa-discord"></i> riddysix
-            </a>
-        </section>
-    </main>
+<!-- Dashboard Page -->
+<section id="dashboard" class="page">
+  <div class="sidebar">
+    <h2>Modules</h2>
+    <div id="tabs-container"></div>
+  </div>
 
-    <footer>
-        <p>&copy; 2025 NeoForensics. All rights reserved. Hosted on GitHub Pages.</p>
-    </footer>
+  <div class="content" id="tab-content"></div>
+</section>
 
-    <script>
-        // =======================================
-        // Tab Switching - Fixed Scrolling
-        // =======================================
-        const tabLinks = document.querySelectorAll('.tab-link');
-        const sections = document.querySelectorAll('section');
-        const ctaButton = document.querySelector('.cta-button');
+<script>
+// Bubbles
+const bubblesContainer = document.querySelector('.bubbles');
+for (let i = 0; i < 80; i++) {
+  const bubble = document.createElement('div');
+  const size = Math.random() * 50 + 5;
+  const duration = Math.random() * 6 + 4;
+  bubble.classList.add('bubble');
+  bubble.style.width = `${size}px`;
+  bubble.style.height = `${size}px`;
+  bubble.style.left = `${Math.random() * 100}%`;
+  bubble.style.animationDuration = `${duration}s`;
+  bubble.style.background = `rgba(128,0,128,${Math.random()*0.4 + 0.1})`;
+  bubblesContainer.appendChild(bubble);
+}
 
-        function switchTab(targetId) {
-            sections.forEach(section => {
-                section.classList.remove('active');
-                section.style.display = 'none'; // Ensure hidden
-            });
-            const targetSection = document.querySelector(targetId);
-            if (targetSection) {
-                targetSection.classList.add('active');
-                targetSection.style.display = 'flex';
-                targetSection.scrollTop = 0; // Reset scroll position
-            }
-            tabLinks.forEach(link => link.classList.remove('active'));
-            tabLinks.forEach(link => {
-                if (link.getAttribute('href') === targetId) link.classList.add('active');
-            });
-        }
+const tabs = [
+  { id: 'introduction', title: 'Introduction', file: 'tabs/introduction.html' },
+  { id: 'powershell', title: 'Powershell Scripts', file: 'tabs/powershell.html' },
+  { id: 'prefetch', title: 'Prefetch', file: 'tabs/prefetch.html' },
+  { id: 'bamdam', title: 'BAM / DAM', file: 'tabs/bamdam.html' },
+  { id: 'eventviewer', title: 'Event Viewer', file: 'tabs/eventviewer.html' },
+  { id: 'amcache', title: 'Amcache', file: 'tabs/amcache.html' },
+  { id: 'usb', title: 'USB', file: 'tabs/usb.html' },
+  { id: 'fileless', title: 'Fileless Executions', file: 'tabs/fileless.html' },
+  { id: 'systeminformer', title: 'System Informer', file: 'tabs/systeminformer.html' }
+];
 
-        tabLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                switchTab(link.getAttribute('href'));
-            });
-        });
+// Generate tabs
+const tabsContainer = document.getElementById('tabs-container');
+tabs.forEach((tab, index) => {
+  const div = document.createElement('div');
+  div.classList.add('tab');
+  if (index === 0) div.classList.add('active');
+  div.textContent = tab.title;
+  div.setAttribute('data-target', '#' + tab.id);
+  div.onclick = () => showTab('#' + tab.id);
+  tabsContainer.appendChild(div);
+});
 
-        if (ctaButton) {
-            ctaButton.addEventListener('click', () => switchTab(ctaButton.getAttribute('data-target')));
-        }
+function showTab(targetId) {
+  const tabsEls = document.querySelectorAll('.tab');
+  tabsEls.forEach(t => {
+    t.classList.remove('active');
+    if (t.getAttribute('data-target') === targetId) t.classList.add('active');
+  });
+  const tab = tabs.find(t => '#' + t.id === targetId);
+  const content = document.getElementById('tab-content');
+  fetch(tab.file)
+    .then(response => response.text())
+    .then(html => {
+      content.innerHTML = `<h1>${tab.title}</h1>${html}`;
+    })
+    .catch(err => {
+      content.innerHTML = `<h1>${tab.title}</h1><p>Error loading content.</p>`;
+    });
+  window.location.hash = targetId;
+}
 
-        // Initial load
-        switchTab('#home');
+function goToDashboard() {
+  document.getElementById('home').classList.remove('active');
+  document.getElementById('dashboard').classList.add('active');
+  showTab('#introduction');
+}
 
-        // =======================================
-        // Animation Observer
-        // =======================================
-        const animateElements = document.querySelectorAll('.feature-card, .tool-card, p, h2, h3, .pricing-card, i');
-        const elementObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('animate-fade-up');
-                    elementObserver.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.3 });
+// Load tab from hash
+window.addEventListener('load', () => {
+  const hash = window.location.hash;
+  if (hash && tabs.some(t => '#' + t.id === hash)) {
+    document.getElementById('home').classList.remove('active');
+    document.getElementById('dashboard').classList.add('active');
+    showTab(hash);
+  } else {
+    // Default to introduction if no hash
+    showTab('#introduction');
+  }
+});
 
-        animateElements.forEach(el => elementObserver.observe(el));
-    </script>
+// Copy command
+function copyCommand(el) {
+  navigator.clipboard.writeText(el.innerText).then(() => {
+    el.style.background = 'rgba(128,0,128,0.4)';
+    setTimeout(() => { el.style.background = 'rgba(128,0,128,0.2)'; }, 500);
+  });
+}
+</script>
+
 </body>
 </html>
