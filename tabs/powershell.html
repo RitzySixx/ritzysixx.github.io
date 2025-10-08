@@ -1,4 +1,7 @@
 <p>Click commands to copy them to your clipboard:</p>
-<div class="command" onclick="copyCommand(this)">iwr https://github.com/yourusername/script1.ps1 -OutFile script1.ps1</div>
-<div class="command" onclick="copyCommand(this)">Get-EventLog -LogName System</div>
-<div class="command" onclick="copyCommand(this)">Get-ChildItem C:\\Users\\ -Recurse</div>
+<div class="command" onclick="copyCommand(this)">iex (iwr "https://raw.githubusercontent.com/RitzySixx/Prefetch-Analysis/refs/heads/main/PrefetchAnalyzer.ps1")</div>
+<div class="command" onclick="copyCommand(this)">iex (iwr "https://raw.githubusercontent.com/RitzySixx/Check-Journal-Tampering/refs/heads/main/journalcheck.ps1")</div>
+<div class="command" onclick="copyCommand(this)">iex (iwr "https://raw.githubusercontent.com/RitzySixx/Suspicious-Task-Scheduler/refs/heads/main/TaskSchedulerChecks.ps1")</div>
+<div class="command" onclick="copyCommand(this)">iex (iwr "https://raw.githubusercontent.com/RitzySixx/reset-date-tampering/refs/heads/main/OriginalInstallDate.ps1")</div>
+<div class="command" onclick="copyCommand(this)">iex (iwr "https://raw.githubusercontent.com/RitzySixx/Suspicious-EVTX-Parser/refs/heads/main/EVTXParser.ps1")</div>
+<div class="command" onclick="copyCommand(this)">Get-Service | Where-Object { $_.Name -match 'pcasvc|DPS|DiagTrack|SysMain|eventlog|sgrmbroker|cdpusersvc|DNS|Appinfo|WSearch|VSS' } | Format-Table Name, Status, DisplayName -AutoSize</div>
