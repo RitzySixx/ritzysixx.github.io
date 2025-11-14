@@ -391,327 +391,6 @@
             // Yara rules based on the provided rules
             const yaraRules = [
                 {
-                    name: "Skript",
-                    description: "Detects Skript launcher based on specific strings and PE characteristics",
-                    rule: function(content) {
-                        const patterns = [
-                            /C:\\Users\\dev\\Desktop\\projects\\Skript\\sk_launcher\\x64\\Release\\sk_launcher\.pdb/i,
-                            /api-ms-win-core-synch-l1-2-0\.dll/i,
-                            /<assembly xmlns=\"urn:schemas-microsoft-com:asm\.v1\" manifestVersion=\"1\.0\" xmlns:asmv3=\"urn:schemas-microsoft-com:asm\.v3\"><t/i,
-                            /uiAccess=\"false\"><\/requestedExecutionLevel><\/requestedPrivileges><\/security><\/trustInfo><compatibility xmlns=\"urn:schemas-mi/i,
-                            /fo xmlns=\"urn:schemas-microsoft-com:asm\.v3\"><security><requestedPrivileges><requestedExecutionLevel level=\"requireAdministrat/i,
-                            /AppPolicyGetProcessTerminationMethod/i,
-                            /AppPolicyGetThreadInitializationType/i,
-                            /Type Descriptor'/i,
-                            /BINDBZJ/i,
-                            /operator<=>/i,
-                            /operator co_await/i,
-                            /syntax error/i,
-                            /logWCW\^e/i,
-                            /object key/i,
-                            /\.data\$rs/i,
-                            /pportedOS Id=\"{1f676c76-80e1-4239-95bb-83d0f6d0da78}\"><\/supportedOS><supportedOS Id=\"{8e0f7a12-bfb3-4fe8-b9a5-48fd50a15a9a}\"/i,
-                            /type_error/i,
-                            /\.\?AVother_error@detail@nlohmann@@/i,
-                            /other_error/i
-                        ];
-                        
-                        const matches = patterns.filter(pattern => pattern.test(content));
-                        return matches.length >= 4;
-                    },
-                    severity: "danger"
-                },
-                {
-                    name: "Testo",
-                    description: "Detects Testo based on specific strings and PE characteristics",
-                    rule: function(content) {
-                        const patterns = [
-                            /VCRUNTIME140_1\.dll/i,
-                            /ehttp:\/\/pki-crl\.symauth\.com\/offlineca\/TheInstituteofElectricalandElectronicsEngineersIncIEEERootCA\.crl0/i,
-                            /d3dx11_43\.dll/i,
-                            /Lhttp:\/\/pki-crl\.symauth\.com\/ca_d409a5cb737dc0768fd08ed5256f3633\/LatestCRL\.crl07/i,
-                            /\(Symantec SHA256 TimeStamping Signer - G30/i,
-                            /\(Symantec SHA256 TimeStamping Signer - G3/i,
-                            /http:\/\/pki-ocsp\.symauth\.com0/i,
-                            /<requestedExecutionLevel level='requireAdministrator' uiAccess='false' \/>/i,
-                            /!!!- 9/i,
-                            /!!!- 9,PS/i,
-                            /\* Y6Xu/i,
-                            /Oreans Technologies0/i,
-                            /%\?3\+ -/i,
-                            /deactiv/i,
-                            /vexrlga/i,
-                            /%AUTM%Xj/i,
-                            /f\^*Zwhb!- /i,
-                            /- BV@%q-/i,
-                            /<trustInfo xmlns=\"urn:schemas-microsoft-com:asm\.v3\">/i,
-                            /aZ:\\hO/i
-                        ];
-                        
-                        const matches = patterns.filter(pattern => pattern.test(content));
-                        return matches.length >= 8;
-                    },
-                    severity: "danger"
-                },
-                {
-                    name: "Gosth",
-                    description: "Detects Gosth based on specific strings and PE characteristics",
-                    rule: function(content) {
-                        const patterns = [
-                            /@\.pedrin0/i,
-                            /`\.pedrin1/i,
-                            /\.pedrin2/i,
-                            /api-ms-win-crt-locale-l1-1-0\.dll/i,
-                            /api-ms-win-crt-filesystem-l1-1-0\.dll/i,
-                            /api-ms-win-crt-math-l1-1-0\.dll/i,
-                            /api-ms-win-crt-runtime-l1-1-0\.dll/i,
-                            /!This program cannot be run in DOS mode\./i,
-                            /pn5Or@!S/i,
-                            /&tA-MC&tA/i,
-                            /__current_exception/i,
-                            /_unlock_file/i,
-                            /r~K7\?~V@R/i,
-                            /\?out@\?\$codecvt@DDU_Mbstatet@@@std@@QEBAHAEAU_Mbstatet@@PEBD1AEAPEBDPEAD3AEAPEAD@Z/i,
-                            /OKERNEL32\.dll/i
-                        ];
-                        
-                        const xPatterns = [
-                            /@\.pedrin0/i,
-                            /`\.pedrin1/i,
-                            /\.pedrin2/i
-                        ];
-                        
-                        const xMatches = xPatterns.filter(pattern => pattern.test(content));
-                        const allMatches = patterns.filter(pattern => pattern.test(content));
-                        
-                        return xMatches.length >= 1 && allMatches.length >= 4;
-                    },
-                    severity: "danger"
-                },
-                {
-                    name: "TZX",
-                    description: "Detects TZX based on specific strings and PE characteristics",
-                    rule: function(content) {
-                        const patterns = [
-                            /taskhostw\.exe/i,
-                            /TZX\.exe/i,
-                            /<requestedExecutionLevel level='requireAdministrator' uiAccess='false' \/>/i,
-                            /a\* QZBw0\[U/i,
-                            /Ie\+%d%5vOX`/i,
-                            /<trustInfo xmlns=\"urn:schemas-microsoft-com:asm\.v3\">/i,
-                            /W\|L`o:\"p`/i,
-                            /\]o:\\\\Sh/i,
-                            /e9y\.YMH/i,
-                            /k:\\\\Qsi/i,
-                            /_'N:\\\\&/i,
-                            /\\\\7sPye/i,
-                            /lZ:\\\\Dyw/i,
-                            /fcMDj\*#/i,
-                            /BXU\.SMU%/i,
-                            /SAPAVAQM/i,
-                            /Windaos/i,
-                            /AfOkqa8/i,
-                            /dwBieBPD0/i,
-                            /}N%L%\|]/i
-                        ];
-                        
-                        const matches = patterns.filter(pattern => pattern.test(content));
-                        return matches.length >= 8;
-                    },
-                    severity: "danger"
-                },
-                {
-                    name: "HX",
-                    description: "Detects HX based on specific strings and PE characteristics",
-                    rule: function(content) {
-                        const patterns = [
-                            /tGDI32\.dll/i,
-                            /<requestedExecutionLevel level='asInvoker' uiAccess='false' \/>/i,
-                            /\* RMkq/i,
-                            /dLOGQO /i,
-                            /\* \+A8M\{=/i,
-                            /<trustInfo xmlns=\"urn:schemas-microsoft-com:asm\.v3\">/i,
-                            /mcmd7is/i,
-                            /he:\"QN/i,
-                            /C:\"ZJL\|i\"cPf/i,
-                            /Vel\.MSe\)<L!\?R/i,
-                            /ARWAWSVD/i,
-                            /cm#DLl/i,
-                            /2%ckt%/i,
-                            /`@\$P -=/i,
-                            /- b!qP/i,
-                            /\*my -/i,
-                            /E -=\\\\z~k/i,
-                            /Xt%ED%i/i,
-                            /\?}\"w\* /i,
-                            /OQ;hP\* /i
-                        ];
-                        
-                        const matches = patterns.filter(pattern => pattern.test(content));
-                        return matches.length >= 8;
-                    },
-                    severity: "danger"
-                },
-                {
-                    name: "Susano",
-                    description: "Detects Susano based on specific strings and PE characteristics",
-                    rule: function(content) {
-                        const patterns = [
-                            /Loader\.exe/i,
-                            /<requestedExecutionLevel level='requireAdministrator' uiAccess='false' \/>/i,
-                            /cNxm\.tNq/i,
-                            /curl_easy_header/i,
-                            /curl_url_get/i,
-                            /\* \\\\ SW/i,
-                            /curl_mime_headers/i,
-                            /curl_easy_nextheader/i,
-                            /BRRz\^\+{ /i,
-                            /<trustInfo xmlns=\"urn:schemas-microsoft-com:asm\.v3\">/i,
-                            /0m0\.egO/i,
-                            /\"dTMPqxU/i,
-                            /F:\\\\pwTk/i,
-                            /Cp%_U:\\\\0/i,
-                            /curl_url_strerror/i,
-                            /Rpgiric/i,
-                            /%s%4@\)/i,
-                            /JDbEs87/i,
-                            /<\* pc-/i,
-                            /sCan\{C\+/i
-                        ];
-                        
-                        const xPatterns = [
-                            /Loader\.exe/i
-                        ];
-                        
-                        const xMatches = xPatterns.filter(pattern => pattern.test(content));
-                        const allMatches = patterns.filter(pattern => pattern.test(content));
-                        
-                        return xMatches.length >= 1 && allMatches.length >= 4;
-                    },
-                    severity: "danger"
-                },
-                {
-                    name: "TZ",
-                    description: "Detects TZ based on specific strings and PE characteristics",
-                    rule: function(content) {
-                        const patterns = [
-                            /CUSER32\.dll/i,
-                            /dWTSAPI32\.dll/i,
-                            /sapi-ms-win-core-heap-l1-1-0\.dll/i,
-                            /<requestedExecutionLevel level='asInvoker' uiAccess='false' \/>/i,
-                            /\* V0;9/i,
-                            /\";@}2\]e-`/i,
-                            /qGEt\\\\6e,/i,
-                            /\* \+;2\+D/i,
-                            /xwkpqfe/i,
-                            /<trustInfo xmlns=\"urn:schemas-microsoft-com:asm\.v3\">/i,
-                            /}5G:\"f3A/i,
-                            /h:\\\\zoh\|/i,
-                            /ci5\.SnB/i,
-                            /O:\"V\{\$/i,
-                            /MZw\.IDb/i,
-                            /K9K\.wvk/i,
-                            /UI9\.eNN/i,
-                            /n:\"S,&6/i,
-                            /,!C9\+ 8/i,
-                            /# AR1<\$A/i
-                        ];
-                        
-                        const matches = patterns.filter(pattern => pattern.test(content));
-                        return matches.length >= 8;
-                    },
-                    severity: "danger"
-                },
-                {
-                    name: "Eulen",
-                    description: "Detects Eulen based on specific strings and PE characteristics",
-                    rule: function(content) {
-                        const patterns = [
-                            /!This program cannot be run in DOS mode\./i,
-                            /SHGetKnownFolderPath/i,
-                            /6api-ms-win-crt-time-l1-1-0\.dll/i,
-                            /UuidToStringW/i,
-                            /api-ms-win-crt-locale-l1-1-0\.dll/i,
-                            /__CxxFrameHandler4/i,
-                            /GetActiveWindow/i,
-                            /D3D11CreateDeviceAndSwapChain/i,
-                            /OpenProcessToken/i,
-                            /KERNEL32\.dll/i,
-                            /6api-ms-win-crt-time-l1-1-0\.dll/i,
-                            /d3d11\.dll/i,
-                            /'FSecur32\.dll/i,
-                            /CSNJP0C/i,
-                            /LOGMC%9S/i,
-                            /2\|_;-!f>:2f/i
-                        ];
-                        
-                        const matches = patterns.filter(pattern => pattern.test(content));
-                        return matches.length >= 8;
-                    },
-                    severity: "danger"
-                },
-                {
-                    name: "BypassFun_Cheat",
-                    description: "Detects BypassFun_Cheat based on specific strings and PE characteristics",
-                    rule: function(content) {
-                        const patterns = [
-                            /<requestedExecutionLevel level='requireAdministrator' uiAccess='false' \/>/i,
-                            /\+@5 c\+_`\./i,
-                            /\* amVV/i,
-                            /%LRZR -\]/i,
-                            /\| \/QYCh!/i,
-                            /\\\\U_8;t:\"/i,
-                            /Z~%I%kx-/i,
-                            /\+rjho \/B/i,
-                            /mxxngac/i,
-                            /L\[\.lNk/i,
-                            /xnE\{d:\"/i,
-                            /x:\\\\m2qWv/i,
-                            /F:\"&=v/i,
-                            /<trustInfo xmlns=\"urn:schemas-microsoft-com:asm\.v3\">/i,
-                            /\\\\R!jFTP/i,
-                            /pJiBiN0Jzt\(nR/i,
-                            /#Gz\*\$pq:\"/i,
-                            /rFCoMNldh/i,
-                            /VAQAYAY/i,
-                            /aBloGq/i
-                        ];
-                        
-                        const matches = patterns.filter(pattern => pattern.test(content));
-                        return matches.length >= 8;
-                    },
-                    severity: "danger"
-                },
-                {
-                    name: "PrivaZer",
-                    description: "Detects PrivaZer based on specific strings and PE characteristics",
-                    rule: function(content) {
-                        const patterns = [
-                            /PrivaZer\.exe/i,
-                            /PrivaZer_Pro\.new\.exe/i,
-                            /PrivaZer\.default\.ini/i,
-                            /PrivaZer\.ini/i,
-                            /PrivaZer/i,
-                            /support@privazer\.com/i,
-                            /https:\/\/www\.privazer\.com\/PrivaZer\.exe/i
-                        ];
-                        
-                        const xPatterns = [
-                            /PrivaZer\.exe/i,
-                            /PrivaZer_Pro\.new\.exe/i,
-                            /PrivaZer\.default\.ini/i,
-                            /PrivaZer\.ini/i,
-                            /PrivaZer/i
-                        ];
-                        
-                        const xMatches = xPatterns.filter(pattern => pattern.test(content));
-                        const allMatches = patterns.filter(pattern => pattern.test(content));
-                        
-                        return xMatches.length >= 1 && allMatches.length >= 2;
-                    },
-                    severity: "warning"
-                },
-                {
                     name: "RevoUninstaller",
                     description: "Detects RevoUninstaller based on specific strings and PE characteristics",
                     rule: function(content) {
@@ -796,7 +475,7 @@
                         const matches = patterns.filter(pattern => pattern.test(content));
                         return matches.length >= 8;
                     },
-                    severity: "warning"
+                    severity: "danger"
                 },
                 {
                     name: "Generic_B",
@@ -825,7 +504,7 @@
                         const matches = patterns.filter(pattern => pattern.test(content));
                         return matches.length >= 8;
                     },
-                    severity: "warning"
+                    severity: "danger"
                 },
                 {
                     name: "Generic_C",
@@ -857,7 +536,7 @@
                         const matches = patterns.filter(pattern => pattern.test(content));
                         return matches.length >= 8;
                     },
-                    severity: "warning"
+                    severity: "danger"
                 },
                 {
                     name: "Generic_D",
@@ -884,7 +563,7 @@
                         const matches = patterns.filter(pattern => pattern.test(content));
                         return matches.length >= 8;
                     },
-                    severity: "warning"
+                    severity: "danger"
                 }
             ];
             
