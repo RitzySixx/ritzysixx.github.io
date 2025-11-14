@@ -564,7 +564,155 @@
                         return matches.length >= 8;
                     },
                     severity: "danger"
-                }
+                },
+                {
+                    name: "Generic_E",
+                    description: "Detects common cheat engine keywords and GTA cheat strings",
+                    rule: function(content) {
+                
+                        const patterns = [
+                            "!This program cannot be run in DOS mode.",
+                            "dagger", "bottle", "crowbar", "unarmed", "flashlight", "golfclub", "hammer",
+                            "hatchet", "knuckle", "knine", "machete", "switchblade", "nightstick", "wrench",
+                            "battleaxe", "poolcue", "stone_hatchet", "pistol", "pistol_mk2", "combatpistol",
+                            "appistol", "stungun", "pistol50", "snspistol", "snspistol_mk2", "heavypistol",
+                            "vintagepistol", "flaregun", "marksmanpistol", "revolver", "revolver_mk2",
+                            "doubleaction", "raypistol", "ceramicpistol", "navyrevolver", "microsmg",
+                            "smg_mk2", "assaultsmg", "combatpdw", "machinepistol", "minismg", "raycarbine",
+                            "pumpshotgun", "pumpshotgun_mk2", "sawnoffshotgun", "assaultshotgun",
+                            "bullpupshotgun", "musket", "heavyshotgun", "dbshotgun", "autoshotgun",
+                            "assaultrifle", "assaultrifle_mk2", "carbinerifle", "carbinerifle_mk2",
+                            "advancedrifle", "specialcarbine", "specialcarbine_mk2", "bullpuprifle",
+                            "bullpuprifle_mk2", "compactrifle", "combatmg", "combatmg_mk2", "gusenberg",
+                            "sniperrifle", "heavysniper", "heavysniper_mk2", "marksmanrifle",
+                            "marksmanrifle_mk2", "grenadelauncher", "grenadelauncher_smoke", "minigun",
+                            "firework", "railgun", "hominglauncher", "compactlauncher", "rayminigun",
+                            "grenade", "bzgas", "smokegrenade", "flare", "molotov", "stickybomb",
+                            "proxmine", "snowball", "pipebomb", "general_noclip_enabled",
+                            "general_noclip_speed", "keybinds_menu_open", "keybinds_aimbot",
+                            "aimbot_enabled", "aimbot_draw_selected_bone", "aimbot_selected_bone",
+                            "aimbot_selected_bone_color", "aimbot_smooth_enabled", "aimbot_smooth_speed",
+                            "aimbot_draw_fov", "aimbot_fov_size", "aimbot_fov_color", "vehicles_enabled",
+                            "vehicles_range", "vehicles_enable_vehicle_count", "players_enabled",
+                            "players_range", "players_bones_ebabled", "players_bones_color",
+                            "players_box_enabled", "players_box_type", "players_box_color",
+                            "players_health_bar_enabled", "players_health_bar_type",
+                            "players_health_bar_color", "players_armor_bar_enabled",
+                            "players_armor_bar_type", "players_armor_bar_color", "players_weapon_enabled",
+                            "players_weapon_color", "players_distance_enabled", "players_distance_color",
+                            "players_enable_player_count", "players_enable_admin_count"
+                        ];
+                
+                        let matches = 0;
+                
+                        for (const p of patterns) {
+                            if (content.includes(p)) matches++;
+                        }
+                
+                        return matches >= 6;
+                    },
+                    severity: "danger"
+                },
+                {
+                    name: "Generic_F",
+                    description: "Detects lightweight cheat loader indicators and configuration artifacts",
+                    rule: function(content) {
+                
+                        const patterns = [
+                            "!This program cannot be run in DOS mode.",
+                            "\\config\\config.json",
+                            "Enabled##Aimbot",
+                            "Style##PedVisualsBox"
+                        ];
+                
+                        let matches = 0;
+                
+                        for (const p of patterns) {
+                            if (content.includes(p)) matches++;
+                        }
+                
+                        // require at least 4 matches
+                        return matches >= 4;
+                    },
+                    severity: "danger"
+                },
+                {
+                    name: "Packed_File",
+                    description: "Detects highly packed, compressed, or encrypted files using whole-file entropy analysis (works for ANY file type)",
+                    rule: function(content) {
+                
+                        const bytes = new Uint8Array(content.split('').map(c => c.charCodeAt(0)));
+                
+                        const fileSize = bytes.length;
+                
+                        if (fileSize < 50 * 1024 || fileSize > 50 * 1024 * 1024)
+                            return false;
+                        
+                        function calculateEntropy(buf) {
+                            const freq = new Array(256).fill(0);
+                            for (let i = 0; i < buf.length; i++) freq[buf[i]]++;
+                
+                            let entropy = 0;
+                            for (let f of freq) {
+                                if (f === 0) continue;
+                                const p = f / buf.length;
+                                entropy -= p * Math.log2(p);
+                            }
+                            return entropy;
+                        }
+                
+                        const entropy = calculateEntropy(bytes);
+                        return entropy >= 7.2;
+                    },
+                    severity: "danger"
+                },
+                {
+                    name: "Possible_InMemory_Modifications",
+                    description: "Detects indicators of reflective loading, manual mapping, or in-memory patching",
+                    rule: function(content) {
+                
+                        const reflectiveIndicators = [
+                            "ReflectiveLoader",
+                            "ReflectiveDLLMain",
+                            "ManualMap",
+                            "ReflectiveLoad",
+                            "ReflectiveInit"
+                        ];
+                
+                        const apis = [
+                            "VirtualAlloc",
+                            "VirtualProtect",
+                            "VirtualAllocEx",
+                            "WriteProcessMemory",
+                            "NtWriteVirtualMemory",
+                            "CreateRemoteThread",
+                            "CreateThread",
+                            "LoadLibraryA",
+                            "LoadLibraryW",
+                            "GetProcAddress",
+                            "RtlMoveMemory",
+                            "RtlCopyMemory",
+                            "NtMapViewOfSection",
+                            "ZwUnmapViewOfSection",
+                            "MapViewOfFile",
+                            "QueueUserAPC",
+                            "ResumeThread"
+                        ];
+                
+                        let count = 0;
+                
+                        for (const kw of reflectiveIndicators) {
+                            if (content.includes(kw)) count++;
+                        }
+                
+                        for (const kw of apis) {
+                            if (content.includes(kw)) count++;
+                        }
+                
+                        return count >= 4;
+                    },
+                    severity: "danger"
+                },
             ];
             
             // Event listeners for drag and drop
