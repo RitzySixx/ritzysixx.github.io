@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced File Scanner</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <style>
+        :root {
+            --primary-dark: #0a0e17;
+            --primary-blue: #1a237e;
+            --accent-blue: #2962ff;
+            --light-blue: #bbdefb;
+            --text-light: #e3f2fd;
+            --success: #00c853;
+            --warning: #ffab00;
+            --danger: #ff1744;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, #1a237e 100%);
+            color: var(--text-light);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 30px 0;
+            animation: fadeIn 1s ease-out;
+        }
+
+        header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, var(--light-blue), var(--accent-blue));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 2px 10px rgba(41, 98, 255, 0.3);
+        }
+
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.8;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .scanner-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .upload-section {
+            background: rgba(10, 14, 23, 0.7);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(41, 98, 255, 0.2);
+            animation: slideUp 0.8s ease-out;
+        }
+
+        .upload-area {
+            border: 3px dashed var(--accent-blue);
+            border-radius: 12px;
+            padding: 60px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upload-area:hover {
+            background: rgba(41, 98, 255, 0.05);
+            border-color: var(--light-blue);
+            transform: translateY(-5px);
+        }
+
+        .upload-area i {
+            font-size: 4rem;
+            color: var(--accent-blue);
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .upload-area h3 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+
+        .upload-area p {
+            font-size: 1.1rem;
+            opacity: 0.8;
+            margin-bottom: 20px;
+        }
+
+        .browse-btn {
+            background: linear-gradient(to right, var(--primary-blue), var(--accent-blue));
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(41, 98, 255, 0.4);
+        }
+
+        .browse-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(41, 98, 255, 0.6);
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .file-info {
+            display: none;
+            background: rgba(26, 35, 126, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            border-left: 4px solid var(--accent-blue);
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .file-info.active {
+            display: block;
+        }
+
+        .file-info h4 {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .file-info h4 i {
+            color: var(--accent-blue);
+        }
+
+        .results-section {
+            display: none;
+            background: rgba(10, 14, 23, 0.7);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(41, 98, 255, 0.2);
+            animation: slideUp 0.8s ease-out;
+        }
+
+        .results-section.active {
+            display: block;
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(41, 98, 255, 0.3);
+        }
+
+        .results-header h2 {
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .result-card {
+            background: rgba(26, 35, 126, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            border-left: 4px solid var(--accent-blue);
+            transition: transform 0.3s ease;
+        }
+
+        .result-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .result-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--light-blue);
+        }
+
+        .result-card p {
+            margin-bottom: 8px;
+            word-break: break-all;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .status.safe {
+            background: rgba(0, 200, 83, 0.2);
+            color: var(--success);
+        }
+
+        .status.warning {
+            background: rgba(255, 171, 0, 0.2);
+            color: var(--warning);
+        }
+
+        .status.danger {
+            background: rgba(255, 23, 68, 0.2);
+            color: var(--danger);
+        }
+
+        .scanning-animation {
+            display: none;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .scanning-animation.active {
+            display: block;
+        }
+
+        .spinner {
+            width: 70px;
+            height: 70px;
+            border: 5px solid rgba(41, 98, 255, 0.3);
+            border-top: 5px solid var(--accent-blue);
+            border-radius: 50%;
+            animation: spin 1.5s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        .pulse {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--accent-blue);
+            margin: 0 5px;
+            animation: pulse 1.5s infinite;
+        }
+
+        .pulse:nth-child(2) {
+            animation-delay: 0.5s;
+        }
+
+        .pulse:nth-child(3) {
+            animation-delay: 1s;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 0.7; }
+        }
+
+        @media (max-width: 768px) {
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            header h1 {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-shield-alt"></i> Advanced File Scanner</h1>
+            <p>Comprehensive file analysis with Yara rules, hash verification, and security assessment</p>
+        </header>
+
+        <div class="scanner-container">
+            <section class="upload-section">
+                <div class="upload-area" id="dropZone">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <h3>Drag & Drop Your File Here</h3>
+                    <p>Or click to browse your system</p>
+                    <button class="browse-btn">Select File</button>
+                    <input type="file" id="fileInput">
+                </div>
+                
+                <div class="file-info" id="fileInfo">
+                    <h4><i class="fas fa-file"></i> Selected File</h4>
+                    <p id="fileName"></p>
+                </div>
+            </section>
+
+            <div class="scanning-animation" id="scanningAnimation">
+                <div class="spinner"></div>
+                <h3>Scanning File</h3>
+                <p>Analyzing content and checking against security rules<span class="pulse"></span><span class="pulse"></span><span class="pulse"></span></p>
+            </div>
+
+            <section class="results-section" id="resultsSection">
+                <div class="results-header">
+                    <h2><i class="fas fa-search"></i> Scan Results</h2>
+                    <button class="browse-btn" id="newScanBtn">New Scan</button>
+                </div>
+                
+                <div class="results-grid" id="resultsGrid">
+                    <!-- Results will be populated here -->
+                </div>
+            </section>
+        </div>
+
+        <footer>
+            <p>Advanced File Scanner &copy; 2023 | Static GitHub Hosted Security Tool</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const dropZone = document.getElementById('dropZone');
+            const fileInput = document.getElementById('fileInput');
+            const fileInfo = document.getElementById('fileInfo');
+            const fileName = document.getElementById('fileName');
+            const scanningAnimation = document.getElementById('scanningAnimation');
+            const resultsSection = document.getElementById('resultsSection');
+            const resultsGrid = document.getElementById('resultsGrid');
+            const newScanBtn = document.getElementById('newScanBtn');
+            
+            // Known malicious hashes database (simulated)
+            const maliciousHashes = {
+                "sha1": [
+                    "da39a3ee5e6b4b0d3255bfef95601890afd80709",
+                    "2fd4e1c67a2d28f123a3e324b3a3a3a3a3a3a3a3"
+                ],
+                "sha256": [
+                    "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                    "2c26b46b68ffc68ff99b453c1d30413413422d706483bfa0f98a5e886266e7ae"
+                ]
+            };
+            
+            // Yara rules (simplified JavaScript implementation)
+            const yaraRules = [
+                {
+                    name: "Suspicious JavaScript",
+                    description: "Detects potentially dangerous JavaScript functions",
+                    rule: function(content) {
+                        const suspiciousPatterns = [
+                            /eval\s*\(/i,
+                            /document\.write/,
+                            /setTimeout\s*\([^)]*\)/,
+                            /setInterval\s*\([^)]*\)/,
+                            /Function\s*\(/,
+                            /script.*src.*http/i
+                        ];
+                        return suspiciousPatterns.some(pattern => pattern.test(content));
+                    },
+                    severity: "warning"
+                },
+                {
+                    name: "Potential Base64 Encoding",
+                    description: "Detects long base64 encoded strings",
+                    rule: function(content) {
+                        const base64Regex = /[A-Za-z0-9+/]{40,}={0,2}/g;
+                        const matches = content.match(base64Regex);
+                        return matches && matches.length > 3;
+                    },
+                    severity: "warning"
+                },
+                {
+                    name: "Executable Patterns",
+                    description: "Detects patterns common in executable files",
+                    rule: function(content) {
+                        // Check for MZ header (Windows executables)
+                        if (content.substring(0, 2) === 'MZ') return true;
+                        
+                        // Check for ELF header (Linux executables)
+                        if (content.substring(0, 4) === '\x7FELF') return true;
+                        
+                        // Check for script shebangs
+                        if (/^#!\/bin\/|^#!\/usr\/bin\/|^#!\/bin\/bash|^#!\/bin\/sh/.test(content)) return true;
+                        
+                        return false;
+                    },
+                    severity: "danger"
+                },
+                {
+                    name: "Suspicious PowerShell",
+                    description: "Detects potentially malicious PowerShell commands",
+                    rule: function(content) {
+                        const psPatterns = [
+                            /Invoke-Expression/i,
+                            /DownloadString/i,
+                            /Start-Process.*Hidden/i,
+                            /New-Object.*Net\.WebClient/i,
+                            /FromBase64String/i
+                        ];
+                        return psPatterns.some(pattern => pattern.test(content));
+                    },
+                    severity: "danger"
+                }
+            ];
+            
+            // Event listeners for drag and drop
+            dropZone.addEventListener('click', () => fileInput.click());
+            
+            fileInput.addEventListener('change', function(e) {
+                if (this.files.length > 0) {
+                    handleFile(this.files[0]);
+                }
+            });
+            
+            dropZone.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                this.style.borderColor = '#bbdefb';
+                this.style.backgroundColor = 'rgba(41, 98, 255, 0.05)';
+            });
+            
+            dropZone.addEventListener('dragleave', function() {
+                this.style.borderColor = '#2962ff';
+                this.style.backgroundColor = '';
+            });
+            
+            dropZone.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.style.borderColor = '#2962ff';
+                this.style.backgroundColor = '';
+                
+                if (e.dataTransfer.files.length > 0) {
+                    handleFile(e.dataTransfer.files[0]);
+                }
+            });
+            
+            newScanBtn.addEventListener('click', function() {
+                resetScanner();
+            });
+            
+            function handleFile(file) {
+                // Show file info
+                fileName.textContent = file.name;
+                fileInfo.classList.add('active');
+                
+                // Show scanning animation
+                scanningAnimation.classList.add('active');
+                
+                // Process the file after a short delay to show animation
+                setTimeout(() => {
+                    analyzeFile(file);
+                }, 1500);
+            }
+            
+            function analyzeFile(file) {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    const content = e.target.result;
+                    
+                    // Calculate hashes
+                    const sha1Hash = CryptoJS.SHA1(CryptoJS.enc.Latin1.parse(content)).toString();
+                    const sha256Hash = CryptoJS.SHA256(CryptoJS.enc.Latin1.parse(content)).toString();
+                    
+                    // Check Yara rules
+                    const yaraResults = checkYaraRules(content);
+                    
+                    // Check against known malicious hashes
+                    const hashResults = checkHashes(sha1Hash, sha256Hash);
+                    
+                    // Generate PCA value (simulated)
+                    const pcaValue = generatePCAValue(content);
+                    
+                    // Calculate compilation time (simulated DPS)
+                    const compilationTime = calculateCompilationTime(content);
+                    
+                    // Display results
+                    displayResults(file, sha1Hash, sha256Hash, yaraResults, hashResults, pcaValue, compilationTime);
+                    
+                    // Hide scanning animation
+                    scanningAnimation.classList.remove('active');
+                    
+                    // Show results section
+                    resultsSection.classList.add('active');
+                };
+                
+                reader.readAsBinaryString(file);
+            }
+            
+            function checkYaraRules(content) {
+                const results = [];
+                
+                yaraRules.forEach(rule => {
+                    if (rule.rule(content)) {
+                        results.push({
+                            name: rule.name,
+                            description: rule.description,
+                            severity: rule.severity
+                        });
+                    }
+                });
+                
+                return results;
+            }
+            
+            function checkHashes(sha1, sha256) {
+                const results = {
+                    sha1: { match: maliciousHashes.sha1.includes(sha1), type: "SHA1" },
+                    sha256: { match: maliciousHashes.sha256.includes(sha256), type: "SHA256" }
+                };
+                
+                return results;
+            }
+            
+            function generatePCAValue(content) {
+                // Simulate PCA analysis by creating a hash-like string based on content
+                const pcaHash = CryptoJS.SHA3(content, { outputLength: 64 }).toString();
+                return `PCASVC-${pcaHash.substring(0, 16).toUpperCase()}`;
+            }
+            
+            function calculateCompilationTime(content) {
+                // Simulate compilation time calculation based on file size and complexity
+                const size = content.length;
+                let baseTime = Math.max(50, size / 1000); // Base time in ms
+                
+                // Add some randomness to simulate different file types
+                const complexity = (content.match(/function|class|if|for|while/g) || []).length;
+                baseTime += complexity * 2;
+                
+                return `${baseTime.toFixed(2)} ms`;
+            }
+            
+            function displayResults(file, sha1, sha256, yaraResults, hashResults, pcaValue, compilationTime) {
+                resultsGrid.innerHTML = '';
+                
+                // File Information Card
+                const fileInfoCard = document.createElement('div');
+                fileInfoCard.className = 'result-card';
+                fileInfoCard.innerHTML = `
+                    <h3><i class="fas fa-info-circle"></i> File Information</h3>
+                    <p><strong>Name:</strong> ${file.name}</p>
+                    <p><strong>Size:</strong> ${formatFileSize(file.size)}</p>
+                    <p><strong>Type:</strong> ${file.type || 'Unknown'}</p>
+                    <p><strong>Last Modified:</strong> ${new Date(file.lastModified).toLocaleString()}</p>
+                `;
+                resultsGrid.appendChild(fileInfoCard);
+                
+                // Hash Information Card
+                const hashCard = document.createElement('div');
+                hashCard.className = 'result-card';
+                
+                const sha1Status = hashResults.sha1.match ? 
+                    '<span class="status danger">KNOWN MALICIOUS</span>' : 
+                    '<span class="status safe">CLEAN</span>';
+                
+                const sha256Status = hashResults.sha256.match ? 
+                    '<span class="status danger">KNOWN MALICIOUS</span>' : 
+                    '<span class="status safe">CLEAN</span>';
+                
+                hashCard.innerHTML = `
+                    <h3><i class="fas fa-fingerprint"></i> Hash Analysis</h3>
+                    <p><strong>SHA1:</strong> ${sha1}</p>
+                    <p>${sha1Status}</p>
+                    <p><strong>SHA256:</strong> ${sha256}</p>
+                    <p>${sha256Status}</p>
+                `;
+                resultsGrid.appendChild(hashCard);
+                
+                // Yara Rules Card
+                const yaraCard = document.createElement('div');
+                yaraCard.className = 'result-card';
+                
+                let yaraContent = '';
+                if (yaraResults.length > 0) {
+                    yaraResults.forEach(result => {
+                        const statusClass = `status ${result.severity}`;
+                        yaraContent += `
+                            <p><strong>${result.name}:</strong> <span class="${statusClass}">MATCH</span></p>
+                            <p style="font-size: 0.9rem; opacity: 0.8;">${result.description}</p>
+                        `;
+                    });
+                } else {
+                    yaraContent = '<p><span class="status safe">No Yara rule matches found</span></p>';
+                }
+                
+                yaraCard.innerHTML = `
+                    <h3><i class="fas fa-search"></i> Yara Rules</h3>
+                    ${yaraContent}
+                `;
+                resultsGrid.appendChild(yaraCard);
+                
+                // PCA & DPS Card
+                const analysisCard = document.createElement('div');
+                analysisCard.className = 'result-card';
+                analysisCard.innerHTML = `
+                    <h3><i class="fas fa-chart-line"></i> Advanced Analysis</h3>
+                    <p><strong>PCA Value:</strong> ${pcaValue}</p>
+                    <p><strong>Compilation Time (DPS):</strong> ${compilationTime}</p>
+                    <p><strong>Security Score:</strong> 
+                        <span class="status ${calculateSecurityScore(yaraResults, hashResults)}">
+                            ${calculateSecurityScore(yaraResults, hashResults).toUpperCase()}
+                        </span>
+                    </p>
+                `;
+                resultsGrid.appendChild(analysisCard);
+            }
+            
+            function calculateSecurityScore(yaraResults, hashResults) {
+                if (hashResults.sha1.match || hashResults.sha256.match) {
+                    return "danger";
+                }
+                
+                const highSeverityYara = yaraResults.filter(r => r.severity === "danger").length;
+                const medSeverityYara = yaraResults.filter(r => r.severity === "warning").length;
+                
+                if (highSeverityYara > 0) {
+                    return "danger";
+                } else if (medSeverityYara > 1) {
+                    return "warning";
+                } else {
+                    return "safe";
+                }
+            }
+            
+            function formatFileSize(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            }
+            
+            function resetScanner() {
+                fileInput.value = '';
+                fileInfo.classList.remove('active');
+                resultsSection.classList.remove('active');
+                scanningAnimation.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>
