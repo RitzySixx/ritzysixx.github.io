@@ -635,6 +635,33 @@
                     severity: "danger"
                 },
                 {
+                    name: "Eulen",
+                    description: "Detects Eulen based on specific strings and PE characteristics",
+                    rule: function(content) {
+                        const patterns = [
+                            /This program cannot be run in DOS mode\./i,
+                            /NtQuerySystemInformation/i,
+                            /wESP_/i,
+                            /vAYesp/i,
+                            /F<VEH5/i,
+                            /D3D11CreateDeviceAndSwapChain/i,
+                            /DnsNameCompare_W/i,
+                            /HeapFree/i,
+                            /InitSecurityInterfaceW/i,
+                            /AlphaBlend/i,
+                            /HeapAlloc/i,
+                            /D3DCompile/i,
+                            /SHELL32\.dll/i,
+                            /PathRemoveFileSpecW/i,
+                            /UxTheme\.dll/i
+                        ];
+                
+                        const matches = patterns.filter(p => p.test(content));
+                        return matches.length >= 10;
+                    },
+                    severity: "danger"
+                },
+                {
                     name: "Packed_File",
                     description: "Detects highly packed, compressed, or encrypted files using whole-file entropy analysis (works for ANY file type)",
                     rule: function(content) {
