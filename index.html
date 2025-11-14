@@ -667,7 +667,7 @@
                     severity: "danger"
                 },
                 {
-                    name: "Possible_InMemory_Modifications",
+                    name: "Possible_Memory_Modifications",
                     description: "Detects indicators of reflective loading, manual mapping, or in-memory patching",
                     rule: function(content) {
                 
@@ -713,9 +713,56 @@
                     },
                     severity: "danger"
                 },
+                {
+                    name: "Suspicious_PWS",
+                    description: "Detects potentially malicious PowerShell usage or suspicious download/execution patterns",
+                    rule: function(content) {
+                
+                        const psIndicators = [
+                            "-NoProfile -NonInteractive -EncodedCommand",
+                            "-NoProfile -NonInteractive -Command",
+                            "-ExecutionPolicy Bypass",
+                            "pwsh -NoProfile -NonInteractive -EncodedCommand",
+                            "-EncodedCommand",
+                            "iex",
+                            "iwr",
+                            "irm",
+                            "Get-Content | IEX",
+                            "IEX (Get-Content",
+                            "Invoke-WebRequest",
+                            "DownloadString",
+                            "DownloadFile",
+                            "raw.githubusercontent.com",
+                            "gist.githubusercontent.com",
+                            "ConvertTo-SecureString",
+                            "Base64String",
+                            "pastebin.com",
+                            "WebClient().DownloadFile",
+                            "WebClient.DownloadFile",
+                            "Invoke-Expression",
+                            "Invoke-RestMethod",
+                            "New-Object",
+                            "certutil",
+                            "curl",
+                            "wget",
+                            "bitsadmin",
+                            "rundll32",
+                            "http://",
+                            "https://"
+                        ];
+                
+                        let count = 0;
+                
+                        for (const kw of psIndicators) {
+                            if (content.includes(kw)) count++;
+                        }
+                        
+                        return count >= 4;
+                    },
+                    severity: "danger"
+                }
             ];
             
-            // Event listeners for drag and drop
             dropZone.addEventListener('click', () => fileInput.click());
             
             fileInput.addEventListener('change', function(e) {
