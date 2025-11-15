@@ -394,139 +394,46 @@
                     name: "Generic Cheat (A)",
                     description: "Detects generic cheat patterns and GTA cheat strings",
                     rule: function(content) {
+                        // Check for negative condition first
+                        if (content.includes("This program cannot be run in DOS mode.")) {
+                            return false;
+                        }
+                        
                         const patterns = [
-                            { pattern: "This program cannot be run in DOS mode.", isNegative: true },
-                            { pattern: "dagger", isNegative: false },
-                            { pattern: "bottle", isNegative: false },
-                            { pattern: "crowbar", isNegative: false },
-                            { pattern: "unarmed", isNegative: false },
-                            { pattern: "flashlight", isNegative: false },
-                            { pattern: "golfclub", isNegative: false },
-                            { pattern: "hammer", isNegative: false },
-                            { pattern: "hatchet", isNegative: false },
-                            { pattern: "knuckle", isNegative: false },
-                            { pattern: "knine", isNegative: false },
-                            { pattern: "machete", isNegative: false },
-                            { pattern: "switchblade", isNegative: false },
-                            { pattern: "nightstick", isNegative: false },
-                            { pattern: "wrench", isNegative: false },
-                            { pattern: "battleaxe", isNegative: false },
-                            { pattern: "poolcue", isNegative: false },
-                            { pattern: "stone_hatchet", isNegative: false },
-                            { pattern: "pistol", isNegative: false },
-                            { pattern: "pistol_mk2", isNegative: false },
-                            { pattern: "combatpistol", isNegative: false },
-                            { pattern: "appistol", isNegative: false },
-                            { pattern: "stungun", isNegative: false },
-                            { pattern: "pistol50", isNegative: false },
-                            { pattern: "snspistol", isNegative: false },
-                            { pattern: "snspistol_mk2", isNegative: false },
-                            { pattern: "heavypistol", isNegative: false },
-                            { pattern: "vintagepistol", isNegative: false },
-                            { pattern: "flaregun", isNegative: false },
-                            { pattern: "marksmanpistol", isNegative: false },
-                            { pattern: "revolver", isNegative: false },
-                            { pattern: "revolver_mk2", isNegative: false },
-                            { pattern: "doubleaction", isNegative: false },
-                            { pattern: "raypistol", isNegative: false },
-                            { pattern: "ceramicpistol", isNegative: false },
-                            { pattern: "navyrevolver", isNegative: false },
-                            { pattern: "microsmg", isNegative: false },
-                            { pattern: "smg_mk2", isNegative: false },
-                            { pattern: "assaultsmg", isNegative: false },
-                            { pattern: "combatpdw", isNegative: false },
-                            { pattern: "machinepistol", isNegative: false },
-                            { pattern: "minismg", isNegative: false },
-                            { pattern: "raycarbine", isNegative: false },
-                            { pattern: "pumpshotgun", isNegative: false },
-                            { pattern: "pumpshotgun_mk2", isNegative: false },
-                            { pattern: "sawnoffshotgun", isNegative: false },
-                            { pattern: "assaultshotgun", isNegative: false },
-                            { pattern: "bullpupshotgun", isNegative: false },
-                            { pattern: "musket", isNegative: false },
-                            { pattern: "heavyshotgun", isNegative: false },
-                            { pattern: "dbshotgun", isNegative: false },
-                            { pattern: "autoshotgun", isNegative: false },
-                            { pattern: "assaultrifle", isNegative: false },
-                            { pattern: "assaultrifle_mk2", isNegative: false },
-                            { pattern: "carbinerifle", isNegative: false },
-                            { pattern: "carbinerifle_mk2", isNegative: false },
-                            { pattern: "advancedrifle", isNegative: false },
-                            { pattern: "specialcarbine", isNegative: false },
-                            { pattern: "specialcarbine_mk2", isNegative: false },
-                            { pattern: "bullpuprifle", isNegative: false },
-                            { pattern: "bullpuprifle_mk2", isNegative: false },
-                            { pattern: "compactrifle", isNegative: false },
-                            { pattern: "combatmg", isNegative: false },
-                            { pattern: "combatmg_mk2", isNegative: false },
-                            { pattern: "gusenberg", isNegative: false },
-                            { pattern: "sniperrifle", isNegative: false },
-                            { pattern: "heavysniper", isNegative: false },
-                            { pattern: "heavysniper_mk2", isNegative: false },
-                            { pattern: "marksmanrifle", isNegative: false },
-                            { pattern: "marksmanrifle_mk2", isNegative: false },
-                            { pattern: "grenadelauncher", isNegative: false },
-                            { pattern: "grenadelauncher_smoke", isNegative: false },
-                            { pattern: "minigun", isNegative: false },
-                            { pattern: "firework", isNegative: false },
-                            { pattern: "railgun", isNegative: false },
-                            { pattern: "hominglauncher", isNegative: false },
-                            { pattern: "compactlauncher", isNegative: false },
-                            { pattern: "rayminigun", isNegative: false },
-                            { pattern: "grenade", isNegative: false },
-                            { pattern: "bzgas", isNegative: false },
-                            { pattern: "smokegrenade", isNegative: false },
-                            { pattern: "flare", isNegative: false },
-                            { pattern: "molotov", isNegative: false },
-                            { pattern: "stickybomb", isNegative: false },
-                            { pattern: "proxmine", isNegative: false },
-                            { pattern: "snowball", isNegative: false },
-                            { pattern: "pipebomb", isNegative: false },
-                            { pattern: "general_noclip_enabled", isNegative: false },
-                            { pattern: "general_noclip_speed", isNegative: false },
-                            { pattern: "keybinds_menu_open", isNegative: false },
-                            { pattern: "keybinds_aimbot", isNegative: false },
-                            { pattern: "aimbot_enabled", isNegative: false },
-                            { pattern: "aimbot_draw_selected_bone", isNegative: false },
-                            { pattern: "aimbot_selected_bone", isNegative: false },
-                            { pattern: "aimbot_selected_bone_color", isNegative: false },
-                            { pattern: "aimbot_smooth_enabled", isNegative: false },
-                            { pattern: "aimbot_smooth_speed", isNegative: false },
-                            { pattern: "aimbot_draw_fov", isNegative: false },
-                            { pattern: "aimbot_fov_size", isNegative: false },
-                            { pattern: "aimbot_fov_color", isNegative: false },
-                            { pattern: "vehicles_enabled", isNegative: false },
-                            { pattern: "vehicles_range", isNegative: false },
-                            { pattern: "vehicles_enable_vehicle_count", isNegative: false },
-                            { pattern: "players_enabled", isNegative: false },
-                            { pattern: "players_range", isNegative: false },
-                            { pattern: "players_bones_ebabled", isNegative: false },
-                            { pattern: "players_bones_color", isNegative: false },
-                            { pattern: "players_box_enabled", isNegative: false },
-                            { pattern: "players_box_type", isNegative: false },
-                            { pattern: "players_box_color", isNegative: false },
-                            { pattern: "players_health_bar_enabled", isNegative: false },
-                            { pattern: "players_health_bar_type", isNegative: false },
-                            { pattern: "players_health_bar_color", isNegative: false },
-                            { pattern: "players_armor_bar_enabled", isNegative: false },
-                            { pattern: "players_armor_bar_type", isNegative: false },
-                            { pattern: "players_armor_bar_color", isNegative: false },
-                            { pattern: "players_weapon_enabled", isNegative: false },
-                            { pattern: "players_weapon_color", isNegative: false },
-                            { pattern: "players_distance_enabled", isNegative: false },
-                            { pattern: "players_distance_color", isNegative: false },
-                            { pattern: "players_enable_player_count", isNegative: false },
-                            { pattern: "players_enable_admin_count", isNegative: false }
+                            "dagger", "bottle", "crowbar", "unarmed", "flashlight", "golfclub", "hammer",
+                            "hatchet", "knuckle", "knine", "machete", "switchblade", "nightstick", "wrench",
+                            "battleaxe", "poolcue", "stone_hatchet", "pistol", "pistol_mk2", "combatpistol",
+                            "appistol", "stungun", "pistol50", "snspistol", "snspistol_mk2", "heavypistol",
+                            "vintagepistol", "flaregun", "marksmanpistol", "revolver", "revolver_mk2",
+                            "doubleaction", "raypistol", "ceramicpistol", "navyrevolver", "microsmg",
+                            "smg_mk2", "assaultsmg", "combatpdw", "machinepistol", "minismg", "raycarbine",
+                            "pumpshotgun", "pumpshotgun_mk2", "sawnoffshotgun", "assaultshotgun",
+                            "bullpupshotgun", "musket", "heavyshotgun", "dbshotgun", "autoshotgun",
+                            "assaultrifle", "assaultrifle_mk2", "carbinerifle", "carbinerifle_mk2",
+                            "advancedrifle", "specialcarbine", "specialcarbine_mk2", "bullpuprifle",
+                            "bullpuprifle_mk2", "compactrifle", "combatmg", "combatmg_mk2", "gusenberg",
+                            "sniperrifle", "heavysniper", "heavysniper_mk2", "marksmanrifle",
+                            "marksmanrifle_mk2", "grenadelauncher", "grenadelauncher_smoke", "minigun",
+                            "firework", "railgun", "hominglauncher", "compactlauncher", "rayminigun",
+                            "grenade", "bzgas", "smokegrenade", "flare", "molotov", "stickybomb",
+                            "proxmine", "snowball", "pipebomb", "general_noclip_enabled",
+                            "general_noclip_speed", "keybinds_menu_open", "keybinds_aimbot",
+                            "aimbot_enabled", "aimbot_draw_selected_bone", "aimbot_selected_bone",
+                            "aimbot_selected_bone_color", "aimbot_smooth_enabled", "aimbot_smooth_speed",
+                            "aimbot_draw_fov", "aimbot_fov_size", "aimbot_fov_color", "vehicles_enabled",
+                            "vehicles_range", "vehicles_enable_vehicle_count", "players_enabled",
+                            "players_range", "players_bones_ebabled", "players_bones_color",
+                            "players_box_enabled", "players_box_type", "players_box_color",
+                            "players_health_bar_enabled", "players_health_bar_type",
+                            "players_health_bar_color", "players_armor_bar_enabled",
+                            "players_armor_bar_type", "players_armor_bar_color", "players_weapon_enabled",
+                            "players_weapon_color", "players_distance_enabled", "players_distance_color",
+                            "players_enable_player_count", "players_enable_admin_count"
                         ];
                 
                         let matches = 0;
-                        for (const p of patterns) {
-                            const found = content.includes(p.pattern);
-                            if (p.isNegative) {
-                                if (!found) matches++;
-                            } else {
-                                if (found) matches++;
-                            }
+                        for (const pattern of patterns) {
+                            if (content.includes(pattern)) matches++;
                         }
                         return matches >= 6;
                     },
@@ -536,57 +443,24 @@
                     name: "Generic Cheat (B)",
                     description: "Detects lightweight cheat loader indicators and configuration artifacts",
                     rule: function(content) {
+                        // Check for negative condition first
+                        if (content.includes("This program cannot be run in DOS mode.")) {
+                            return false;
+                        }
+                        
                         const patterns = [
-                            { pattern: "This program cannot be run in DOS mode.", isNegative: true },
-                            { pattern: "\\config\\config.json", isNegative: false },
-                            { pattern: "Enabled##Aimbot", isNegative: false },
-                            { pattern: "Style##PedVisualsBox", isNegative: false }
+                            "\\config\\config.json",
+                            "Enabled##Aimbot", 
+                            "Style##PedVisualsBox"
                         ];
                 
                         let matches = 0;
-                        for (const p of patterns) {
-                            const found = content.includes(p.pattern);
-                            if (p.isNegative) {
-                                if (!found) matches++;
-                            } else {
-                                if (found) matches++;
-                            }
+                        for (const pattern of patterns) {
+                            if (content.includes(pattern)) matches++;
                         }
-                        return matches >= 4;
+                        return matches >= 3; // Changed from 4 to 3 since we only have 3 positive patterns now
                     },
                     severity: "danger"
-                },
-                {
-                    name: "CCleaner",
-                    description: "Detects CCleaner based on specific strings",
-                    rule: function(content) {
-                        const xPatterns = [
-                            "Ccleaner.exe",
-                            "Ccleaner64.exe", 
-                            "CCleaner.Windows.IPC.NamedPipes",
-                            "CCleanerDU.dll"
-                        ];
-                        
-                        const sPatterns = [
-                            "ccleaner.com",
-                            "dlc.ccleaner.com",
-                            "https://www.ccleaner.com"
-                        ];
-                        
-                        let xMatches = 0;
-                        let sMatches = 0;
-                        
-                        for (const pattern of xPatterns) {
-                            if (content.includes(pattern)) xMatches++;
-                        }
-                        
-                        for (const pattern of sPatterns) {
-                            if (content.includes(pattern)) sMatches++;
-                        }
-                        
-                        return xMatches >= 2 && sMatches >= 2;
-                    },
-                    severity: "warning"
                 },
                 {
                     name: "Generic Cheat (C)",
@@ -596,7 +470,7 @@
                             "<requestedExecutionLevel level='asInvoker' uiAccess='false' />",
                             "W1,$_@",
                             "14$_A:",
-                            "AR1,$L",
+                            "AR1,$L", 
                             "AR1,$D",
                             "1<$A[A",
                             "1,$_fA",
@@ -604,7 +478,7 @@
                             "$A[fE;",
                             "AR1,$I",
                             "14$]Hc",
-                            "U14$fD",
+                            "U14$fD", 
                             "AR1,$A",
                             "AR1<$AZ@",
                             "1<$AZHc",
@@ -624,7 +498,7 @@
                     severity: "danger"
                 },
                 {
-                    name: "Generic Cheat (D)",
+                    name: "Generic Cheat (D)", 
                     description: "Detects generic cheat patterns with specific strings",
                     rule: function(content) {
                         const patterns = [
@@ -633,7 +507,7 @@
                             ".AaVXM",
                             "AS1<$I",
                             "AS1,$A[Hc",
-                            "1<$A[Hc",
+                            "1<$A[Hc", 
                             "Oh4e1z",
                             "AS1,$fE",
                             "AS1<$A",
@@ -643,7 +517,7 @@
                             "1,$_Hc",
                             "1,$A[Hc",
                             "AS1<$fD",
-                            "AS1,$fA",
+                            "AS1,$fA", 
                             "14$_Hc"
                         ];
                         
@@ -657,7 +531,7 @@
                 },
                 {
                     name: "Generic Cheat (E)",
-                    description: "Detects generic cheat patterns with specific strings",
+                    description: "Detects generic cheat patterns with specific strings", 
                     rule: function(content) {
                         const patterns = [
                             "V1<$fA",
@@ -667,7 +541,7 @@
                             "81<$fA",
                             "14$AYHc",
                             "$AYfD;",
-                            "V1<$^Hc",
+                            "V1<$^Hc", 
                             "O1<$fE",
                             "W1,$_fA",
                             "AQ14$A",
@@ -677,7 +551,7 @@
                             "AQ14$D",
                             "V1<$^f",
                             "$AYfA;",
-                            "AYA^fD",
+                            "AYA^fD", 
                             "1<$fE3",
                             "1<$^E:"
                         ];
@@ -696,7 +570,7 @@
                     rule: function(content) {
                         const patterns = [
                             "1<$[Hc",
-                            "S1<$fA",
+                            "S1<$fA", 
                             "AS1<$A[Hc",
                             "14$_E:",
                             "$A[fA;",
@@ -706,7 +580,7 @@
                             "W14$_fD;",
                             "S1<$[Hc",
                             "S1<$Hc",
-                            "U1<$fA",
+                            "U1<$fA", 
                             "W1,$_A",
                             "AS1<$fD",
                             "1<$fE+"
@@ -725,25 +599,33 @@
                     description: "Detects RevoUninstaller based on specific strings",
                     rule: function(content) {
                         const patterns = [
-                            /RevoUnin\.exe/i,
-                            /Revo Uninstaller/i,
-                            /https:\/\/www\.revouninstaller\.com/i,
-                            /Revo Uninstaller-command-manager-profile/i,
-                            /Revo Uninstaller Pro/i,
-                            /https:\/\/www\.facebook\.com\/pages\/Revo-Uninstaller\/53526911789/i
+                            "RevoUnin.exe",
+                            "Revo Uninstaller", 
+                            "https://www.revouninstaller.com",
+                            "Revo Uninstaller-command-manager-profile",
+                            "Revo Uninstaller Pro",
+                            "https://www.facebook.com/pages/Revo-Uninstaller/53526911789"
                         ];
                         
                         const xPatterns = [
-                            /RevoUnin\.exe/i,
-                            /Revo Uninstaller/i,
-                            /https:\/\/www\.revouninstaller\.com/i,
-                            /Revo Uninstaller-command-manager-profile/i
+                            "RevoUnin.exe",
+                            "Revo Uninstaller",
+                            "https://www.revouninstaller.com", 
+                            "Revo Uninstaller-command-manager-profile"
                         ];
                         
-                        const xMatches = xPatterns.filter(pattern => pattern.test(content));
-                        const allMatches = patterns.filter(pattern => pattern.test(content));
+                        let xMatches = 0;
+                        let allMatches = 0;
                         
-                        return xMatches.length >= 1 && allMatches.length >= 2;
+                        for (const pattern of xPatterns) {
+                            if (content.includes(pattern)) xMatches++;
+                        }
+                        
+                        for (const pattern of patterns) {
+                            if (content.includes(pattern)) allMatches++;
+                        }
+                        
+                        return xMatches >= 1 && allMatches >= 2;
                     },
                     severity: "warning"
                 },
@@ -752,25 +634,28 @@
                     description: "Detects Eulen based on specific strings and PE characteristics",
                     rule: function(content) {
                         const patterns = [
-                            /This program cannot be run in DOS mode\./i,
-                            /NtQuerySystemInformation/i,
-                            /wESP_/i,
-                            /vAYesp/i,
-                            /F<VEH5/i,
-                            /D3D11CreateDeviceAndSwapChain/i,
-                            /DnsNameCompare_W/i,
-                            /HeapFree/i,
-                            /InitSecurityInterfaceW/i,
-                            /AlphaBlend/i,
-                            /HeapAlloc/i,
-                            /D3DCompile/i,
-                            /SHELL32\.dll/i,
-                            /PathRemoveFileSpecW/i,
-                            /UxTheme\.dll/i
+                            "This program cannot be run in DOS mode.",
+                            "NtQuerySystemInformation",
+                            "wESP_", 
+                            "vAYesp",
+                            "F<VEH5",
+                            "D3D11CreateDeviceAndSwapChain",
+                            "DnsNameCompare_W",
+                            "HeapFree",
+                            "InitSecurityInterfaceW",
+                            "AlphaBlend", 
+                            "HeapAlloc",
+                            "D3DCompile",
+                            "SHELL32.dll",
+                            "PathRemoveFileSpecW",
+                            "UxTheme.dll"
                         ];
                 
-                        const matches = patterns.filter(p => p.test(content));
-                        return matches.length >= 10;
+                        let matches = 0;
+                        for (const pattern of patterns) {
+                            if (content.includes(pattern)) matches++;
+                        }
+                        return matches >= 10;
                     },
                     severity: "danger"
                 },
@@ -780,7 +665,7 @@
                     rule: function(content) {
                         const bytes = new Uint8Array(content.split('').map(c => c.charCodeAt(0)));
                         const fileSize = bytes.length;
-
+            
                         if (fileSize < 50 * 1024 || fileSize > 50 * 1024 * 1024)
                             return false;
                         
