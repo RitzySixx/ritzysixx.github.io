@@ -1,6 +1,4 @@
-// PowerShell script copying functionality - MOVED OUTSIDE DOMContentLoaded
-function copyScript(scriptId) {
-    // Placeholder function - you'll need to add your actual PowerShell scripts here
+function copyScript(scriptId, element) {
     const scripts = {
         'script1': 'Get-Process | Format-Table Name, CPU, WorkingSet -AutoSize',
         'script2': 'Get-NetTCPConnection | Where-Object {$_.State -eq "Established"}',
@@ -16,18 +14,17 @@ function copyScript(scriptId) {
     const scriptContent = scripts[scriptId] || 'Script not found';
     
     navigator.clipboard.writeText(scriptContent).then(() => {
-        // Show temporary success message
-        const originalText = event.target.textContent;
-        event.target.textContent = 'Copied!';
-        event.target.style.background = 'linear-gradient(to right, var(--success), #00e676)';
+        const originalText = element.textContent;
+        element.textContent = 'Copied!';
+        element.style.background = 'linear-gradient(to right, var(--success), #00e676)';
         
         setTimeout(() => {
-            event.target.textContent = originalText;
-            event.target.style.background = 'linear-gradient(to right, var(--primary-blue), var(--accent-blue))';
+            element.textContent = originalText;
+            element.style.background = 'linear-gradient(to right, var(--primary-blue), var(--accent-blue))';
         }, 2000);
     }).catch(err => {
-        console.error('Failed to copy script: ', err);
-        alert('Failed to copy script to clipboard');
+
+        console.log('Clipboard copy failed silently');
     });
 }
 
