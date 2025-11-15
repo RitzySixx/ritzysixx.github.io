@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced File Scanner</title>
+    <title>YaraAC File Scanner</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <style>
@@ -323,7 +323,7 @@
     <div class="container">
         <header>
             <h1><i class="fas fa-shield-alt"></i> Advanced File Scanner</h1>
-            <p>Comprehensive file analysis with Yara rules, hash verification, and security assessment</p>
+            <p>Comprehensive File Analysis With Yara Rules, Hash Verification, & Security Assessment</p>
         </header>
 
         <div class="scanner-container">
@@ -345,7 +345,7 @@
             <div class="scanning-animation" id="scanningAnimation">
                 <div class="spinner"></div>
                 <h3>Scanning File</h3>
-                <p>Analyzing content and checking against security rules<span class="pulse"></span><span class="pulse"></span><span class="pulse"></span></p>
+                <p>Analyzing File and Checking Against Database<span class="pulse"></span><span class="pulse"></span><span class="pulse"></span></p>
             </div>
 
             <section class="results-section" id="resultsSection">
@@ -361,7 +361,7 @@
         </div>
 
         <footer>
-            <p>Advanced File Scanner &copy; 2023 | Static GitHub Hosted Security Tool</p>
+            <p>YaraAC File Scanner &copy; 2025 | File Analysis Tool</p>
         </footer>
     </div>
 
@@ -394,7 +394,7 @@
             const yaraRules = [
                 {
                     name: "Generic Cheat (A)",
-                    description: "Detects generic cheat patterns and GTA cheat strings",
+                    description: "Possible Generic Cheat",
                     rule: function(content) {
                         const patterns = [
                             "This program cannot be run in DOS mode.",
@@ -439,7 +439,7 @@
                 },
                 {
                     name: "Generic Cheat (B)",
-                    description: "Detects lightweight cheat loader indicators and configuration artifacts",
+                    description: "Possible Generic Cheat",
                     rule: function(content) {
                         const patterns = [
                             "This program cannot be run in DOS mode.",
@@ -458,7 +458,7 @@
                 },
                 {
                     name: "Generic Cheat (C)",
-                    description: "Detects generic cheat patterns with specific strings",
+                    description: "Possible Generic Cheat",
                     rule: function(content) {
                         const patterns = [
                             "This program cannot be run in DOS mode.",
@@ -494,7 +494,7 @@
                 },
                 {
                     name: "Generic Cheat (D)", 
-                    description: "Detects generic cheat patterns with specific strings",
+                    description: "Possible Generic Cheat",
                     rule: function(content) {
                         const patterns = [
                             "This program cannot be run in DOS mode.",
@@ -527,7 +527,7 @@
                 },
                 {
                     name: "Generic Cheat (E)",
-                    description: "Detects generic cheat patterns with specific strings", 
+                    description: "Possible Generic Cheat", 
                     rule: function(content) {
                         const patterns = [
                             "This program cannot be run in DOS mode.",
@@ -563,7 +563,7 @@
                 },
                 {
                     name: "Generic Cheat (F)",
-                    description: "Detects generic cheat patterns with specific strings",
+                    description: "Possible Generic Cheat",
                     rule: function(content) {
                         const patterns = [
                             "This program cannot be run in DOS mode.",
@@ -594,7 +594,7 @@
                 },
                 {
                     name: "RevoUninstaller",
-                    description: "Detects RevoUninstaller based on specific strings",
+                    description: "RevoUninstaller Detected",
                     rule: function(content) {
                         const patterns = [
                             "RevoUnin.exe",
@@ -615,7 +615,7 @@
                 },
                 {
                     name: "Eulen",
-                    description: "Paid Advanced FiveM Cheat Service",
+                    description: "Eulen Cheat Detected",
                     rule: function(content) {
                         const patterns = [
                             "This program cannot be run in DOS mode.",
@@ -665,7 +665,7 @@
                 },
                 {
                     name: "Packed_File",
-                    description: "Detects highly packed, compressed, or encrypted files using whole-file entropy analysis",
+                    description: "Packed Encrypted File",
                     rule: function(content) {
                         const bytes = new Uint8Array(content.split('').map(c => c.charCodeAt(0)));
                         const fileSize = bytes.length;
@@ -712,7 +712,7 @@
                 },
                 {
                     name: "Memory_Injection",
-                    description: "Detects advanced memory injection, DLL injection, and process hollowing patterns",
+                    description: "Memory/DLL injection Process Hollowing",
                     rule: function(content) {
                         const patterns = [
                             "WriteProcessMemory", "CreateRemoteThread", "VirtualAllocEx", "QueueUserAPC",
@@ -735,7 +735,7 @@
                 },
                 {
                     name: "Memory_Manipulation_Hooking",
-                    description: "Detects memory manipulation, API hooking, and code injection patterns",
+                    description: "Memory manipulation/hooking",
                     rule: function(content) {
                         const patterns = [
                             "VirtualProtect", "VirtualAlloc", "VirtualFree", "HeapCreate", "HeapAlloc",
@@ -757,7 +757,7 @@
                 },
                 {
                     name: "Advanced_Memory_Manipulation",
-                    description: "Detects advanced memory manipulation including PE injection and runtime patching",
+                    description: "Memory Manipulation & PE Injection & Runtime Patching",
                     rule: function(content) {
                         const patterns = [
                             "MapViewOfFile", "UnmapViewOfFile", "CreateFileMappingA", "CreateFileMappingW",
@@ -779,7 +779,7 @@
                 },
                 {
                     name: "Reflective_DLL_Loading",
-                    description: "Detects reflective DLL loading and memory-based payload execution",
+                    description: "DLL loading & memory payload execution",
                     rule: function(content) {
                         const patterns = [
                             "ReflectiveDLLMain", "ReflectiveLoad", "ReflectiveInit", "ReflectiveEntry",
@@ -800,7 +800,7 @@
                 },
                 {
                     name: "Memory_Decompression",
-                    description: "Detects memory decompression, packing, and unpacking routines",
+                    description: "Memory Decompression Packing",
                     rule: function(content) {
                         const patterns = [
                             "RtlDecompressBuffer", "RtlDecompressFragment", "RtlGetCompressionWorkSpaceSize",
@@ -827,7 +827,7 @@
                 },
                 {
                     name: "Fileless_Execution",
-                    description: "Detects basic PowerShell execution with bypass and encoding patterns",
+                    description: "Fileless Executions Detected",
                     rule: function(content) {
                         const patterns = [
                             "-NoProfile -NonInteractive -EncodedCommand", "-NoProfile -NonInteractive -Command",
@@ -851,7 +851,7 @@
                 },
                 {
                     name: "PowerShell_Obfuscated",
-                    description: "Detects obfuscated PowerShell scripts and encoded execution patterns",
+                    description: "Obfuscated Scripts & Encoded Patterns",
                     rule: function(content) {
                         const patterns = [
                             "[System.Convert]::FromBase64String", "[Runtime.Interopservices.CharSet]",
@@ -876,7 +876,7 @@
                 },
                 {
                     name: "Remote_Execution",
-                    description: "Detects PowerShell remote execution and script download patterns",
+                    description: "Remote Execution & Script Patterns",
                     rule: function(content) {
                         const patterns = [
                             "Invoke-Command", "Enter-PSSession", "New-PSSession", "Remove-PSSession",
@@ -899,7 +899,7 @@
                 },
                 {
                     name: "Information_Extraction",
-                    description: "Detects PowerShell credential extraction and credential dumping patterns",
+                    description: "Credential Extraction & Dumping",
                     rule: function(content) {
                         const patterns = [
                             "Get-Credential", "ConvertTo-SecureString", "ConvertFrom-SecureString",
@@ -924,7 +924,7 @@
                 },
                 {
                     name: "Registry_Manipulation",
-                    description: "Detects PowerShell registry manipulation and persistence techniques",
+                    description: "Registry Manipulation Tampering",
                     rule: function(content) {
                         const patterns = [
                             "New-ItemProperty", "Set-ItemProperty", "Remove-ItemProperty", "Get-ItemProperty",
@@ -949,7 +949,7 @@
                 },
                 {
                     name: "Network_Communication",
-                    description: "Detects PowerShell network communication and data exfiltration patterns",
+                    description: "Network Communication & Data Patterns Found",
                     rule: function(content) {
                         const patterns = [
                             "New-Object Net.Sockets.TcpClient", "New-Object Net.Sockets.UdpClient",
@@ -974,7 +974,7 @@
                 },
                 {
                     name: "Process_Manipulation",
-                    description: "Detects PowerShell process manipulation and process injection patterns",
+                    description: "Process Manipulation & Injection Patterns",
                     rule: function(content) {
                         const patterns = [
                             "Start-Process", "Stop-Process", "Get-Process", "Wait-Process",
@@ -999,7 +999,7 @@
                 },
                 {
                     name: "System_Manipulation",
-                    description: "Detects PowerShell file system manipulation and alternate data streams",
+                    description: "System Manipulation & ADS Detections",
                     rule: function(content) {
                         const patterns = [
                             "Get-ChildItem", "Get-Item", "Get-Content", "Set-Content", "Add-Content", "Clear-Content",
