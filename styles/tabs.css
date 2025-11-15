@@ -1,0 +1,59 @@
+.tabs-nav {
+    display: flex;
+    background: rgba(10, 14, 23, 0.7);
+    border-radius: 15px;
+    padding: 10px;
+    margin: 30px 0;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(41, 98, 255, 0.2);
+    overflow-x: auto;
+}
+
+.tab-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-light);
+    padding: 12px 24px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+    font-weight: 500;
+    white-space: nowrap;
+    flex: 1;
+    min-width: 120px;
+}
+
+.tab-btn:hover {
+    background: rgba(41, 98, 255, 0.1);
+}
+
+.tab-btn.active {
+    background: linear-gradient(to right, var(--primary-blue), var(--accent-blue));
+    box-shadow: 0 4px 15px rgba(41, 98, 255, 0.4);
+}
+
+.tab-content {
+    position: relative;
+}
+
+.tab-pane {
+    display: none;
+    animation: fadeIn 0.5s ease-out;
+}
+
+.tab-pane.active {
+    display: block;
+}
+
+@media (max-width: 768px) {
+    .tabs-nav {
+        flex-wrap: wrap;
+    }
+    
+    .tab-btn {
+        min-width: 100px;
+        padding: 10px 15px;
+        font-size: 0.9rem;
+    }
+}
