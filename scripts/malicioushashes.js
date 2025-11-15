@@ -1,3 +1,4 @@
+// Known malicious hashes database
 const maliciousHashes = {
     "sha1": [
         "2f60e2956284937d7b36ff7c928ea123accb391c",

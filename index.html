@@ -66,22 +66,60 @@
             <div class="tab-pane" id="about">
                 <div class="content-section">
                     <h2><i class="fas fa-info-circle"></i> About YaraAC File Scanner</h2>
-                    <div class="info-grid">
-                        <div class="info-card">
-                            <h3>What is YaraAC?</h3>
-                            <p>YaraAC File Scanner is a comprehensive file analysis tool that uses Yara rules, hash verification, and file information to detect potentially malicious files.</p>
+                    <div class="about-grid">
+                        <div class="about-card">
+                            <h3><i class="fas fa-question-circle"></i> What is YaraAC?</h3>
+                            <p>YaraAC File Scanner is an advanced, client-side file analysis tool designed to detect potentially malicious files using multiple detection methodologies. The scanner operates entirely in your browser, ensuring complete privacy as no files are uploaded to external servers.</p>
                         </div>
-                        <div class="info-card">
-                            <h3>How It Works</h3>
-                            <p>The scanner analyzes files using multiple detection methods including hash matching against known malicious databases and Yara rule pattern matching.</p>
-                        </div>
-                        <div class="info-card">
-                            <h3>Detection Methods</h3>
+                        <div class="about-card">
+                            <h3><i class="fas fa-cogs"></i> How It Works</h3>
+                            <p>The scanner employs a multi-layered analysis approach:</p>
                             <ul>
-                                <li>Hash-based detection (SHA1, SHA256)</li>
-                                <li>Yara rule pattern matching</li>
-                                <li>File structure analysis</li>
-                                <li>Behavioral indicators</li>
+                                <li><strong>Client-Side Processing:</strong> All file analysis occurs locally in your browser</li>
+                                <li><strong>Real-time Scanning:</strong> Instant analysis without file uploads</li>
+                                <li><strong>Multi-Engine Detection:</strong> Combines hash matching and Yara rules</li>
+                                <li><strong>Comprehensive Reporting:</strong> Detailed results with security scoring</li>
+                            </ul>
+                        </div>
+                        <div class="about-card">
+                            <h3><i class="fas fa-shield-alt"></i> Detection Methods</h3>
+                            <ul>
+                                <li><strong>Hash-based Detection:</strong> Compares SHA1 and SHA256 hashes against known malicious databases</li>
+                                <li><strong>Yara Rule Pattern Matching:</strong> Advanced pattern recognition using custom Yara rules</li>
+                                <li><strong>File Structure Analysis:</strong> Examines file headers, entropy, and structural integrity</li>
+                                <li><strong>Behavioral Indicators:</strong> Identifies suspicious patterns and characteristics</li>
+                            </ul>
+                        </div>
+                        <div class="about-card">
+                            <h3><i class="fas fa-database"></i> Technology Stack</h3>
+                            <p>Built with modern web technologies for optimal performance:</p>
+                            <div class="tech-stack">
+                                <span class="tech-tag">HTML5</span>
+                                <span class="tech-tag">CSS3</span>
+                                <span class="tech-tag">JavaScript ES6+</span>
+                                <span class="tech-tag">CryptoJS</span>
+                                <span class="tech-tag">Yara Rules</span>
+                                <span class="tech-tag">Font Awesome</span>
+                            </div>
+                        </div>
+                        <div class="about-card">
+                            <h3><i class="fas fa-lock"></i> Privacy & Security</h3>
+                            <p>Your privacy is our top priority:</p>
+                            <ul>
+                                <li>No file uploads to external servers</li>
+                                <li>All processing happens locally in your browser</li>
+                                <li>No data collection or tracking</li>
+                                <li>Open-source transparency</li>
+                            </ul>
+                        </div>
+                        <div class="about-card">
+                            <h3><i class="fas fa-bolt"></i> Performance Features</h3>
+                            <ul>
+                                <li>Lightning-fast hash calculations</li>
+                                <li>Optimized Yara rule processing</li>
+                                <li>Real-time progress indicators</li>
+                                <li>Responsive design for all devices</li>
+                                <li>Minimal resource consumption</li>
                             </ul>
                         </div>
                     </div>
@@ -92,21 +130,147 @@
             <div class="tab-pane" id="tools">
                 <div class="content-section">
                     <h2><i class="fas fa-tools"></i> External Security Tools</h2>
-                    <div class="tools-grid">
-                        <div class="tool-card">
-                            <h3>VirusTotal</h3>
-                            <p>Online service that analyzes suspicious files and URLs</p>
-                            <a href="https://www.virustotal.com" target="_blank" class="tool-link">Visit Website</a>
+                    
+                    <!-- Nested tabs for tools categories -->
+                    <nav class="nested-tabs-nav" id="toolsTabsNav">
+                        <button class="nested-tab-btn active" data-tool-category="online-scanners">Online Scanners</button>
+                        <button class="nested-tab-btn" data-tool-category="journal-parsing">Journal Parsing</button>
+                        <button class="nested-tab-btn" data-tool-category="powershell-scripts">PowerShell Scripts</button>
+                        <button class="nested-tab-btn" data-tool-category="usb-drive">USB/Drive Detections</button>
+                        <button class="nested-tab-btn" data-tool-category="prefetch">Prefetch Analysis</button>
+                        <button class="nested-tab-btn" data-tool-category="forensic-tools">Forensic Tools</button>
+                    </nav>
+
+                    <div class="nested-tab-content">
+                        <!-- Online Scanners Tab -->
+                        <div class="nested-tab-pane active" id="online-scanners">
+                            <div class="tools-grid">
+                                <div class="tool-card">
+                                    <h3>VirusTotal</h3>
+                                    <p>Online service that analyzes suspicious files and URLs</p>
+                                    <a href="https://www.virustotal.com" target="_blank" class="tool-link">Visit Website</a>
+                                </div>
+                                <div class="tool-card">
+                                    <h3>Tria.ge</h3>
+                                    <p>Interactive malware analysis sandbox</p>
+                                    <a href="https://tria.ge" target="_blank" class="tool-link">Visit Website</a>
+                                </div>
+                            </div>
                         </div>
-                        <div class="tool-card">
-                            <h3>Hybrid Analysis</h3>
-                            <p>Free malware analysis service</p>
-                            <a href="https://www.hybrid-analysis.com" target="_blank" class="tool-link">Visit Website</a>
+
+                        <!-- Journal Parsing Tab -->
+                        <div class="nested-tab-pane" id="journal-parsing">
+                            <div class="tools-grid">
+                                <div class="tool-card">
+                                    <h3>JournalTrace</h3>
+                                    <p>Windows Journal (JRNL) parser for forensic analysis</p>
+                                    <a href="https://github.com/spokwn/JournalTrace" target="_blank" class="tool-link">Visit GitHub</a>
+                                </div>
+                            </div>
                         </div>
-                        <div class="tool-card">
-                            <h3>ANY.RUN</h3>
-                            <p>Interactive malware analysis service</p>
-                            <a href="https://any.run" target="_blank" class="tool-link">Visit Website</a>
+
+                        <!-- PowerShell Scripts Tab -->
+                        <div class="nested-tab-pane" id="powershell-scripts">
+                            <div class="tools-grid">
+                                <div class="tool-card">
+                                    <h3>PowerShell Script 1</h3>
+                                    <p>Process analysis and monitoring script</p>
+                                    <button class="tool-link" onclick="copyScript('script1')">Copy Script</button>
+                                </div>
+                                <div class="tool-card">
+                                    <h3>PowerShell Script 2</h3>
+                                    <p>Network connection monitoring</p>
+                                    <button class="tool-link" onclick="copyScript('script2')">Copy Script</button>
+                                </div>
+                                <div class="tool-card">
+                                    <h3>PowerShell Script 3</h3>
+                                    <p>User account analysis</p>
+                                    <button class="tool-link" onclick="copyScript('script3')">Copy Script</button>
+                                </div>
+                                <div class="tool-card">
+                                    <h3>PowerShell Script 4</h3>
+                                    <p>Service and driver enumeration</p>
+                                    <button class="tool-link" onclick="copyScript('script4')">Copy Script</button>
+                                </div>
+                                <div class="tool-card">
+                                    <h3>PowerShell Script 5</h3>
+                                    <p>Registry analysis script</p>
+                                    <button class="tool-link" onclick="copyScript('script5')">Copy Script</button>
+                                </div>
+                                <div class="tool-card">
+                                    <h3>PowerShell Script 6</h3>
+                                    <p>File system monitoring</p>
+                                    <button class="tool-link" onclick="copyScript('script6')">Copy Script</button>
+                                </div>
+                                <div class="tool-card">
+                                    <h3>PowerShell Script 7</h3>
+                                    <p>Event log analysis</p>
+                                    <button class="tool-link" onclick="copyScript('script7')">Copy Script</button>
+                                </div>
+                                <div class="tool-card">
+                                    <h3>PowerShell Script 8</h3>
+                                    <p>Memory analysis tools</p>
+                                    <button class="tool-link" onclick="copyScript('script8')">Copy Script</button>
+                                </div>
+                                <div class="tool-card">
+                                    <h3>PowerShell Script 9</h3>
+                                    <p>System integrity checker</p>
+                                    <button class="tool-link" onclick="copyScript('script9')">Copy Script</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- USB/Drive Detections Tab -->
+                        <div class="nested-tab-pane" id="usb-drive">
+                            <div class="tools-grid">
+                                <div class="tool-card">
+                                    <h3>DriveLetterView</h3>
+                                    <p>View and manage drive letter assignments</p>
+                                    <a href="https://www.nirsoft.net/utils/drive_letter_view.html" target="_blank" class="tool-link">Visit Website</a>
+                                </div>
+                                <div class="tool-card">
+                                    <h3>USBDeview</h3>
+                                    <p>List all USB devices connected to your computer</p>
+                                    <a href="https://www.nirsoft.net/utils/usb_devices_view.html" target="_blank" class="tool-link">Visit Website</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Prefetch Analysis Tab -->
+                        <div class="nested-tab-pane" id="prefetch">
+                            <div class="tools-grid">
+                                <div class="tool-card">
+                                    <h3>WinPrefetchView</h3>
+                                    <p>View Windows Prefetch (.pf) files</p>
+                                    <a href="https://www.nirsoft.net/utils/win_prefetch_view.html" target="_blank" class="tool-link">Visit Website</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Forensic Tools Tab -->
+                        <div class="nested-tab-pane" id="forensic-tools">
+                            <div class="tools-grid">
+                                <div class="tool-card">
+                                    <h3>Everything</h3>
+                                    <p>Ultra-fast file search utility for Windows</p>
+                                    <a href="https://www.voidtools.com" target="_blank" class="tool-link">Visit Website</a>
+                                </div>
+                                <div class="tool-card">
+                                    <h3>Wireshark</h3>
+                                    <p>Network protocol analyzer for forensic analysis</p>
+                                    <a href="https://www.wireshark.org" target="_blank" class="tool-link">Visit Website</a>
+                                </div>
+                                <div class="tool-card">
+                                    <h3>Autopsy</h3>
+                                    <p>Digital forensics platform and GUI for The Sleuth Kit</p>
+                                    <a href="https://www.sleuthkit.org/autopsy" target="_blank" class="tool-link">Visit Website</a>
+                                </div>
+                                <div class="tool-card">
+                                    <h3>FTK Imager</h3>
+                                    <p>Forensic toolkit for data preview and imaging</p>
+                                    <a href="https://www.exterro.com/ftk-imager" target="_blank" class="tool-link">Visit Website</a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

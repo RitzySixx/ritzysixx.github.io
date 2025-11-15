@@ -338,6 +338,10 @@ footer {
     border-radius: 50px;
     text-decoration: none;
     transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.9rem;
 }
 
 .tool-link:hover {
@@ -357,6 +361,134 @@ footer {
 
 .guide-content li {
     margin-bottom: 10px;
+}
+
+/* Nested Tabs Styles */
+.nested-tabs-nav {
+    display: flex;
+    background: rgba(10, 14, 23, 0.5);
+    border-radius: 10px;
+    padding: 8px;
+    margin: 20px 0;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(41, 98, 255, 0.2);
+    overflow-x: auto;
+    flex-wrap: wrap;
+}
+
+.nested-tab-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-light);
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+    font-weight: 500;
+    white-space: nowrap;
+    margin: 2px;
+    flex: 1;
+    min-width: 120px;
+}
+
+.nested-tab-btn:hover {
+    background: rgba(41, 98, 255, 0.1);
+}
+
+.nested-tab-btn.active {
+    background: linear-gradient(to right, var(--primary-blue), var(--accent-blue));
+    box-shadow: 0 3px 10px rgba(41, 98, 255, 0.4);
+}
+
+.nested-tab-content {
+    position: relative;
+}
+
+.nested-tab-pane {
+    display: none;
+    animation: fadeIn 0.5s ease-out;
+}
+
+.nested-tab-pane.active {
+    display: block;
+}
+
+/* Remove scrollbar from guide tab */
+#guide {
+    overflow: hidden !important;
+}
+
+#guide .content-section {
+    overflow: hidden !important;
+}
+
+#guide .guide-content {
+    overflow: hidden !important;
+    max-height: none !important;
+}
+
+/* Hide scrollbars for guide tab */
+#guide::-webkit-scrollbar {
+    display: none;
+}
+
+#guide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+/* Enhanced About section styles */
+.about-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 25px;
+    margin-top: 20px;
+}
+
+.about-card {
+    background: rgba(26, 35, 126, 0.2);
+    border-radius: 12px;
+    padding: 25px;
+    border-left: 4px solid var(--accent-blue);
+    transition: transform 0.3s ease;
+}
+
+.about-card:hover {
+    transform: translateY(-5px);
+}
+
+.about-card h3 {
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+    color: var(--light-blue);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.about-card ul {
+    padding-left: 20px;
+}
+
+.about-card li {
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+
+.tech-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.tech-tag {
+    background: rgba(41, 98, 255, 0.2);
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    border: 1px solid rgba(41, 98, 255, 0.3);
 }
 
 @keyframes fadeIn {
@@ -380,7 +512,7 @@ footer {
 }
 
 @media (max-width: 768px) {
-    .results-grid, .info-grid, .tools-grid {
+    .results-grid, .info-grid, .tools-grid, .about-grid {
         grid-template-columns: 1fr;
     }
     
@@ -392,5 +524,14 @@ footer {
         flex-direction: column;
         gap: 15px;
         align-items: flex-start;
+    }
+    
+    .nested-tabs-nav {
+        flex-direction: column;
+    }
+    
+    .nested-tab-btn {
+        min-width: 100%;
+        margin: 2px 0;
     }
 }
