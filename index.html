@@ -839,29 +839,29 @@
                 const reader = new FileReader();
                 
                 reader.onload = function(e) {
-                    const content = e.target.result;
-                    
-                    // Calculate hashes
-                    const sha1Hash = CryptoJS.SHA1(CryptoJS.enc.Latin1.parse(content)).toString();
-                    const sha256Hash = CryptoJS.SHA256(CryptoJS.enc.Latin1.parse(content)).toString();
-                    
-                    // Check Yara rules
+                    const arrayBuffer = e.target.result;
+                    const bytes = new Uint8Array(arrayBuffer);
+                
+                    let content = "";
+                    for (let i = 0; i < bytes.length; i++) {
+                        content += String.fromCharCode(bytes[i]);
+                    }
+                
+                    const wordArray = CryptoJS.lib.WordArray.create(bytes);
+                    const sha1Hash = CryptoJS.SHA1(wordArray).toString();
+                    const sha256Hash = CryptoJS.SHA256(wordArray).toString();
+                
                     const yaraResults = checkYaraRules(content);
-                    
-                    // Check against known malicious hashes
                     const hashResults = checkHashes(sha1Hash, sha256Hash);
-                    
-                    // Display results
+                
                     displayResults(file, sha1Hash, sha256Hash, yaraResults, hashResults);
-                    
-                    // Hide scanning animation
+                
                     scanningAnimation.classList.remove('active');
-                    
-                    // Show results section
                     resultsSection.classList.add('active');
                 };
+
                 
-                reader.readAsBinaryString(file);
+                reader.readAsArrayBuffer(file);
             }
             
             function checkYaraRules(content) {
