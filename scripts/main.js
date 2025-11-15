@@ -1,3 +1,36 @@
+// PowerShell script copying functionality - MOVED OUTSIDE DOMContentLoaded
+function copyScript(scriptId) {
+    // Placeholder function - you'll need to add your actual PowerShell scripts here
+    const scripts = {
+        'script1': 'Get-Process | Format-Table Name, CPU, WorkingSet -AutoSize',
+        'script2': 'Get-NetTCPConnection | Where-Object {$_.State -eq "Established"}',
+        'script3': 'Get-LocalUser | Format-Table Name, Enabled, LastLogon',
+        'script4': 'Get-Service | Where-Object {$_.Status -eq "Running"}',
+        'script5': 'Get-ChildItem HKCU:\\ -Recurse | Select-Object Name',
+        'script6': 'Get-ChildItem C:\\Windows\\System32 -Filter *.exe',
+        'script7': 'Get-EventLog -LogName System -Newest 10',
+        'script8': 'Get-WmiObject -Class Win32_ComputerSystem',
+        'script9': 'Get-HotFix | Sort-Object InstalledOn -Descending'
+    };
+    
+    const scriptContent = scripts[scriptId] || 'Script not found';
+    
+    navigator.clipboard.writeText(scriptContent).then(() => {
+        // Show temporary success message
+        const originalText = event.target.textContent;
+        event.target.textContent = 'Copied!';
+        event.target.style.background = 'linear-gradient(to right, var(--success), #00e676)';
+        
+        setTimeout(() => {
+            event.target.textContent = originalText;
+            event.target.style.background = 'linear-gradient(to right, var(--primary-blue), var(--accent-blue))';
+        }, 2000);
+    }).catch(err => {
+        console.error('Failed to copy script: ', err);
+        alert('Failed to copy script to clipboard');
+    });
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     const dropZone = document.getElementById('dropZone');
     const fileInput = document.getElementById('fileInput');
@@ -44,38 +77,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // PowerShell script copying functionality
-    function copyScript(scriptId) {
-        // Placeholder function - you'll need to add your actual PowerShell scripts here
-        const scripts = {
-            'script1': 'Get-Process | Format-Table Name, CPU, WorkingSet -AutoSize',
-            'script2': 'Get-NetTCPConnection | Where-Object {$_.State -eq "Established"}',
-            'script3': 'Get-LocalUser | Format-Table Name, Enabled, LastLogon',
-            'script4': 'Get-Service | Where-Object {$_.Status -eq "Running"}',
-            'script5': 'Get-ChildItem HKCU:\\ -Recurse | Select-Object Name',
-            'script6': 'Get-ChildItem C:\\Windows\\System32 -Filter *.exe',
-            'script7': 'Get-EventLog -LogName System -Newest 10',
-            'script8': 'Get-WmiObject -Class Win32_ComputerSystem',
-            'script9': 'Get-HotFix | Sort-Object InstalledOn -Descending'
-        };
-        
-        const scriptContent = scripts[scriptId] || 'Script not found';
-        
-        navigator.clipboard.writeText(scriptContent).then(() => {
-            // Show temporary success message
-            const originalText = event.target.textContent;
-            event.target.textContent = 'Copied!';
-            event.target.style.background = 'linear-gradient(to right, var(--success), #00e676)';
-            
-            setTimeout(() => {
-                event.target.textContent = originalText;
-                event.target.style.background = 'linear-gradient(to right, var(--primary-blue), var(--accent-blue))';
-            }, 2000);
-        }).catch(err => {
-            console.error('Failed to copy script: ', err);
-            alert('Failed to copy script to clipboard');
-        });
-    }
+    // REMOVED the copyScript function from here - it's now outside
     
     dropZone.addEventListener('click', () => fileInput.click());
     
