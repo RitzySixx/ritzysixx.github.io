@@ -650,8 +650,7 @@ const yaraRules = [
                 if (content.includes(pattern)) apiMatches++;
             }
             
-            // Lower thresholds for better detection
-            return apiMatches >= 2; // Only need 2 anti-debug patterns now
+            return apiMatches >= 3;
         },
         severity: "danger"
     },
@@ -751,5 +750,140 @@ const yaraRules = [
             return matches >= 2;
         },
         severity: "warning"
+    },
+    {
+        name: "Possible Ransomware",
+        description: "Common Randomware Patterns Detected",
+        rule: function(content) {
+            const patterns = [
+                "How to decrypt files", "Your files are encrypted", "Pay the ransom",
+                "Bitcoin wallet", "decryption service", "recover your files",
+                "AES256", "RSA2048", "file encryption", ".encrypted", ".locked",
+                ".crypted", "WannaCry", "Locky", "CryptoLocker", "Ryuk", "REvil",
+                "Maze", "Conti", "encryption key", "decryption key", "ransom note",
+                "READ_ME.txt", "HELP_DECRYPT.txt", "RECOVER_FILES.txt",
+                "Your files have been encrypted with", 
+                "To recover your files you need to pay",
+                "Send $1000 in Bitcoin to wallet",
+                "All your files have been encrypted",
+                "Decryption software can be purchased",
+                "Contact us at this email to get the decryption key",
+                "AES-256-CBC encrypted", "RSA-2048 encrypted",
+                "WannaCry ransomware", "LockBit ransomware", "Conti ransomware",
+                "REvil/Sodinokibi", "Maze ransomware", "Ryuk ransomware"
+            ];
+            
+            let matches = 0;
+            for (const pattern of patterns) {
+                if (content.includes(pattern)) matches++;
+            }
+            return matches >= 3;
+        },
+        severity: "danger"
+    },
+    {
+        name: "Possible RAT Detection",
+        description: "Common RAT Detections Inside File",
+        rule: function(content) {
+            const patterns = [
+                "NanoCore", "Gh0stRAT", "DarkComet", "njRAT", "QuasarRAT",
+                "keylogger", "screenshotcapture", "remote desktop", "camcapture",
+                "GetAsyncKeyState", "SetWindowsHookEx", "shell.execute",
+                "reverse_shell", "backconnect", "C2_server", "command_and_control",
+                "victim_id", "bot_id", "server_config", "rat_config", "njRAT Config",
+                "AsyncRAT", "Remcos RAT", "NetWire RAT",
+                "C2_Server_Address", "Bot_Identifier", "Victim_Machine_ID",
+                "Keylogger_Enabled", "Remote_Desktop_Active", "Webcam_Capture",
+                "Microphone_Record", "File_Manager_Enabled", "Process_Manager"
+            ];
+            
+            let matches = 0;
+            for (const pattern of patterns) {
+                if (content.includes(pattern)) matches++;
+            }
+            return matches >= 4;
+        },
+        severity: "danger"
+    },
+    {
+        name: "Possible Discord Token Logger",
+        description: "Common Token Logger Indications",
+        rule: function(content) {
+            const patterns = [
+                "discord.com/api/webhooks", "DiscordToken", "Local Storage/leveldb",
+                "Roaming/Discord", "tokens.txt", "discord tokens", "webhook_url",
+                "x-super-properties", "authorization", "user-token", "payment_source",
+                "billing", "credit_card", "discord_guilds", "discord_friends",
+                "harvest_tokens", "steal_tokens", "token_grabber", "discord.py",
+                "discord.js", "webhook.send", "hook.php", "api/webhooks",
+                "https://discord.com/api/webhooks/",
+                "Authorization: ", "User-Agent: DiscordBot",
+                "X-Super-Properties:", "discord.com/api/v9/users/@me",
+                "Local Storage/leveldb", "Roaming\\\\Discord\\\\Local Storage\\\\leveldb",
+                "tokens.txt", "discord_tokens.txt", "grabbed_tokens.txt",
+                "DiscordTokenGrabber", "TokenLogger", "WebhookManager"
+            ];
+            
+            let matches = 0;
+            for (const pattern of patterns) {
+                if (content.includes(pattern)) matches++;
+            }
+            return matches >= 5;
+        },
+        severity: "danger"
+    },
+    {
+        name: "Possible Crypto Miner",
+        description: "Common Crypto Mining Indications",
+        rule: function(content) {
+            const patterns = [
+                "xmr.pool", "moneropool", "nanopool.org", "minexmr.com",
+                "cryptonight", "randomx", "argon2", "cpu_miner", "gpu_miner",
+                "stratum+tcp", "mining_pool", "getwork", "submit_hash",
+                "cpuminer", "cgminer", "bfgminer", "xmrig", "xmr-stak",
+                "nicehash", "mining_rig", "hash_rate", "difficulty",
+                "block_reward", "crypto_miner", "mining_software",
+                "stratum+tcp://xmr.pool.minergate.com",
+                "stratum+tcp://pool.minexmr.com",
+                "stratum+tcp://xmr-asia1.nanopool.org",
+                "stratum+tcp://xmr-us-east1.nanopool.org",
+                "stratum+tcp://xmr-eu1.nanopool.org",
+                "xmrig.exe", "xmr-stak.exe", "cpuminer-multi",
+                "cryptonight_r", "randomx_algorithm", "argon2_chukwa",
+                "mining_threads", "cpu_affinity", "gpu_mining_enabled"
+            ];
+            
+            let matches = 0;
+            for (const pattern of patterns) {
+                if (content.includes(pattern)) matches++;
+            }
+            return matches >= 4;
+        },
+        severity: "danger"
+    },
+    {
+        name: "Possible Malware",
+        description: "Common malware droppers & loaders detected",
+        rule: function(content) {
+            const patterns = [
+                "UPX packed", "PECompact", "ASPack", "Themida", "VMProtect",
+                "dropper.exe", "loader.dll", "stub.bin", "payload.dat",
+                "stage2.bin", "malware_config", "bot_config", "c2_config",
+                "decrypt_payload", "unpack_stage", "inject_payload",
+                "malware_family", "trojan_generic", "win32.malware",
+                "malicious_payload", "infection_chain", "persistence_setup",
+                "UPX0", "UPX1", "UPX2", "PECompact2", "ASPack v2.12",
+                "Themida/WinLicense", "VMProtect v3", "Enigma Protector",
+                "Armadillo Protection", "Obsidium Protection", "CodeVirtualizer",
+                "MPRESS compressed", "FSG compressed", "UPX compressed"
+            ];
+            
+            let matches = 0;
+            for (const pattern of patterns) {
+                if (content.includes(pattern)) matches++;
+            }
+            return matches >= 4;
+        },
+        severity: "danger"
     }
 ];
