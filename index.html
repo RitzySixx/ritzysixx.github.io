@@ -394,12 +394,8 @@
                     name: "Generic Cheat (A)",
                     description: "Detects generic cheat patterns and GTA cheat strings",
                     rule: function(content) {
-                        // Check for negative condition first
-                        if (content.includes("This program cannot be run in DOS mode.")) {
-                            return false;
-                        }
-                        
                         const patterns = [
+                            "This program cannot be run in DOS mode.",
                             "dagger", "bottle", "crowbar", "unarmed", "flashlight", "golfclub", "hammer",
                             "hatchet", "knuckle", "knine", "machete", "switchblade", "nightstick", "wrench",
                             "battleaxe", "poolcue", "stone_hatchet", "pistol", "pistol_mk2", "combatpistol",
@@ -443,12 +439,8 @@
                     name: "Generic Cheat (B)",
                     description: "Detects lightweight cheat loader indicators and configuration artifacts",
                     rule: function(content) {
-                        // Check for negative condition first
-                        if (content.includes("This program cannot be run in DOS mode.")) {
-                            return false;
-                        }
-                        
                         const patterns = [
+                            "This program cannot be run in DOS mode.",
                             "\\config\\config.json",
                             "Enabled##Aimbot", 
                             "Style##PedVisualsBox"
@@ -458,7 +450,7 @@
                         for (const pattern of patterns) {
                             if (content.includes(pattern)) matches++;
                         }
-                        return matches >= 3; // Changed from 4 to 3 since we only have 3 positive patterns now
+                        return matches >= 3;
                     },
                     severity: "danger"
                 },
@@ -467,6 +459,7 @@
                     description: "Detects generic cheat patterns with specific strings",
                     rule: function(content) {
                         const patterns = [
+                            "This program cannot be run in DOS mode.",
                             "<requestedExecutionLevel level='asInvoker' uiAccess='false' />",
                             "W1,$_@",
                             "14$_A:",
@@ -502,6 +495,7 @@
                     description: "Detects generic cheat patterns with specific strings",
                     rule: function(content) {
                         const patterns = [
+                            "This program cannot be run in DOS mode.",
                             "h.rsrc",
                             "AS1,$A",
                             ".AaVXM",
@@ -534,6 +528,7 @@
                     description: "Detects generic cheat patterns with specific strings", 
                     rule: function(content) {
                         const patterns = [
+                            "This program cannot be run in DOS mode.",
                             "V1<$fA",
                             "e14$AYHc",
                             "V1<$fD",
@@ -569,6 +564,7 @@
                     description: "Detects generic cheat patterns with specific strings",
                     rule: function(content) {
                         const patterns = [
+                            "This program cannot be run in DOS mode.",
                             "1<$[Hc",
                             "S1<$fA", 
                             "AS1<$A[Hc",
@@ -822,9 +818,18 @@
             }
             
             function checkHashes(sha1, sha256) {
+                const sha1Lower = sha1.toLowerCase();
+                const sha256Lower = sha256.toLowerCase();
+                
                 const results = {
-                    sha1: { match: maliciousHashes.sha1.includes(sha1), type: "SHA1" },
-                    sha256: { match: maliciousHashes.sha256.includes(sha256), type: "SHA256" }
+                    sha1: { 
+                        match: maliciousHashes.sha1.some(hash => hash.toLowerCase() === sha1Lower), 
+                        type: "SHA1" 
+                    },
+                    sha256: { 
+                        match: maliciousHashes.sha256.some(hash => hash.toLowerCase() === sha256Lower), 
+                        type: "SHA256" 
+                    }
                 };
                 return results;
             }
