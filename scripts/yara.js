@@ -272,7 +272,7 @@ const yaraRules = [
         severity: "danger"
     },
     {
-        name: "Packed_File",
+        name: "Packed File",
         description: "Packed Encrypted File",
         rule: function(content) {
             const bytes = new Uint8Array(content.split('').map(c => c.charCodeAt(0)));
@@ -297,7 +297,7 @@ const yaraRules = [
             const entropy = calculateEntropy(bytes);
             return entropy >= 7.2;
         },
-        severity: "danger"
+        severity: "warning"
     },
     {
         name: "Admin Privileges",
@@ -319,7 +319,7 @@ const yaraRules = [
         severity: "warning"
     },
     {
-        name: "Memory_Injection",
+        name: "Memory Injection",
         description: "Memory/DLL injection Process Hollowing",
         rule: function(content) {
             const patterns = [
@@ -342,7 +342,7 @@ const yaraRules = [
         severity: "danger"
     },
     {
-        name: "Memory_Manipulation_Hooking",
+        name: "Memory Manipulation Hooking",
         description: "Memory manipulation/hooking",
         rule: function(content) {
             const patterns = [
@@ -364,7 +364,7 @@ const yaraRules = [
         severity: "danger"
     },
     {
-        name: "Advanced_Memory_Manipulation",
+        name: "Advanced Memory Manipulation",
         description: "Memory Manipulation & PE Injection & Runtime Patching",
         rule: function(content) {
             const patterns = [
@@ -386,7 +386,7 @@ const yaraRules = [
         severity: "danger"
     },
     {
-        name: "Reflective_DLL_Loading",
+        name: "Reflective DLL Loading",
         description: "DLL loading & memory payload execution",
         rule: function(content) {
             const patterns = [
@@ -407,7 +407,7 @@ const yaraRules = [
         severity: "danger"
     },
     {
-        name: "Memory_Decompression",
+        name: "Memory Decompression",
         description: "Memory Decompression Packing",
         rule: function(content) {
             const patterns = [
@@ -434,7 +434,7 @@ const yaraRules = [
         severity: "danger"
     },
     {
-        name: "Fileless_Execution",
+        name: "Fileless Execution",
         description: "Fileless Executions Detected",
         rule: function(content) {
             const patterns = [
@@ -458,7 +458,7 @@ const yaraRules = [
         severity: "danger"
     },
     {
-        name: "PowerShell_Obfuscated",
+        name: "PowerShell Obfuscated",
         description: "Obfuscated Scripts & Encoded Patterns",
         rule: function(content) {
             const patterns = [
@@ -483,7 +483,7 @@ const yaraRules = [
         severity: "danger"
     },
     {
-        name: "Remote_Execution",
+        name: "Remote Execution",
         description: "Remote Execution & Script Patterns",
         rule: function(content) {
             const patterns = [
@@ -506,7 +506,7 @@ const yaraRules = [
         severity: "danger"
     },
     {
-        name: "Information_Extraction",
+        name: "Information Extraction",
         description: "Credential Extraction & Dumping",
         rule: function(content) {
             const patterns = [
@@ -531,7 +531,7 @@ const yaraRules = [
         severity: "danger"
     },
     {
-        name: "Registry_Manipulation",
+        name: "Registry Manipulation",
         description: "Registry Manipulation Tampering",
         rule: function(content) {
             const patterns = [
@@ -556,7 +556,7 @@ const yaraRules = [
         severity: "danger"
     },
     {
-        name: "Network_Communication",
+        name: "Network Communication",
         description: "Network Communication & Data Patterns Found",
         rule: function(content) {
             const patterns = [
@@ -581,7 +581,7 @@ const yaraRules = [
         severity: "danger"
     },
     {
-        name: "Process_Manipulation",
+        name: "Process Manipulation",
         description: "Process Manipulation & Injection Patterns",
         rule: function(content) {
             const patterns = [
@@ -606,7 +606,7 @@ const yaraRules = [
         severity: "danger"
     },
     {
-        name: "System_Manipulation",
+        name: "System Manipulation",
         description: "System Manipulation & ADS Detections",
         rule: function(content) {
             const patterns = [
@@ -629,26 +629,20 @@ const yaraRules = [
         severity: "danger"
     },
     {
-        name: "Advanced_Anti_Debug_Detection",
-        description: "Detects sophisticated anti-debugging techniques with reduced false positives",
+        name: "Anti Debug",
+        description: "Anti Debugging Detected",
         rule: function(content) {
             // More specific API patterns with fullword matching
             const debugPatterns = [
                 "IsDebuggerPresent", 
                 "CheckRemoteDebuggerPresent", 
-                "OutputDebugStringA",
+                "OutputDebugString",
                 "NtQueryInformationProcess",
                 "ZwQueryInformationProcess",
-                "PEB.BeingDebugged",
-                "NtGlobalFlag"
-            ];
-            
-            // Code sequences for common anti-debug techniques
-            const codePatterns = [
-                "\x64\xA1\x30\x00\x00\x00",  // PEB access pattern
-                "\x0F\x31",                   // RDTSC instruction
-                "\x9C\x58",                   // PUSHF + POP EAX
-                "\xEB\xFE"                    // Infinite loop
+                "BeingDebugged",
+                "NtGlobalFlag",
+                "DebuggerPresent",
+                "ProcessDebugPort"
             ];
             
             let apiMatches = 0;
@@ -656,179 +650,106 @@ const yaraRules = [
                 if (content.includes(pattern)) apiMatches++;
             }
             
-            let codeMatches = 0;
-            for (const pattern of codePatterns) {
-                if (content.includes(pattern)) codeMatches++;
-            }
-            
-            // Require multiple indicators to reduce false positives
-            return (apiMatches >= 2 && codeMatches >= 1) || apiMatches >= 4;
+            // Lower thresholds for better detection
+            return apiMatches >= 2; // Only need 2 anti-debug patterns now
         },
         severity: "danger"
     },
     {
-        name: "Advanced_ImGui_Detection",
-        description: "Detects ImGui usage with specific function signatures and patterns",
+        name: "ImGui Generation",
+        description: "Imgui generation detected",
         rule: function(content) {
             // Core ImGui function signatures (more specific)
             const imguiFunctions = [
-                "ImGui::Begin(",
-                "ImGui::Text(",
-                "ImGui::Button(",
-                "ImGui::SliderFloat(",
-                "ImGui::Checkbox(",
-                "ImGui::SameLine(",
-                "ImGui::NewFrame(",
-                "ImGui::Render(",
-                "ImGui_ImplDX11_NewFrame",
-                "ImGui_ImplWin32_NewFrame"
+                "ImGui::Begin",
+                "ImGui::Text",
+                "ImGui::Button",
+                "ImGui::Slider",
+                "ImGui::Checkbox",
+                "ImGui::SameLine",
+                "ImGui::NewFrame",
+                "ImGui::Render",
+                "ImGui_ImplDX",
+                "ImGui_ImplWin32",
+                "ImVec2",
+                "ImGuiIO",
+                "ImGuiStyle",
+                "Dear ImGui"
             ];
-            
-            // ImGui structural patterns
-            const structuralPatterns = [
-                "ImGuiIO& io = ImGui::GetIO()",
-                "ImGuiStyle& style = ImGui::GetStyle()",
-                "ImVec2 window_size = ImVec2(",
-                "ImGuiWindowFlags_NoResize",
-                "IMGUI_API bool",
-                "IMGUI_IMPL_API"
-            ];
-            
-            // File size and structure validation
-            const bytes = new Uint8Array(content.split('').map(c => c.charCodeAt(0)));
-            const fileSize = bytes.length;
-            const isReasonableSize = fileSize > 50000 && fileSize < 50000000; // 50KB - 50MB
             
             let functionMatches = 0;
             for (const pattern of imguiFunctions) {
                 if (content.includes(pattern)) functionMatches++;
             }
             
-            let structuralMatches = 0;
-            for (const pattern of structuralPatterns) {
-                if (content.includes(pattern)) structuralMatches++;
-            }
-            
-            // Require multiple specific ImGui patterns and reasonable file size
-            return isReasonableSize && (
-                (functionMatches >= 3 && structuralMatches >= 2) || 
-                (functionMatches >= 5)
-            );
+            // Much lower threshold - only need 2 ImGui patterns
+            return functionMatches >= 2;
         },
         severity: "warning"
     },
     {
-        name: "Advanced_KeyAuth_Detection",
-        description: "Detects KeyAuth authentication with specific API patterns and domains",
+        name: "KeyAuth",
+        description: "Keyauth Detection in File",
         rule: function(content) {
-            // KeyAuth specific API endpoints and domains
-            const keyauthDomains = [
-                "https://keyauth.cc/api/1.0/",
-                "keyauth.cc/api/1.0/",
-                "keyauth.win/api/1.0/",
-                "keyauth.com/api/1.0/"
-            ];
-            
-            // KeyAuth API function patterns
-            const apiFunctions = [
-                "keyauth.license(",
-                "keyauth.init(",
-                "keyauth.checkblack(",
-                "keyauth.checkhwid(",
-                "keyauth.register(",
-                "keyauth.webhook(",
-                "keyauth.ban(",
-                "var enckey =",
+            // KeyAuth specific patterns - broader detection
+            const keyauthPatterns = [
+                "keyauth.cc",
+                "keyauth.win", 
+                "keyauth.com",
+                "keyauth.license",
+                "keyauth.init",
+                "keyauth.check",
+                "keyauth.register",
+                "keyauth.webhook",
+                "keyauth.ban",
+                "enckey",
+                "ownerid",
+                "KeyAuth.App",
+                "api/1.0/",
                 "response.success"
             ];
             
-            // KeyAuth structural patterns
-            const structuralPatterns = [
-                "name = keyauth",
-                "ownerid = keyauth",
-                "version = keyauth",
-                "KeyAuth.App",
-                "class keyauth"
-            ];
-            
-            let domainMatches = 0;
-            for (const pattern of keyauthDomains) {
-                if (content.includes(pattern)) domainMatches++;
+            let matches = 0;
+            for (const pattern of keyauthPatterns) {
+                if (content.includes(pattern)) matches++;
             }
             
-            let apiMatches = 0;
-            for (const pattern of apiFunctions) {
-                if (content.includes(pattern)) apiMatches++;
-            }
-            
-            let structuralMatches = 0;
-            for (const pattern of structuralPatterns) {
-                if (content.includes(pattern)) structuralMatches++;
-            }
-            
-            // Multiple detection vectors required
-            return (domainMatches >= 1 && apiMatches >= 2) || 
-                   (apiMatches >= 3 && structuralMatches >= 1) ||
-                   (domainMatches >= 2);
+            // Only need 2 KeyAuth patterns now
+            return matches >= 2;
         },
-        severity: "danger"
+        severity: "warning"
     },
     {
-        name: "Advanced_EAuth_Detection",
-        description: "Detects EAuth authentication system with specific patterns",
+        name: "EAuth",
+        description: "EAuth Detection in File",
         rule: function(content) {
-            // EAuth specific domains and endpoints
-            const eauthDomains = [
-                "https://eauth.me/api/",
-                "eauth.me/api/",
-                "eauth.pro/api/",
-                "eauth.gg/api/",
-                "api.eauth."
-            ];
-            
-            // EAuth API function patterns
-            const apiFunctions = [
-                "EA_Init(",
-                "EA_Login(",
-                "EA_Register(",
-                "EA_Upgrade(",
-                "EA_CheckSession(",
-                "EA_License(",
-                "EA_HWID(",
+            // EAuth specific patterns - broader detection
+            const eauthPatterns = [
+                "eauth.me",
+                "eauth.pro",
+                "eauth.gg",
+                "api.eauth",
+                "EA_Init",
+                "EA_Login", 
+                "EA_Register",
+                "EA_Upgrade",
+                "EA_Check",
+                "EA_License",
+                "EA_HWID",
                 "EA_Response",
                 "EA_Success",
-                "EAClient."
+                "EAClient",
+                "EAuth.Application"
             ];
             
-            // EAuth structural and configuration patterns
-            const configPatterns = [
-                "EAuth.Application",
-                "EAuth.Session",
-                "EAuth.Version",
-                "eauth_config",
-                "eauth_settings"
-            ];
-            
-            let domainMatches = 0;
-            for (const pattern of eauthDomains) {
-                if (content.includes(pattern)) domainMatches++;
+            let matches = 0;
+            for (const pattern of eauthPatterns) {
+                if (content.includes(pattern)) matches++;
             }
             
-            let apiMatches = 0;
-            for (const pattern of apiFunctions) {
-                if (content.includes(pattern)) apiMatches++;
-            }
-            
-            let configMatches = 0;
-            for (const pattern of configPatterns) {
-                if (content.includes(pattern)) configMatches++;
-            }
-            
-            // Require concrete evidence of EAuth usage
-            return (domainMatches >= 1 && apiMatches >= 2) ||
-                   (apiMatches >= 4) ||
-                   (domainMatches >= 2 && configMatches >= 1);
+            // Only need 2 EAuth patterns now
+            return matches >= 2;
         },
-        severity: "danger"
+        severity: "warning"
     }
 ];
