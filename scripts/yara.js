@@ -627,5 +627,208 @@ const yaraRules = [
             return matches >= 4;
         },
         severity: "danger"
+    },
+    {
+        name: "Advanced_Anti_Debug_Detection",
+        description: "Detects sophisticated anti-debugging techniques with reduced false positives",
+        rule: function(content) {
+            // More specific API patterns with fullword matching
+            const debugPatterns = [
+                "IsDebuggerPresent", 
+                "CheckRemoteDebuggerPresent", 
+                "OutputDebugStringA",
+                "NtQueryInformationProcess",
+                "ZwQueryInformationProcess",
+                "PEB.BeingDebugged",
+                "NtGlobalFlag"
+            ];
+            
+            // Code sequences for common anti-debug techniques
+            const codePatterns = [
+                "\x64\xA1\x30\x00\x00\x00",  // PEB access pattern
+                "\x0F\x31",                   // RDTSC instruction
+                "\x9C\x58",                   // PUSHF + POP EAX
+                "\xEB\xFE"                    // Infinite loop
+            ];
+            
+            let apiMatches = 0;
+            for (const pattern of debugPatterns) {
+                if (content.includes(pattern)) apiMatches++;
+            }
+            
+            let codeMatches = 0;
+            for (const pattern of codePatterns) {
+                if (content.includes(pattern)) codeMatches++;
+            }
+            
+            // Require multiple indicators to reduce false positives
+            return (apiMatches >= 2 && codeMatches >= 1) || apiMatches >= 4;
+        },
+        severity: "danger"
+    },
+    {
+        name: "Advanced_ImGui_Detection",
+        description: "Detects ImGui usage with specific function signatures and patterns",
+        rule: function(content) {
+            // Core ImGui function signatures (more specific)
+            const imguiFunctions = [
+                "ImGui::Begin(",
+                "ImGui::Text(",
+                "ImGui::Button(",
+                "ImGui::SliderFloat(",
+                "ImGui::Checkbox(",
+                "ImGui::SameLine(",
+                "ImGui::NewFrame(",
+                "ImGui::Render(",
+                "ImGui_ImplDX11_NewFrame",
+                "ImGui_ImplWin32_NewFrame"
+            ];
+            
+            // ImGui structural patterns
+            const structuralPatterns = [
+                "ImGuiIO& io = ImGui::GetIO()",
+                "ImGuiStyle& style = ImGui::GetStyle()",
+                "ImVec2 window_size = ImVec2(",
+                "ImGuiWindowFlags_NoResize",
+                "IMGUI_API bool",
+                "IMGUI_IMPL_API"
+            ];
+            
+            // File size and structure validation
+            const bytes = new Uint8Array(content.split('').map(c => c.charCodeAt(0)));
+            const fileSize = bytes.length;
+            const isReasonableSize = fileSize > 50000 && fileSize < 50000000; // 50KB - 50MB
+            
+            let functionMatches = 0;
+            for (const pattern of imguiFunctions) {
+                if (content.includes(pattern)) functionMatches++;
+            }
+            
+            let structuralMatches = 0;
+            for (const pattern of structuralPatterns) {
+                if (content.includes(pattern)) structuralMatches++;
+            }
+            
+            // Require multiple specific ImGui patterns and reasonable file size
+            return isReasonableSize && (
+                (functionMatches >= 3 && structuralMatches >= 2) || 
+                (functionMatches >= 5)
+            );
+        },
+        severity: "warning"
+    },
+    {
+        name: "Advanced_KeyAuth_Detection",
+        description: "Detects KeyAuth authentication with specific API patterns and domains",
+        rule: function(content) {
+            // KeyAuth specific API endpoints and domains
+            const keyauthDomains = [
+                "https://keyauth.cc/api/1.0/",
+                "keyauth.cc/api/1.0/",
+                "keyauth.win/api/1.0/",
+                "keyauth.com/api/1.0/"
+            ];
+            
+            // KeyAuth API function patterns
+            const apiFunctions = [
+                "keyauth.license(",
+                "keyauth.init(",
+                "keyauth.checkblack(",
+                "keyauth.checkhwid(",
+                "keyauth.register(",
+                "keyauth.webhook(",
+                "keyauth.ban(",
+                "var enckey =",
+                "response.success"
+            ];
+            
+            // KeyAuth structural patterns
+            const structuralPatterns = [
+                "name = keyauth",
+                "ownerid = keyauth",
+                "version = keyauth",
+                "KeyAuth.App",
+                "class keyauth"
+            ];
+            
+            let domainMatches = 0;
+            for (const pattern of keyauthDomains) {
+                if (content.includes(pattern)) domainMatches++;
+            }
+            
+            let apiMatches = 0;
+            for (const pattern of apiFunctions) {
+                if (content.includes(pattern)) apiMatches++;
+            }
+            
+            let structuralMatches = 0;
+            for (const pattern of structuralPatterns) {
+                if (content.includes(pattern)) structuralMatches++;
+            }
+            
+            // Multiple detection vectors required
+            return (domainMatches >= 1 && apiMatches >= 2) || 
+                   (apiMatches >= 3 && structuralMatches >= 1) ||
+                   (domainMatches >= 2);
+        },
+        severity: "danger"
+    },
+    {
+        name: "Advanced_EAuth_Detection",
+        description: "Detects EAuth authentication system with specific patterns",
+        rule: function(content) {
+            // EAuth specific domains and endpoints
+            const eauthDomains = [
+                "https://eauth.me/api/",
+                "eauth.me/api/",
+                "eauth.pro/api/",
+                "eauth.gg/api/",
+                "api.eauth."
+            ];
+            
+            // EAuth API function patterns
+            const apiFunctions = [
+                "EA_Init(",
+                "EA_Login(",
+                "EA_Register(",
+                "EA_Upgrade(",
+                "EA_CheckSession(",
+                "EA_License(",
+                "EA_HWID(",
+                "EA_Response",
+                "EA_Success",
+                "EAClient."
+            ];
+            
+            // EAuth structural and configuration patterns
+            const configPatterns = [
+                "EAuth.Application",
+                "EAuth.Session",
+                "EAuth.Version",
+                "eauth_config",
+                "eauth_settings"
+            ];
+            
+            let domainMatches = 0;
+            for (const pattern of eauthDomains) {
+                if (content.includes(pattern)) domainMatches++;
+            }
+            
+            let apiMatches = 0;
+            for (const pattern of apiFunctions) {
+                if (content.includes(pattern)) apiMatches++;
+            }
+            
+            let configMatches = 0;
+            for (const pattern of configPatterns) {
+                if (content.includes(pattern)) configMatches++;
+            }
+            
+            // Require concrete evidence of EAuth usage
+            return (domainMatches >= 1 && apiMatches >= 2) ||
+                   (apiMatches >= 4) ||
+                   (domainMatches >= 2 && configMatches >= 1);
+        },
+        severity: "danger"
     }
 ];
