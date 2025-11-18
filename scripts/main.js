@@ -1,14 +1,13 @@
 function copyScript(scriptId, element) {
     const scripts = {
-        'script1': 'Get-Process | Format-Table Name, CPU, WorkingSet -AutoSize',
-        'script2': 'Get-NetTCPConnection | Where-Object {$_.State -eq "Established"}',
-        'script3': 'Get-LocalUser | Format-Table Name, Enabled, LastLogon',
-        'script4': 'Get-Service | Where-Object {$_.Status -eq "Running"}',
-        'script5': 'Get-ChildItem HKCU:\\ -Recurse | Select-Object Name',
-        'script6': 'Get-ChildItem C:\\Windows\\System32 -Filter *.exe',
-        'script7': 'Get-EventLog -LogName System -Newest 10',
-        'script8': 'Get-WmiObject -Class Win32_ComputerSystem',
-        'script9': 'Get-HotFix | Sort-Object InstalledOn -Descending'
+        'Registry Executions': 'Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass; Invoke-Expression (Invoke-RestMethod "https://raw.githubusercontent.com/RitzySixx/RegistryExecutions/refs/heads/main/RegistryExecutions.ps1")',
+        'Fileless Bypasses': 'Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass; Invoke-Expression (Invoke-RestMethod "https://raw.githubusercontent.com/RitzySixx/FilelessBypasses/refs/heads/main/FilelessDetection.ps1")',
+        'USB/PCI Devices': 'iex (iwr "https://raw.githubusercontent.com/RitzySixx/Device-Scanner/refs/heads/main/Devices.ps1")',
+        'Prefetch Analysis': 'Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass; Invoke-Expression (Invoke-RestMethod "https://raw.githubusercontent.com/RitzySixx/Prefetch-Analysis/refs/heads/main/PrefetchAnalyzer.ps1")',
+        'Journal Tampering': 'iex (iwr "https://raw.githubusercontent.com/RitzySixx/Check-Journal-Tampering/refs/heads/main/journalcheck.ps1")',
+        'Custom Task Schedulers': 'iex (iwr "https://raw.githubusercontent.com/RitzySixx/Suspicious-Task-Scheduler/refs/heads/main/TaskSchedulerChecks.ps1")',
+        'Suspicious EVTX': 'Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass; Invoke-Expression (Invoke-RestMethod "https://raw.githubusercontent.com/RitzySixx/Suspicious-EVTX-Parser/refs/heads/main/EVTXParser.ps1")',
+        'Check Services': 'Get-Service | Where-Object { $_.Name -match 'pcasvc|DPS|DiagTrack|SysMain|eventlog|sgrmbroker|cdpusersvc|DNS|Appinfo|WSearch|VSS' } | Format-Table Name, Status, DisplayName -AutoSize',
     };
     
     const scriptContent = scripts[scriptId] || 'Script not found';
