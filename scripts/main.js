@@ -22,12 +22,12 @@ function copyScript(scriptId, element) {
             element.style.background = 'linear-gradient(to right, var(--primary-blue), var(--accent-blue))';
         }, 2000);
     }).catch(err => {
-
         console.log('Clipboard copy failed silently');
     });
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+    // File scanner elements
     const dropZone = document.getElementById('dropZone');
     const fileInput = document.getElementById('fileInput');
     const fileInfo = document.getElementById('fileInfo');
@@ -54,59 +54,44 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById(tabId).classList.add('active');
         });
     });
-    
-    // Nested tabs functionality for tools
-    const nestedTabButtons = document.querySelectorAll('.nested-tab-btn');
-    const nestedTabPanes = document.querySelectorAll('.nested-tab-pane');
-    
-    nestedTabButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            const toolCategory = button.getAttribute('data-tool-category');
-            
-            // Update active nested tab button
-            nestedTabButtons.forEach(btn => btn.classList.remove('active'));
-            button.classList.add('active');
-            
-            // Show active nested tab pane
-            nestedTabPanes.forEach(pane => pane.classList.remove('active'));
-            document.getElementById(toolCategory).classList.add('active');
-        });
-    });
 
-    // REMOVED the copyScript function from here - it's now outside
-    
-    dropZone.addEventListener('click', () => fileInput.click());
-    
-    fileInput.addEventListener('change', function(e) {
-        if (this.files.length > 0) {
-            handleFile(this.files[0]);
-        }
-    });
-    
-    dropZone.addEventListener('dragover', function(e) {
-        e.preventDefault();
-        this.style.borderColor = '#bbdefb';
-        this.style.backgroundColor = 'rgba(41, 98, 255, 0.05)';
-    });
-    
-    dropZone.addEventListener('dragleave', function() {
-        this.style.borderColor = '#2962ff';
-        this.style.backgroundColor = '';
-    });
-    
-    dropZone.addEventListener('drop', function(e) {
-        e.preventDefault();
-        this.style.borderColor = '#2962ff';
-        this.style.backgroundColor = '';
+    // File scanner functionality
+    if (dropZone && fileInput) {
+        dropZone.addEventListener('click', () => fileInput.click());
         
-        if (e.dataTransfer.files.length > 0) {
-            handleFile(e.dataTransfer.files[0]);
-        }
-    });
+        fileInput.addEventListener('change', function(e) {
+            if (this.files.length > 0) {
+                handleFile(this.files[0]);
+            }
+        });
+        
+        dropZone.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            this.style.borderColor = '#bbdefb';
+            this.style.backgroundColor = 'rgba(41, 98, 255, 0.05)';
+        });
+        
+        dropZone.addEventListener('dragleave', function() {
+            this.style.borderColor = '#2962ff';
+            this.style.backgroundColor = '';
+        });
+        
+        dropZone.addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.style.borderColor = '#2962ff';
+            this.style.backgroundColor = '';
+            
+            if (e.dataTransfer.files.length > 0) {
+                handleFile(e.dataTransfer.files[0]);
+            }
+        });
+    }
     
-    newScanBtn.addEventListener('click', function() {
-        resetScanner();
-    });
+    if (newScanBtn) {
+        newScanBtn.addEventListener('click', function() {
+            resetScanner();
+        });
+    }
     
     function handleFile(file) {
         fileName.textContent = file.name;
@@ -148,15 +133,17 @@ document.addEventListener('DOMContentLoaded', function() {
     
     function checkYaraRules(content) {
         const results = [];
-        yaraRules.forEach(rule => {
-            if (rule.rule(content)) {
-                results.push({
-                    name: rule.name,
-                    description: rule.description,
-                    severity: rule.severity
-                });
-            }
-        });
+        if (typeof yaraRules !== 'undefined') {
+            yaraRules.forEach(rule => {
+                if (rule.rule(content)) {
+                    results.push({
+                        name: rule.name,
+                        description: rule.description,
+                        severity: rule.severity
+                    });
+                }
+            });
+        }
         return results;
     }
     
@@ -166,11 +153,11 @@ document.addEventListener('DOMContentLoaded', function() {
         
         const results = {
             sha1: { 
-                match: maliciousHashes.sha1.some(hash => hash.toLowerCase() === sha1Lower), 
+                match: maliciousHashes && maliciousHashes.sha1 ? maliciousHashes.sha1.some(hash => hash.toLowerCase() === sha1Lower) : false, 
                 type: "SHA1" 
             },
             sha256: { 
-                match: maliciousHashes.sha256.some(hash => hash.toLowerCase() === sha256Lower), 
+                match: maliciousHashes && maliciousHashes.sha256 ? maliciousHashes.sha256.some(hash => hash.toLowerCase() === sha256Lower) : false, 
                 type: "SHA256" 
             }
         };
@@ -239,11 +226,12 @@ document.addEventListener('DOMContentLoaded', function() {
         // Security Assessment Card
         const securityCard = document.createElement('div');
         securityCard.className = 'result-card';
+        const securityScore = calculateSecurityScore(yaraResults, hashResults);
         securityCard.innerHTML = `
             <h3><i class="fas fa-chart-line"></i> Security Assessment</h3>
             <p><strong>Security Score:</strong> 
-                <span class="status ${calculateSecurityScore(yaraResults, hashResults)}">
-                    ${calculateSecurityScore(yaraResults, hashResults).toUpperCase()}
+                <span class="status ${securityScore}">
+                    ${securityScore.toUpperCase()}
                 </span>
             </p>
             <p><strong>Yara Matches:</strong> ${yaraResults.length}</p>
