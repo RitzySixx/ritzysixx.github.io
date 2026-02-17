@@ -3,117 +3,115 @@ const cheatDetections = [
     {
         name: "Generic Menu PTFX Detection",
         description: "Common menu-based cheat using particle effects",
-        pattern: "@monitor/resource/menu/client/cl_ptfx.lua:CreatePlayerModePtfxLoop:84:85:116",
-        function: "CreateThread",
-        hashPattern: "6387d32971b38551c3e994b111ba6787",
+        fields: {
+            pattern: "@monitor/resource/menu/client/cl_ptfx.lua:CreatePlayerModePtfxLoop:84:85:116",
+            function: "CreateThread",
+            hashPattern: "6387d32971b38551c3e994b111ba6787"
+        },
         severity: "danger"
     },
     {
-        name: "Outfits Visibility Cheat",
+        name: "Invisible Method #1",
         description: "Outfit manipulation cheat using SetEntityVisible",
-        pattern: "@monitor/outfits.lua:fn:97:120:121",
-        function: "SetEntityVisible",
-        hashPattern: "02ce22e210fa749a671171010f05dd7e",
+        fields: {
+            pattern: "@monitor/outfits.lua:fn:97:120:121",
+            function: "SetEntityVisible",
+            hashPattern: "02ce22e210fa749a671171010f05dd7e"
+        },
         severity: "danger"
     },
     {
         name: "Generic Noclip #1",
         description: "Noclip detection based on invalid player speed",
-        dbg: "5.8626070022583/7.6397044767891/1.7770974745308",
-        reason: "Invalid Player Speed",
+        fields: {
+            dbg: "5.8626070022583/7.6397044767891/1.7770974745308",
+            reason: "Invalid Player Speed"
+        },
+        severity: "danger"
+    },
+    {
+        name: "RPG Detection",
+        description: "Blacklisted projectile detected (RPG)",
+        fields: {
+            reason: "Blacklisted Projectile Detected",
+            weapon: "WEAPON_RPG"
+        },
+        severity: "danger"
+    },
+    {
+        name: "FreeCam Detection #1",
+        description: "FreeCam detection with multiple indicators",
+        fields: {
+            reason: "FreeCam Detected",
+            distance: "3.9234402179718",
+            detection: "Type #3",
+            maxVertical: "1.34515040297831",
+            verticalDot: "3.6654414030109",
+            horizontalDot: "1.03867003418417",
+            maxHorizontal: "0.40034238183878"
+        },
         severity: "danger"
     }
 ];
 
-// Function to extract fields from pasted input
+// Function to extract all labeled fields from pasted input
 function extractFields(input) {
     const lines = input.split('\n').filter(line => line.trim() !== '');
-    const fields = {
-        pattern: null,
-        function: null,
-        hashPattern: null,
-        dbg: null,
-        reason: null,
-        other: []  // for lines without labels
-    };
+    const fields = {};          // key -> value for labeled lines
+    const other = [];            // unlabeled lines
 
     for (let line of lines) {
         line = line.trim();
-        // Check for labeled lines
-        if (line.toLowerCase().startsWith('pattern:')) {
-            fields.pattern = line.substring(8).trim();
-        } else if (line.toLowerCase().startsWith('function:')) {
-            fields.function = line.substring(9).trim();
-        } else if (line.toLowerCase().startsWith('hashpattern:')) {
-            fields.hashPattern = line.substring(12).trim();
-        } else if (line.toLowerCase().startsWith('dbg:')) {
-            fields.dbg = line.substring(4).trim();
-        } else if (line.toLowerCase().startsWith('reason:')) {
-            fields.reason = line.substring(7).trim();
+        const colonIndex = line.indexOf(':');
+        if (colonIndex > 0) {
+            const key = line.substring(0, colonIndex).trim().toLowerCase();
+            const value = line.substring(colonIndex + 1).trim();
+            // Store with original casing? We'll keep value as is, key lowercased for matching.
+            fields[key] = value;
         } else {
-            // Unlabeled line – treat as raw string
-            fields.other.push(line);
+            other.push(line);
         }
     }
-    return fields;
+    return { fields, other };
 }
 
 // Function to match detection against known patterns
-function matchDetection(fields) {
+function matchDetection(inputFields, otherLines) {
     const results = [];
 
     for (const detection of cheatDetections) {
-        let matchedFields = 0;
-        let totalPossibleFields = 0;
-        const matches = {
-            pattern: false,
-            function: false,
-            hash: false,
-            dbg: false,
-            reason: false
-        };
+        const expectedFields = detection.fields;
+        const expectedKeys = Object.keys(expectedFields);
+        let matchedCount = 0;
 
-        // Determine which fields this detection uses
-        if (detection.pattern !== undefined && detection.function !== undefined && detection.hashPattern !== undefined) {
-            totalPossibleFields = 3;
-            // Check pattern
-            if (fields.pattern === detection.pattern || fields.other.includes(detection.pattern)) {
-                matches.pattern = true;
-                matchedFields++;
+        // For each expected key, check if input has it and value matches
+        for (const key of expectedKeys) {
+            // Try to match from labeled fields first (case-insensitive key)
+            if (inputFields[key] !== undefined && inputFields[key] === expectedFields[key]) {
+                matchedCount++;
             }
-            // Check function
-            if (fields.function === detection.function || fields.other.includes(detection.function)) {
-                matches.function = true;
-                matchedFields++;
-            }
-            // Check hash
-            if (fields.hashPattern === detection.hashPattern || fields.other.includes(detection.hashPattern)) {
-                matches.hash = true;
-                matchedFields++;
-            }
-        }
-        else if (detection.dbg !== undefined && detection.reason !== undefined) {
-            totalPossibleFields = 2;
-            // Check dbg
-            if (fields.dbg === detection.dbg || fields.other.includes(detection.dbg)) {
-                matches.dbg = true;
-                matchedFields++;
-            }
-            // Check reason
-            if (fields.reason === detection.reason || fields.other.includes(detection.reason)) {
-                matches.reason = true;
-                matchedFields++;
+            // Also check if the value appears in unlabeled lines (for pastes without labels)
+            else if (otherLines.includes(expectedFields[key])) {
+                matchedCount++;
             }
         }
 
-        // Calculate percentage
-        const percentage = totalPossibleFields > 0 ? Math.round((matchedFields / totalPossibleFields) * 100) : 0;
+        const totalPossible = expectedKeys.length;
+        const percentage = totalPossible > 0 ? Math.round((matchedCount / totalPossible) * 100) : 0;
+
+        // Build match details for each expected field
+        const matches = {};
+        for (const key of expectedKeys) {
+            const inputVal = inputFields[key];
+            const expectedVal = expectedFields[key];
+            matches[key] = (inputVal !== undefined && inputVal === expectedVal) || otherLines.includes(expectedVal);
+        }
 
         results.push({
             detection: detection,
             matches: matches,
-            matchedFields: matchedFields,
-            totalPossibleFields: totalPossibleFields,
+            matchedFields: matchedCount,
+            totalPossibleFields: totalPossible,
             totalScore: percentage,
             severity: detection.severity
         });
@@ -142,17 +140,15 @@ function displayKnownDetections() {
         item.className = 'detection-item';
         item.setAttribute('data-name', detection.name);
 
-        let details = '';
-        if (detection.reason) {
-            details = `<small>Reason: ${detection.reason}</small><br><small>DBG: ${detection.dbg.substring(0, 20)}...</small>`;
-        } else {
-            details = `<small>Pattern: ${detection.pattern.substring(0, 30)}...</small>`;
-        }
+        // Create a short preview of fields
+        const fieldPreview = Object.entries(detection.fields)
+            .map(([k, v]) => `${k}: ${v.substring(0, 20)}${v.length > 20 ? '...' : ''}`)
+            .join('<br>');
 
         item.innerHTML = `
             <h4>${detection.name}</h4>
             <p>${detection.description}</p>
-            ${details}
+            <small>${fieldPreview}</small>
             <br>
             <small>Severity: <span class="status ${detection.severity}">${detection.severity}</span></small>
         `;
@@ -161,11 +157,10 @@ function displayKnownDetections() {
         item.addEventListener('click', () => {
             const textarea = document.getElementById('detectionInput');
             if (textarea) {
-                if (detection.reason) {
-                    textarea.value = `dbg:\n${detection.dbg}\nreason:\n${detection.reason}`;
-                } else {
-                    textarea.value = `${detection.pattern}\n${detection.function}\n${detection.hashPattern}`;
-                }
+                // Build a string with all fields
+                const lines = Object.entries(detection.fields)
+                    .map(([k, v]) => `${k}:\n${v}`);
+                textarea.value = lines.join('\n\n');
             }
         });
 
@@ -174,7 +169,7 @@ function displayKnownDetections() {
 }
 
 // Function to display analysis results
-function displayResults(fields, results) {
+function displayResults(inputFields, otherLines, results) {
     const detectionStatus = document.getElementById('detectionStatus');
     const matchPercentage = document.getElementById('matchPercentage');
     const progressBar = document.getElementById('progressBar');
@@ -222,13 +217,11 @@ function displayResults(fields, results) {
     inputDiv.style.marginBottom = '10px';
 
     let inputHtml = '<h4 style="color: var(--light-blue); margin-bottom: 10px;">Analyzed Input:</h4>';
-    if (fields.pattern) inputHtml += `<p><strong>Pattern:</strong> ${fields.pattern}</p>`;
-    if (fields.function) inputHtml += `<p><strong>Function:</strong> ${fields.function}</p>`;
-    if (fields.hashPattern) inputHtml += `<p><strong>Hash:</strong> ${fields.hashPattern}</p>`;
-    if (fields.dbg) inputHtml += `<p><strong>DBG:</strong> ${fields.dbg}</p>`;
-    if (fields.reason) inputHtml += `<p><strong>Reason:</strong> ${fields.reason}</p>`;
-    if (fields.other.length > 0) {
-        fields.other.forEach((val, i) => {
+    for (const [key, value] of Object.entries(inputFields)) {
+        inputHtml += `<p><strong>${key}:</strong> ${value}</p>`;
+    }
+    if (otherLines.length > 0) {
+        otherLines.forEach((val, i) => {
             inputHtml += `<p><strong>String ${i+1}:</strong> ${val}</p>`;
         });
     }
@@ -242,55 +235,18 @@ function displayResults(fields, results) {
     matchDiv.innerHTML = `<h4 style="color: var(--light-blue); margin: 10px 0;">Best Match: ${bestMatch.detection.name}</h4>`;
     matchDetails.appendChild(matchDiv);
 
-    // Determine which type of detection we're dealing with
-    if (bestMatch.detection.pattern !== undefined) {
-        // Pattern/Function/Hash detection
-        const patternItem = document.createElement('div');
-        patternItem.className = `match-item ${bestMatch.matches.pattern ? 'matched' : ''}`;
-        patternItem.innerHTML = `
-            <h4>Pattern Match</h4>
-            <div class="match-value">${bestMatch.matches.pattern ? '✓ MATCHED' : '✗ NO MATCH'}</div>
-            <div>Expected: ${bestMatch.detection.pattern.substring(0, 30)}${bestMatch.detection.pattern.length > 30 ? '...' : ''}</div>
+    // Display each field of the detection and whether it matched
+    const expectedFields = bestMatch.detection.fields;
+    for (const [key, expectedValue] of Object.entries(expectedFields)) {
+        const matched = bestMatch.matches[key];
+        const item = document.createElement('div');
+        item.className = `match-item ${matched ? 'matched' : ''}`;
+        item.innerHTML = `
+            <h4>${key}</h4>
+            <div class="match-value">${matched ? '✓ MATCHED' : '✗ NO MATCH'}</div>
+            <div>Expected: ${expectedValue}</div>
         `;
-        matchDetails.appendChild(patternItem);
-
-        const functionItem = document.createElement('div');
-        functionItem.className = `match-item ${bestMatch.matches.function ? 'matched' : ''}`;
-        functionItem.innerHTML = `
-            <h4>Function Match</h4>
-            <div class="match-value">${bestMatch.matches.function ? '✓ MATCHED' : '✗ NO MATCH'}</div>
-            <div>Expected: ${bestMatch.detection.function}</div>
-        `;
-        matchDetails.appendChild(functionItem);
-
-        const hashItem = document.createElement('div');
-        hashItem.className = `match-item ${bestMatch.matches.hash ? 'matched' : ''}`;
-        hashItem.innerHTML = `
-            <h4>Hash Match</h4>
-            <div class="match-value">${bestMatch.matches.hash ? '✓ MATCHED' : '✗ NO MATCH'}</div>
-            <div>Expected: ${bestMatch.detection.hashPattern.substring(0, 20)}...</div>
-        `;
-        matchDetails.appendChild(hashItem);
-    }
-    else if (bestMatch.detection.dbg !== undefined) {
-        // DBG/Reason detection
-        const dbgItem = document.createElement('div');
-        dbgItem.className = `match-item ${bestMatch.matches.dbg ? 'matched' : ''}`;
-        dbgItem.innerHTML = `
-            <h4>DBG Match</h4>
-            <div class="match-value">${bestMatch.matches.dbg ? '✓ MATCHED' : '✗ NO MATCH'}</div>
-            <div>Expected: ${bestMatch.detection.dbg}</div>
-        `;
-        matchDetails.appendChild(dbgItem);
-
-        const reasonItem = document.createElement('div');
-        reasonItem.className = `match-item ${bestMatch.matches.reason ? 'matched' : ''}`;
-        reasonItem.innerHTML = `
-            <h4>Reason Match</h4>
-            <div class="match-value">${bestMatch.matches.reason ? '✓ MATCHED' : '✗ NO MATCH'}</div>
-            <div>Expected: ${bestMatch.detection.reason}</div>
-        `;
-        matchDetails.appendChild(reasonItem);
+        matchDetails.appendChild(item);
     }
 
     // Show other potential matches
@@ -344,10 +300,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
 
-            const fields = extractFields(input);
-            const results = matchDetection(fields);
+            const { fields, other } = extractFields(input);
+            const results = matchDetection(fields, other);
 
-            displayResults(fields, results);
+            displayResults(fields, other, results);
         });
     }
 
