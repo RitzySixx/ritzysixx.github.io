@@ -1,7 +1,7 @@
 // Anticheat Detection Patterns Database
 const cheatDetections = [
     {
-        name: "Generic PTFX Detection",
+        name: "Generic Menu PTFX Detection",
         description: "Common menu-based cheat using particle effects",
         pattern: "@monitor/resource/menu/client/cl_ptfx.lua:CreatePlayerModePtfxLoop:84:85:116",
         function: "CreateThread",
@@ -9,68 +9,116 @@ const cheatDetections = [
         severity: "danger"
     },
     {
-        name: "Generic Visibility Detection",
+        name: "Outfits Visibility Cheat",
         description: "Outfit manipulation cheat using SetEntityVisible",
         pattern: "@monitor/outfits.lua:fn:97:120:121",
         function: "SetEntityVisible",
         hashPattern: "02ce22e210fa749a671171010f05dd7e",
         severity: "danger"
+    },
+    {
+        name: "Generic Noclip #1",
+        description: "Noclip detection based on invalid player speed",
+        dbg: "5.8626070022583/7.6397044767891/1.7770974745308",
+        reason: "Invalid Player Speed",
+        severity: "danger"
     }
 ];
 
-// Function to extract strings from pasted input
-function extractStrings(input) {
-    // Split by newlines and filter out empty lines
+// Function to extract fields from pasted input
+function extractFields(input) {
     const lines = input.split('\n').filter(line => line.trim() !== '');
-    
-    // Remove any "pattern:", "function:", "hashPattern:" labels if present
-    const cleanedLines = lines.map(line => {
-        return line.replace(/^(pattern:|function:|hashPattern:)\s*/i, '').trim();
-    });
-    
-    return cleanedLines;
+    const fields = {
+        pattern: null,
+        function: null,
+        hashPattern: null,
+        dbg: null,
+        reason: null,
+        other: []  // for lines without labels
+    };
+
+    for (let line of lines) {
+        line = line.trim();
+        // Check for labeled lines
+        if (line.toLowerCase().startsWith('pattern:')) {
+            fields.pattern = line.substring(8).trim();
+        } else if (line.toLowerCase().startsWith('function:')) {
+            fields.function = line.substring(9).trim();
+        } else if (line.toLowerCase().startsWith('hashpattern:')) {
+            fields.hashPattern = line.substring(12).trim();
+        } else if (line.toLowerCase().startsWith('dbg:')) {
+            fields.dbg = line.substring(4).trim();
+        } else if (line.toLowerCase().startsWith('reason:')) {
+            fields.reason = line.substring(7).trim();
+        } else {
+            // Unlabeled line – treat as raw string
+            fields.other.push(line);
+        }
+    }
+    return fields;
 }
 
 // Function to match detection against known patterns
-function matchDetection(inputStrings) {
+function matchDetection(fields) {
     const results = [];
-    
+
     for (const detection of cheatDetections) {
         let matchedFields = 0;
+        let totalPossibleFields = 0;
         const matches = {
             pattern: false,
             function: false,
-            hash: false
+            hash: false,
+            dbg: false,
+            reason: false
         };
-        
-        // Check each input string against detection fields
-        for (const str of inputStrings) {
-            if (str === detection.pattern) {
+
+        // Determine which fields this detection uses
+        if (detection.pattern !== undefined && detection.function !== undefined && detection.hashPattern !== undefined) {
+            totalPossibleFields = 3;
+            // Check pattern
+            if (fields.pattern === detection.pattern || fields.other.includes(detection.pattern)) {
                 matches.pattern = true;
                 matchedFields++;
             }
-            if (str === detection.function) {
+            // Check function
+            if (fields.function === detection.function || fields.other.includes(detection.function)) {
                 matches.function = true;
                 matchedFields++;
             }
-            if (str === detection.hashPattern) {
+            // Check hash
+            if (fields.hashPattern === detection.hashPattern || fields.other.includes(detection.hashPattern)) {
                 matches.hash = true;
                 matchedFields++;
             }
         }
-        
-        // Calculate percentage (33.33% per field)
-        const percentage = Math.round((matchedFields / 3) * 100);
-        
+        else if (detection.dbg !== undefined && detection.reason !== undefined) {
+            totalPossibleFields = 2;
+            // Check dbg
+            if (fields.dbg === detection.dbg || fields.other.includes(detection.dbg)) {
+                matches.dbg = true;
+                matchedFields++;
+            }
+            // Check reason
+            if (fields.reason === detection.reason || fields.other.includes(detection.reason)) {
+                matches.reason = true;
+                matchedFields++;
+            }
+        }
+
+        // Calculate percentage
+        const percentage = totalPossibleFields > 0 ? Math.round((matchedFields / totalPossibleFields) * 100) : 0;
+
         results.push({
             detection: detection,
             matches: matches,
             matchedFields: matchedFields,
+            totalPossibleFields: totalPossibleFields,
             totalScore: percentage,
             severity: detection.severity
         });
     }
-    
+
     // Sort by highest score first
     return results.sort((a, b) => b.totalScore - a.totalScore);
 }
@@ -86,59 +134,73 @@ function getSeverityClass(score, severity) {
 function displayKnownDetections() {
     const grid = document.getElementById('detectionsGrid');
     if (!grid) return;
-    
+
     grid.innerHTML = '';
-    
+
     cheatDetections.forEach(detection => {
         const item = document.createElement('div');
         item.className = 'detection-item';
         item.setAttribute('data-name', detection.name);
+
+        let details = '';
+        if (detection.reason) {
+            details = `<small>Reason: ${detection.reason}</small><br><small>DBG: ${detection.dbg.substring(0, 20)}...</small>`;
+        } else {
+            details = `<small>Pattern: ${detection.pattern.substring(0, 30)}...</small>`;
+        }
+
         item.innerHTML = `
             <h4>${detection.name}</h4>
             <p>${detection.description}</p>
+            ${details}
+            <br>
             <small>Severity: <span class="status ${detection.severity}">${detection.severity}</span></small>
         `;
-        
+
         // Add click handler to fill textarea with this detection
         item.addEventListener('click', () => {
             const textarea = document.getElementById('detectionInput');
             if (textarea) {
-                textarea.value = `${detection.pattern}\n${detection.function}\n${detection.hashPattern}`;
+                if (detection.reason) {
+                    textarea.value = `dbg:\n${detection.dbg}\nreason:\n${detection.reason}`;
+                } else {
+                    textarea.value = `${detection.pattern}\n${detection.function}\n${detection.hashPattern}`;
+                }
             }
         });
-        
+
         grid.appendChild(item);
     });
 }
 
 // Function to display analysis results
-function displayResults(inputStrings, results) {
+function displayResults(fields, results) {
     const detectionStatus = document.getElementById('detectionStatus');
     const matchPercentage = document.getElementById('matchPercentage');
     const progressBar = document.getElementById('progressBar');
     const matchDetails = document.getElementById('matchDetails');
     const verdictBox = document.getElementById('verdictBox');
-    
+
     if (!results || results.length === 0 || results[0].totalScore === 0) {
         matchPercentage.textContent = '0%';
         progressBar.style.width = '0%';
         progressBar.style.background = 'linear-gradient(to right, #2962ff, #bbdefb)';
-        
+
         matchDetails.innerHTML = `
             <div style="grid-column: span 3; text-align: center; padding: 20px;">
                 <p>No matches found in database</p>
             </div>
         `;
-        
+
         verdictBox.innerHTML = '<span class="status safe">NO MATCHES FOUND</span>';
         detectionStatus.style.display = 'block';
         return;
     }
-    
+
     const bestMatch = results[0];
     matchPercentage.textContent = `${bestMatch.totalScore}%`;
     progressBar.style.width = `${bestMatch.totalScore}%`;
-    
+
     // Change progress bar color based on score
     if (bestMatch.totalScore === 100) {
         progressBar.style.background = 'linear-gradient(to right, #ff1744, #ff5252)';
@@ -147,62 +209,90 @@ function displayResults(inputStrings, results) {
     } else {
         progressBar.style.background = 'linear-gradient(to right, #2962ff, #bbdefb)';
     }
-    
+
     // Display match details
     matchDetails.innerHTML = '';
-    
-    // Show input strings
+
+    // Show input fields
     const inputDiv = document.createElement('div');
     inputDiv.style.gridColumn = 'span 3';
     inputDiv.style.background = 'rgba(10, 14, 23, 0.5)';
     inputDiv.style.padding = '15px';
     inputDiv.style.borderRadius = '10px';
     inputDiv.style.marginBottom = '10px';
-    
-    let inputHtml = '<h4 style="color: var(--light-blue); margin-bottom: 10px;">Analyzed Strings:</h4>';
-    inputStrings.forEach((str, index) => {
-        inputHtml += `<p><strong>String ${index + 1}:</strong> ${str}</p>`;
-    });
-    
+
+    let inputHtml = '<h4 style="color: var(--light-blue); margin-bottom: 10px;">Analyzed Input:</h4>';
+    if (fields.pattern) inputHtml += `<p><strong>Pattern:</strong> ${fields.pattern}</p>`;
+    if (fields.function) inputHtml += `<p><strong>Function:</strong> ${fields.function}</p>`;
+    if (fields.hashPattern) inputHtml += `<p><strong>Hash:</strong> ${fields.hashPattern}</p>`;
+    if (fields.dbg) inputHtml += `<p><strong>DBG:</strong> ${fields.dbg}</p>`;
+    if (fields.reason) inputHtml += `<p><strong>Reason:</strong> ${fields.reason}</p>`;
+    if (fields.other.length > 0) {
+        fields.other.forEach((val, i) => {
+            inputHtml += `<p><strong>String ${i+1}:</strong> ${val}</p>`;
+        });
+    }
+
     inputDiv.innerHTML = inputHtml;
     matchDetails.appendChild(inputDiv);
-    
+
     // Show best match details
     const matchDiv = document.createElement('div');
     matchDiv.style.gridColumn = 'span 3';
     matchDiv.innerHTML = `<h4 style="color: var(--light-blue); margin: 10px 0;">Best Match: ${bestMatch.detection.name}</h4>`;
     matchDetails.appendChild(matchDiv);
-    
-    // Pattern match
-    const patternItem = document.createElement('div');
-    patternItem.className = `match-item ${bestMatch.matches.pattern ? 'matched' : ''}`;
-    patternItem.innerHTML = `
-        <h4>Pattern Match</h4>
-        <div class="match-value">${bestMatch.matches.pattern ? '✓ MATCHED' : '✗ NO MATCH'}</div>
-        <div>Expected: ${bestMatch.detection.pattern.substring(0, 30)}${bestMatch.detection.pattern.length > 30 ? '...' : ''}</div>
-    `;
-    matchDetails.appendChild(patternItem);
-    
-    // Function match
-    const functionItem = document.createElement('div');
-    functionItem.className = `match-item ${bestMatch.matches.function ? 'matched' : ''}`;
-    functionItem.innerHTML = `
-        <h4>Function Match</h4>
-        <div class="match-value">${bestMatch.matches.function ? '✓ MATCHED' : '✗ NO MATCH'}</div>
-        <div>Expected: ${bestMatch.detection.function}</div>
-    `;
-    matchDetails.appendChild(functionItem);
-    
-    // Hash match
-    const hashItem = document.createElement('div');
-    hashItem.className = `match-item ${bestMatch.matches.hash ? 'matched' : ''}`;
-    hashItem.innerHTML = `
-        <h4>Hash Match</h4>
-        <div class="match-value">${bestMatch.matches.hash ? '✓ MATCHED' : '✗ NO MATCH'}</div>
-        <div>Expected: ${bestMatch.detection.hashPattern.substring(0, 20)}...</div>
-    `;
-    matchDetails.appendChild(hashItem);
-    
+
+    // Determine which type of detection we're dealing with
+    if (bestMatch.detection.pattern !== undefined) {
+        // Pattern/Function/Hash detection
+        const patternItem = document.createElement('div');
+        patternItem.className = `match-item ${bestMatch.matches.pattern ? 'matched' : ''}`;
+        patternItem.innerHTML = `
+            <h4>Pattern Match</h4>
+            <div class="match-value">${bestMatch.matches.pattern ? '✓ MATCHED' : '✗ NO MATCH'}</div>
+            <div>Expected: ${bestMatch.detection.pattern.substring(0, 30)}${bestMatch.detection.pattern.length > 30 ? '...' : ''}</div>
+        `;
+        matchDetails.appendChild(patternItem);
+
+        const functionItem = document.createElement('div');
+        functionItem.className = `match-item ${bestMatch.matches.function ? 'matched' : ''}`;
+        functionItem.innerHTML = `
+            <h4>Function Match</h4>
+            <div class="match-value">${bestMatch.matches.function ? '✓ MATCHED' : '✗ NO MATCH'}</div>
+            <div>Expected: ${bestMatch.detection.function}</div>
+        `;
+        matchDetails.appendChild(functionItem);
+
+        const hashItem = document.createElement('div');
+        hashItem.className = `match-item ${bestMatch.matches.hash ? 'matched' : ''}`;
+        hashItem.innerHTML = `
+            <h4>Hash Match</h4>
+            <div class="match-value">${bestMatch.matches.hash ? '✓ MATCHED' : '✗ NO MATCH'}</div>
+            <div>Expected: ${bestMatch.detection.hashPattern.substring(0, 20)}...</div>
+        `;
+        matchDetails.appendChild(hashItem);
+    }
+    else if (bestMatch.detection.dbg !== undefined) {
+        // DBG/Reason detection
+        const dbgItem = document.createElement('div');
+        dbgItem.className = `match-item ${bestMatch.matches.dbg ? 'matched' : ''}`;
+        dbgItem.innerHTML = `
+            <h4>DBG Match</h4>
+            <div class="match-value">${bestMatch.matches.dbg ? '✓ MATCHED' : '✗ NO MATCH'}</div>
+            <div>Expected: ${bestMatch.detection.dbg}</div>
+        `;
+        matchDetails.appendChild(dbgItem);
+
+        const reasonItem = document.createElement('div');
+        reasonItem.className = `match-item ${bestMatch.matches.reason ? 'matched' : ''}`;
+        reasonItem.innerHTML = `
+            <h4>Reason Match</h4>
+            <div class="match-value">${bestMatch.matches.reason ? '✓ MATCHED' : '✗ NO MATCH'}</div>
+            <div>Expected: ${bestMatch.detection.reason}</div>
+        `;
+        matchDetails.appendChild(reasonItem);
+    }
+
     // Show other potential matches
     const otherMatches = results.filter((r, index) => index > 0 && r.totalScore > 0);
     if (otherMatches.length > 0) {
@@ -210,42 +300,42 @@ function displayResults(inputStrings, results) {
         otherDiv.style.gridColumn = 'span 3';
         otherDiv.style.marginTop = '15px';
         otherDiv.innerHTML = '<h4 style="color: var(--light-blue);">Other Partial Matches:</h4>';
-        
+
         otherMatches.slice(0, 2).forEach(match => {
             otherDiv.innerHTML += `
                 <div style="background: rgba(10, 14, 23, 0.5); padding: 10px; border-radius: 5px; margin-top: 5px;">
-                    <strong>${match.detection.name}:</strong> ${match.totalScore}% (${match.matchedFields}/3 fields matched)
+                    <strong>${match.detection.name}:</strong> ${match.totalScore}% (${match.matchedFields}/${match.totalPossibleFields} fields matched)
                 </div>
             `;
         });
-        
+
         matchDetails.appendChild(otherDiv);
     }
-    
+
     // Set verdict
     let verdictText = '';
     if (bestMatch.totalScore === 100) {
         verdictText = `⚠️ CONFIRMED MATCH - ${bestMatch.detection.name}`;
     } else if (bestMatch.totalScore > 0) {
-        verdictText = `⚠️ PARTIAL MATCH - ${bestMatch.matchedFields}/3 fields matched with ${bestMatch.detection.name}`;
+        verdictText = `⚠️ PARTIAL MATCH - ${bestMatch.matchedFields}/${bestMatch.totalPossibleFields} fields matched with ${bestMatch.detection.name}`;
     } else {
         verdictText = '✓ CLEAN - No matches found';
     }
-    
+
     const severityClass = getSeverityClass(bestMatch.totalScore, bestMatch.severity);
     verdictBox.innerHTML = `<span class="status ${severityClass}">${verdictText}</span>`;
-    
+
     detectionStatus.style.display = 'block';
 }
 
 // Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
     displayKnownDetections();
-    
+
     const analyzeBtn = document.getElementById('analyzeBtn');
     const clearBtn = document.getElementById('clearBtn');
     const detectionInput = document.getElementById('detectionInput');
-    
+
     if (analyzeBtn) {
         analyzeBtn.addEventListener('click', function() {
             const input = detectionInput.value.trim();
@@ -253,14 +343,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 alert('Please paste detection strings first');
                 return;
             }
-            
-            const strings = extractStrings(input);
-            const results = matchDetection(strings);
-            
-            displayResults(strings, results);
+
+            const fields = extractFields(input);
+            const results = matchDetection(fields);
+
+            displayResults(fields, results);
         });
     }
-    
+
     if (clearBtn) {
         clearBtn.addEventListener('click', function() {
             detectionInput.value = '';
