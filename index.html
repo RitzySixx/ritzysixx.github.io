@@ -13,7 +13,7 @@
     <div class="container">
         <header>
             <h1><i class="fas fa-shield-alt"></i> Riddy Security Suite</h1>
-            <p>File Analysis, Anticheat Detection & Security Tools</p>
+            <p>File Analysis & Anticheat Detection</p>
         </header>
 
         <!-- Navigation Tabs -->
@@ -46,7 +46,7 @@
                     <div class="scanning-animation" id="scanningAnimation">
                         <div class="spinner"></div>
                         <h3>Scanning File</h3>
-                        <p>Analyzing File and Checking Against Database<span class="pulse"></span><span class="pulse"></span><span class="pulse"></span></p>
+                        <p>Analyzing File<span class="pulse"></span><span class="pulse"></span><span class="pulse"></span></p>
                     </div>
 
                     <section class="results-section" id="resultsSection">
@@ -71,13 +71,10 @@
                         <div class="paste-area" id="pasteZone">
                             <i class="fas fa-paste"></i>
                             <h3>Paste Detection Pattern Here</h3>
-                            <p>Paste your detection pattern (format: pattern/function/hashPattern)</p>
+                            <p>Paste your detection strings (order doesn't matter)</p>
                             <textarea id="detectionInput" placeholder="Example:
-pattern:
 @monitor/resource/menu/client/cl_ptfx.lua:CreatePlayerModePtfxLoop:84:85:116
-function:
 CreateThread
-hashPattern:
 6387d32971b38551c3e994b111ba6787"></textarea>
                             <div class="paste-actions">
                                 <button class="browse-btn" id="analyzeBtn">Analyze Pattern</button>
@@ -128,9 +125,8 @@ hashPattern:
                             <p>The suite employs multiple analysis methods:</p>
                             <ul>
                                 <li><strong>File Scanning:</strong> Hash matching and Yara rule analysis</li>
-                                <li><strong>Anticheat Detection:</strong> Pattern matching for cheat detections</li>
-                                <li><strong>Percentage-based Analysis:</strong> Weighted matching system</li>
-                                <li><strong>Expandable Database:</strong> Easy to add new detection patterns</li>
+                                <li><strong>Anticheat Detection:</strong> Exact pattern matching for cheat detections</li>
+                                <li><strong>Multi-field Verification:</strong> Checks pattern, function, and hash independently</li>
                             </ul>
                         </div>
                         <div class="about-card">
@@ -138,18 +134,7 @@ hashPattern:
                             <ul>
                                 <li><strong>Hash-based Detection:</strong> SHA1/SHA256 matching</li>
                                 <li><strong>Yara Rules:</strong> Advanced pattern recognition</li>
-                                <li><strong>Pattern Matching:</strong> Three-field verification system</li>
-                                <li><strong>Weighted Scoring:</strong> 40/30/30 distribution</li>
-                            </ul>
-                        </div>
-                        <div class="about-card">
-                            <h3><i class="fas fa-lock"></i> Privacy & Security</h3>
-                            <p>Your privacy is our top priority:</p>
-                            <ul>
-                                <li>No data uploaded to external servers</li>
-                                <li>All processing happens locally</li>
-                                <li>No data collection or tracking</li>
-                                <li>Open-source transparency</li>
+                                <li><strong>Exact Pattern Matching:</strong> No fuzzy matching, only 100% matches count</li>
                             </ul>
                         </div>
                     </div>
@@ -170,30 +155,18 @@ hashPattern:
                         
                         <h3>Anticheat Detection Usage</h3>
                         <ol>
-                            <li>Paste a detection pattern in the text area (format: pattern/function/hashPattern)</li>
+                            <li>Paste your detection strings in the text area (order doesn't matter)</li>
                             <li>Click "Analyze Pattern" to check against known detections</li>
-                            <li>View the percentage match and detailed breakdown</li>
-                            <li>Results show which parts matched and confidence level</li>
+                            <li>View which parts matched and the overall confidence level</li>
+                            <li>A detection requires 100% match on pattern, function, and hash to be confirmed</li>
                         </ol>
 
-                        <h3>Understanding Match Percentages</h3>
+                        <h3>Understanding Results</h3>
                         <ul>
-                            <li><span class="status safe">0-30%</span> - Low confidence / No match</li>
-                            <li><span class="status warning">31-69%</span> - Partial match / Suspicious</li>
-                            <li><span class="status danger">70-100%</span> - High confidence / Matched</li>
+                            <li><span class="status safe">CLEAN</span> - No exact matches found</li>
+                            <li><span class="status warning">PARTIAL MATCH</span> - Some fields matched but not all</li>
+                            <li><span class="status danger">CONFIRMED</span> - 100% match on all fields</li>
                         </ul>
-
-                        <h3>Adding New Detections</h3>
-                        <p>To add new detection patterns, edit the <code>anticheat.js</code> file and add entries to the <code>cheatDetections</code> array:</p>
-                        <pre style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 8px; overflow-x: auto;">
-{
-    name: "Detection Name",
-    description: "Description of what this detects",
-    pattern: "pattern string here",
-    function: "function name here",
-    hashPattern: "hash here",
-    severity: "danger/warning/info"
-}</pre>
                     </div>
                 </div>
             </div>
