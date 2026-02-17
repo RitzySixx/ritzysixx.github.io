@@ -1,7 +1,7 @@
 // Anticheat Detection Patterns Database
 const cheatDetections = [
     {
-        name: "Generic Menu PTFX Detection",
+        name: "Generic PTFX Detection",
         description: "Common menu-based cheat using particle effects",
         pattern: "@monitor/resource/menu/client/cl_ptfx.lua:CreatePlayerModePtfxLoop:84:85:116",
         function: "CreateThread",
@@ -9,27 +9,11 @@ const cheatDetections = [
         severity: "danger"
     },
     {
-        name: "Eulen Menu Detection",
-        description: "Eulen cheat menu pattern detected",
-        pattern: "eulen/menu/client/cl_main.lua:InitializeMenu:45:50",
-        function: "Citizen.CreateThread",
-        hashPattern: "e8d4f5a2b1c9e3f7a6b8c2d4e5f1a3b7c9d8e2f",
-        severity: "danger"
-    },
-    {
-        name: "RedEngine Menu Detection",
-        description: "RedEngine cheat pattern detected",
-        pattern: "redengine/menu/client/cl_main.lua:LoadMenu:12:20",
-        function: "Citizen.CreateThreadNow",
-        hashPattern: "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0",
-        severity: "danger"
-    },
-    {
-        name: "Brutan Menu Detection",
-        description: "Brutan cheat menu pattern detected",
-        pattern: "brutan/menu/client/cl_ui.lua:DrawMenu:100:150",
-        function: "Citizen.Wait",
-        hashPattern: "9z8y7x6w5v4u3t2s1r0q9p8o7n6m5l4k3j2i1h0",
+        name: "Generic Visibility Detection",
+        description: "Outfit manipulation cheat using SetEntityVisible",
+        pattern: "@monitor/outfits.lua:fn:97:120:121",
+        function: "SetEntityVisible",
+        hashPattern: "02ce22e210fa749a671171010f05dd7e",
         severity: "danger"
     }
 ];
