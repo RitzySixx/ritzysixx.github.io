@@ -1,31 +1,3 @@
-function copyScript(scriptId, element) {
-    const scripts = {
-        'Registry Executions': 'Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass; Invoke-Expression (Invoke-RestMethod "https://raw.githubusercontent.com/RitzySixx/RegistryExecutions/refs/heads/main/RegistryExecutions.ps1")',
-        'Fileless Bypasses': 'Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass; Invoke-Expression (Invoke-RestMethod "https://raw.githubusercontent.com/RitzySixx/FilelessBypasses/refs/heads/main/FilelessDetection.ps1")',
-        'USB/PCI Devices': 'iex (iwr "https://raw.githubusercontent.com/RitzySixx/Device-Scanner/refs/heads/main/Devices.ps1")',
-        'Prefetch Analysis': 'Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass; Invoke-Expression (Invoke-RestMethod "https://raw.githubusercontent.com/RitzySixx/Prefetch-Analysis/refs/heads/main/PrefetchAnalyzer.ps1")',
-        'Journal Tampering': 'iex (iwr "https://raw.githubusercontent.com/RitzySixx/Check-Journal-Tampering/refs/heads/main/journalcheck.ps1")',
-        'Custom Task Schedulers': 'iex (iwr "https://raw.githubusercontent.com/RitzySixx/Suspicious-Task-Scheduler/refs/heads/main/TaskSchedulerChecks.ps1")',
-        'Suspicious EVTX': 'Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass; Invoke-Expression (Invoke-RestMethod "https://raw.githubusercontent.com/RitzySixx/Suspicious-EVTX-Parser/refs/heads/main/EVTXParser.ps1")',
-        'Check Services': 'Get-Service | Where-Object { $_.Name -match "pcasvc|DPS|DiagTrack|SysMain|eventlog|sgrmbroker|cdpusersvc|DNS|Appinfo|WSearch|VSS" } | Format-Table Name, Status, DisplayName -AutoSize',
-    };
-    
-    const scriptContent = scripts[scriptId] || 'Script not found';
-    
-    navigator.clipboard.writeText(scriptContent).then(() => {
-        const originalText = element.textContent;
-        element.textContent = 'Copied!';
-        element.style.background = 'linear-gradient(to right, var(--success), #00e676)';
-        
-        setTimeout(() => {
-            element.textContent = originalText;
-            element.style.background = 'linear-gradient(to right, var(--primary-blue), var(--accent-blue))';
-        }, 2000);
-    }).catch(err => {
-        console.log('Clipboard copy failed silently');
-    });
-}
-
 document.addEventListener('DOMContentLoaded', function() {
     // File scanner elements
     const dropZone = document.getElementById('dropZone');
