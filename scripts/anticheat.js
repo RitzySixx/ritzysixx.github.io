@@ -1,7 +1,7 @@
 // Anticheat Detection Patterns Database
 const cheatDetections = [
     {
-        name: "Generic Menu PTFX Detection",
+        name: "Generic PTFX Detection",
         description: "Common menu-based cheat using particle effects",
         fields: {
             pattern: "@monitor/resource/menu/client/cl_ptfx.lua:CreatePlayerModePtfxLoop:84:85:116",
@@ -30,7 +30,7 @@ const cheatDetections = [
         severity: "danger"
     },
     {
-        name: "RPG Detection",
+        name: "Blacklisted Weapon or Explosion Projectile",
         description: "Blacklisted projectile detected (RPG)",
         fields: {
             reason: "Blacklisted Projectile Detected",
@@ -49,6 +49,16 @@ const cheatDetections = [
             verticalDot: "3.6654414030109",
             horizontalDot: "1.03867003418417",
             maxHorizontal: "0.40034238183878"
+        },
+        severity: "danger"
+    },
+    {
+        name: "Blacklisted Explosion",
+        description: "Blacklisted explosion detected (Rocket type 4)",
+        fields: {
+            reason: "Blacklisted Explosion Detected",
+            explosionName: "Rocket",
+            explosionType: "4"
         },
         severity: "danger"
     }
