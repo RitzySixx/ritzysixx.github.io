@@ -14,6 +14,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const tabPanes = document.querySelectorAll('.tab-pane');
     
     tabButtons.forEach(button => {
+        // Exclude the link button that goes to the Event Viewer page
+        if(button.tagName.toLowerCase() === 'a') return;
+
         button.addEventListener('click', () => {
             const tabId = button.getAttribute('data-tab');
             
@@ -23,7 +26,8 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Show active tab pane
             tabPanes.forEach(pane => pane.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
+            const targetPane = document.getElementById(tabId);
+            if(targetPane) targetPane.classList.add('active');
         });
     });
 
@@ -123,7 +127,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const sha1Lower = sha1.toLowerCase();
         const sha256Lower = sha256.toLowerCase();
         
-        const results = {
+        return {
             sha1: { 
                 match: maliciousHashes && maliciousHashes.sha1 ? maliciousHashes.sha1.some(hash => hash.toLowerCase() === sha1Lower) : false, 
                 type: "SHA1" 
@@ -133,7 +137,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 type: "SHA256" 
             }
         };
-        return results;
     }
     
     function displayResults(file, sha1, sha256, yaraResults, hashResults) {
@@ -183,14 +186,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 yaraContent += `
                     <p><strong>${result.name}:</strong> <span class="${statusClass}">MATCH</span></p>
                     <p style="font-size: 0.9rem; opacity: 0.8;">${result.description}</p>
+                    <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 5px 0;">
                 `;
             });
         } else {
-            yaraContent = '<p><span class="status safe">No Yara rule matches found</span></p>';
+            yaraContent = '<p><span class="status safe">No rule matches found</span></p>';
         }
         
         yaraCard.innerHTML = `
-            <h3><i class="fas fa-search"></i> Yara Rules</h3>
+            <h3><i class="fas fa-search"></i> Static Analysis</h3>
             ${yaraContent}
         `;
         resultsGrid.appendChild(yaraCard);
@@ -213,20 +217,14 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function calculateSecurityScore(yaraResults, hashResults) {
-        if (hashResults.sha1.match || hashResults.sha256.match) {
-            return "danger";
-        }
+        if (hashResults.sha1.match || hashResults.sha256.match) return "danger";
         
         const highSeverityYara = yaraResults.filter(r => r.severity === "danger").length;
         const medSeverityYara = yaraResults.filter(r => r.severity === "warning").length;
         
-        if (highSeverityYara > 0) {
-            return "danger";
-        } else if (medSeverityYara > 1) {
-            return "warning";
-        } else {
-            return "safe";
-        }
+        if (highSeverityYara > 0) return "danger";
+        if (medSeverityYara > 1) return "warning";
+        return "safe";
     }
     
     function formatFileSize(bytes) {
