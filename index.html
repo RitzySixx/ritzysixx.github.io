@@ -13,19 +13,17 @@
     <div class="container">
         <header>
             <h1><i class="fas fa-shield-alt"></i> Riddy Security Suite</h1>
-            <p>File Analysis & Anticheat Detection</p>
+            <p>Advanced File Analysis & Telemetry Forensics</p>
         </header>
 
-        <!-- Navigation Tabs -->
         <nav class="tabs-nav" id="tabsNav">
-            <button class="tab-btn active" data-tab="scanner">File Scanner</button>
-            <button class="tab-btn" data-tab="anticheat">Anticheat Detection</button>
-            <button class="tab-btn" data-tab="about">About</button>
-            <button class="tab-btn" data-tab="guide">User Guide</button>
+            <button class="tab-btn active" data-tab="scanner"><i class="fas fa-search"></i> File Scanner</button>
+            <button class="tab-btn" data-tab="about"><i class="fas fa-info-circle"></i> About</button>
+            <button class="tab-btn" data-tab="guide"><i class="fas fa-book"></i> User Guide</button>
+            <a href="learn/eventviewer/index.html" class="tab-btn" style="text-decoration: none; text-align: center; line-height: 1.5;"><i class="fas fa-microchip"></i> Event Viewer Masterclass</a>
         </nav>
 
         <div class="tab-content">
-            <!-- Scanner Tab -->
             <div class="tab-pane active" id="scanner">
                 <div class="scanner-container">
                     <section class="upload-section">
@@ -56,116 +54,48 @@
                         </div>
                         
                         <div class="results-grid" id="resultsGrid">
-                            <!-- Results will be populated here -->
-                        </div>
+                            </div>
                     </section>
                 </div>
             </div>
 
-            <!-- Anticheat Detection Tab -->
-            <div class="tab-pane" id="anticheat">
-                <div class="content-section">
-                    <h2><i class="fas fa-gamepad"></i> Anticheat Detection</h2>
-                    
-                    <div class="anticheat-container">
-                        <div class="paste-area" id="pasteZone">
-                            <i class="fas fa-paste"></i>
-                            <h3>Paste Detection Pattern Here</h3>
-                            <p>Paste your detection strings (order doesn't matter)</p>
-                            <textarea id="detectionInput" placeholder="Example:
-@monitor/resource/menu/client/cl_ptfx.lua:CreatePlayerModePtfxLoop:84:85:116
-CreateThread
-6387d32971b38551c3e994b111ba6787"></textarea>
-                            <div class="paste-actions">
-                                <button class="browse-btn" id="analyzeBtn">Analyze Pattern</button>
-                                <button class="browse-btn" id="clearBtn">Clear</button>
-                            </div>
-                        </div>
-
-                        <div class="detection-status" id="detectionStatus" style="display: none;">
-                            <div class="status-header">
-                                <h3><i class="fas fa-chart-pie"></i> Detection Analysis</h3>
-                                <span class="match-percentage" id="matchPercentage">0%</span>
-                            </div>
-                            
-                            <div class="progress-bar-container">
-                                <div class="progress-bar" id="progressBar" style="width: 0%"></div>
-                            </div>
-
-                            <div class="match-details" id="matchDetails">
-                                <!-- Match details will be populated here -->
-                            </div>
-
-                            <div class="verdict-box" id="verdictBox">
-                                <!-- Verdict will be shown here -->
-                            </div>
-                        </div>
-
-                        <div class="known-detections">
-                            <h3><i class="fas fa-database"></i> Known Detection Patterns</h3>
-                            <div class="detections-grid" id="detectionsGrid">
-                                <!-- Detection patterns will be listed here -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- About Tab -->
             <div class="tab-pane" id="about">
                 <div class="content-section">
                     <h2><i class="fas fa-info-circle"></i> About Riddy Security Suite</h2>
                     <div class="about-grid">
                         <div class="about-card">
                             <h3><i class="fas fa-question-circle"></i> What is Riddy Security Suite?</h3>
-                            <p>Riddy Security Suite is an advanced, client-side security analysis tool designed to detect potentially malicious files and anticheat detections. The scanner operates entirely in your browser, ensuring complete privacy as no data is uploaded to external servers.</p>
+                            <p>Riddy Security Suite is an advanced, client-side security analysis tool designed to detect potentially malicious files, packers, and known cheat signatures. The scanner operates entirely in your browser, ensuring complete privacy as no data is uploaded to external servers.</p>
                         </div>
                         <div class="about-card">
                             <h3><i class="fas fa-cogs"></i> How It Works</h3>
                             <p>The suite employs multiple analysis methods:</p>
                             <ul>
-                                <li><strong>File Scanning:</strong> Hash matching and Yara rule analysis</li>
-                                <li><strong>Anticheat Detection:</strong> Exact pattern matching for cheat detections</li>
-                                <li><strong>Multi-field Verification:</strong> Checks pattern, function, and hash independently</li>
-                            </ul>
-                        </div>
-                        <div class="about-card">
-                            <h3><i class="fas fa-shield-alt"></i> Detection Methods</h3>
-                            <ul>
-                                <li><strong>Hash-based Detection:</strong> SHA1/SHA256 matching</li>
-                                <li><strong>Yara Rules:</strong> Advanced pattern recognition</li>
-                                <li><strong>Exact Pattern Matching:</strong> No fuzzy matching, only 100% matches count</li>
+                                <li><strong>Static Analysis:</strong> Evaluates file structures and entropy.</li>
+                                <li><strong>Hash Matching:</strong> Compares SHA1/SHA256 against known malicious databases.</li>
+                                <li><strong>Yara-Style Rules:</strong> Detects malware families, API hooks, and unauthorized tools.</li>
                             </ul>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Guide Tab -->
             <div class="tab-pane" id="guide">
                 <div class="content-section">
                     <h2><i class="fas fa-book"></i> User Guide</h2>
                     <div class="guide-content">
                         <h3>File Scanner Usage</h3>
                         <ol>
-                            <li>Click "Select File" or drag and drop a file into the upload area</li>
-                            <li>Wait for the scanning process to complete</li>
-                            <li>Review the results including hash matches and Yara rule detections</li>
-                        </ol>
-                        
-                        <h3>Anticheat Detection Usage</h3>
-                        <ol>
-                            <li>Paste your detection strings in the text area (order doesn't matter)</li>
-                            <li>Click "Analyze Pattern" to check against known detections</li>
-                            <li>View which parts matched and the overall confidence level</li>
-                            <li>A detection requires 100% match on pattern, function, and hash to be confirmed</li>
+                            <li>Click "Select File" or drag and drop a file into the upload area.</li>
+                            <li>Wait for the in-memory scanning process to complete.</li>
+                            <li>Review the results, including cryptographic hash matches and heuristic Yara rule detections.</li>
                         </ol>
 
                         <h3>Understanding Results</h3>
                         <ul>
-                            <li><span class="status safe">CLEAN</span> - No exact matches found</li>
-                            <li><span class="status warning">PARTIAL MATCH</span> - Some fields matched but not all</li>
-                            <li><span class="status danger">CONFIRMED</span> - 100% match on all fields</li>
+                            <li><span class="status safe">CLEAN</span> - No malicious patterns or known hashes detected.</li>
+                            <li><span class="status warning">WARNING</span> - Suspicious behaviors detected (e.g., Packers, High Entropy, Admin Privileges). Investigate further.</li>
+                            <li><span class="status danger">DANGER</span> - Known malware, cheat signatures, or severe injection APIs detected.</li>
                         </ul>
                     </div>
                 </div>
@@ -173,13 +103,12 @@ CreateThread
         </div>
 
         <footer>
-            <p>Riddy Security Suite &copy; 2025 | Advanced Security Analysis Tool</p>
+            <p>Riddy Security Suite &copy; 2026 | Advanced Security Analysis Tool</p>
         </footer>
     </div>
 
     <script src="scripts/malicioushashes.js"></script>
     <script src="scripts/yara.js"></script>
-    <script src="scripts/anticheat.js"></script>
     <script src="scripts/main.js"></script>
 </body>
 </html>
